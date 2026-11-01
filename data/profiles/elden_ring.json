@@ -1,0 +1,32 @@
+{
+  "id": "elden_ring",
+  "name": "Elden Ring",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "PS5 version is controller-only; no keyboard/mouse gameplay support found in any controls source (Fextralife lists only DualSense layout)",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "PC strong attack (Shift+LMB) and skill (Shift+RMB) are modifier combos the tool can't express as single keys, so they are mapped to MOUSE5/MOUSE4 here; Shift+wheel (switch armaments) likewise dropped, use the arrow keys. Two-handing (E+LMB/RMB = TRIANGLE+R1/L1) and pouch (E+arrows = TRIANGLE+D-pad) work naturally by holding E. Walk (Alt) omitted: on PS5 walking is partial stick tilt. Space = Circle: tap to roll/backstep, hold to dash.",
+  "sources": [
+    "https://shacknews.com/article/128968/elden-ring-controls-and-pc-keybindings",
+    "https://eldenring.wiki.fextralife.com/Controls"
+  ],
+  "actions": [
+    {"label": "Esquivar / rodar / correr", "ps5": "CIRCLE", "pc": ["SPACE", ""]},
+    {"label": "Saltar", "ps5": "CROSS", "pc": ["F", ""]},
+    {"label": "Agacharse / pararse", "ps5": "L3", "pc": ["X", ""]},
+    {"label": "Fijar objetivo / centrar cámara", "ps5": "R3", "pc": ["Q", "MOUSE3"]},
+    {"label": "Ataque (mano derecha)", "ps5": "R1", "pc": ["MOUSE1", ""]},
+    {"label": "Ataque fuerte", "ps5": "R2", "pc": ["MOUSE5", ""]},
+    {"label": "Guardia (mano izquierda)", "ps5": "L1", "pc": ["MOUSE2", ""]},
+    {"label": "Habilidad (Ash of War)", "ps5": "L2", "pc": ["MOUSE4", ""]},
+    {"label": "Usar objeto", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Interactuar / acción", "ps5": "TRIANGLE", "pc": ["E", ""]},
+    {"label": "Cambiar hechizo", "ps5": "DPAD_UP", "pc": ["UP", ""]},
+    {"label": "Cambiar objeto", "ps5": "DPAD_DOWN", "pc": ["DOWN", ""]},
+    {"label": "Cambiar arma izquierda", "ps5": "DPAD_LEFT", "pc": ["LEFT", ""]},
+    {"label": "Cambiar arma derecha", "ps5": "DPAD_RIGHT", "pc": ["RIGHT", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["G", ""]},
+    {"label": "Menú", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

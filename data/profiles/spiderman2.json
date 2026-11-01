@@ -1,0 +1,40 @@
+{
+  "id": "spiderman2",
+  "name": "Marvel's Spider-Man 2",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "La versión de PS5 no soporta teclado/mouse para jugar. Las opciones de accesibilidad de Insomniac (support.insomniac.games) solo hablan de remapear el control, y las guías de PS5 listan solo el DualSense.",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "Los botones de PS5 tienen buenas fuentes (outsidergaming, gfinity, frondtech, Insomniac). Las teclas de PC vienen de una sola lista (shortcutposters) que coincide con los defaults de Nixxes en Remastered/Miles; no se pudo verificar en PCGamingWiki (no se pudo acceder). Camuflaje (R) y Atajo 1 (P) se infirieron de Miles Morales: verificalos en el menú de controles de PC. T = Parry (tocar) / Habilidad (mantener) = L1; las habilidades son L1 + Cuadrado/Triángulo/Cruz/Círculo, así que se arman solas manteniendo T + MOUSE1/F/SPACE/LCTRL. Las alas de telaraña son Triángulo en el aire = F. E y MOUSE3 van los dos a R1 (tocar = telaraña, mantener = rueda de gadgets). Los trucos aéreos son mantener Cuadrado + stick, sin tecla aparte. Equipar la cámara y la app del FNSM son deslizamientos en el touchpad, que no se pueden mapear.",
+  "sources": [
+    "https://shortcutposters.com/games/marvels-spider-man-2/",
+    "https://outsidergaming.com/spider-man-2-complete-controls-guide-for-ps5/",
+    "https://www.gfinityesports.com/article/spider-man-2-controls-guide",
+    "https://frondtech.com/marvels-spider-man-2-controls/",
+    "https://support.insomniac.games/hc/en-us/articles/46730041467027-What-Accessibility-options-does-Marvel-s-Spider-Man-2-feature",
+    "https://www.trustedreviews.com/how-to/how-to-use-the-web-wings-in-marvels-spider-man-2-4382823"
+  ],
+  "actions": [
+    {"label": "Saltar / Web zip", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Balancearse / Parkour", "ps5": "R2", "pc": ["LSHIFT", ""]},
+    {"label": "Zip a punto", "ps5": "L2+R2", "pc": ["C", ""]},
+    {"label": "Posarse / Zambullirse", "ps5": "L3", "pc": ["X", ""]},
+    {"label": "Atacar", "ps5": "SQUARE", "pc": ["MOUSE1", ""]},
+    {"label": "Golpe de telaraña / Alas", "ps5": "TRIANGLE", "pc": ["F", ""]},
+    {"label": "Esquivar", "ps5": "CIRCLE", "pc": ["LCTRL", ""]},
+    {"label": "Parry / Habilidad (mantener)", "ps5": "L1", "pc": ["T", ""]},
+    {"label": "Agarrar y tirar objeto", "ps5": "L1+R1", "pc": ["Q", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Poder del traje / Simbionte", "ps5": "L3+R3", "pc": ["3", ""]},
+    {"label": "Remate", "ps5": "TRIANGLE+CIRCLE", "pc": ["2", ""]},
+    {"label": "Curar", "ps5": "DPAD_DOWN", "pc": ["1", ""]},
+    {"label": "Disparar telaraña / Gadget", "ps5": "R1", "pc": ["E", ""]},
+    {"label": "Rueda de gadgets (mantener)", "ps5": "R1", "pc": ["MOUSE3", ""]},
+    {"label": "Camuflaje (Miles)", "ps5": "DPAD_UP", "pc": ["R", ""]},
+    {"label": "Atajo 1 (modo foto)", "ps5": "DPAD_LEFT", "pc": ["P", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["TAB", ""]},
+    {"label": "Mostrar objetivo / Escanear", "ps5": "R3", "pc": ["V", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "id": "dying_light_2",
+  "name": "Dying Light 2 Stay Human",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No source found showing keyboard/mouse gameplay support on PS5; every PS5 guide lists DualSense controls only. Not explicitly confirmed by an official statement.",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "The PS5 layout is solid: outsidergaming, magicgameworld and gamenguides agree (R1 jump, R2 attack, L1 block, L2 use equipment, L1+R2 kick, hold X heal, Circle crouch, Square use, Triangle look back, R3 survivor sense, D-pad up consumables, down flashlight, left accessories, right weapons, Touchpad player menu, Options pause). The PC guides conflict. Block = RMB is confirmed by Steam users (hard-bound). Kick = E follows gamepur and brgeeks, but the in-game loading tips on the wiki say F. Crouch is C in the guides and LCtrl in the loading tips, so both are mapped. The loading tips also say Tab = extended HUD, but the guides say Tab (hold) = weapons menu, so Tab -> D-pad right is uncertain. MMB (use accessory / throwables) -> L2 is inferred. Left out because no reliable PC key was found: cycle consumables, grappling hook (Alt), reload/next weapon (R, which the guides overlap).",
+  "sources": [
+    "https://outsidergaming.com/dying-light-2-controls-guide-for-ps4-ps5-xbox-one-xbox-series-xs-and-tips-for-beginners/",
+    "https://www.magicgameworld.com/?p=60712",
+    "https://www.gamenguides.com/dying-light-2-controls-for-playstation-xbox-and-pc",
+    "https://www.magicgameworld.com/?p=60678",
+    "https://www.shacknews.com/article/128679/dying-light-2-stay-human-controls-pc-keybindings",
+    "https://dyinglight.wiki.gg/wiki/Loading_Screens_(Dying_Light_2_Stay_Human)",
+    "https://gamepur.com/?p=299859",
+    "https://steamcommunity.com/app/534380/discussions/0/3186862118582461548"
+  ],
+  "actions": [
+    {"label": "Saltar / Parkour", "ps5": "R1", "pc": ["SPACE", ""]},
+    {"label": "Atacar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Bloquear", "ps5": "L1", "pc": ["MOUSE2", ""]},
+    {"label": "Patada", "ps5": "L1+R2", "pc": ["E", ""]},
+    {"label": "Usar equipo (arrojadizos)", "ps5": "L2", "pc": ["MOUSE3", ""]},
+    {"label": "Agacharse", "ps5": "CIRCLE", "pc": ["C", "LCTRL"]},
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Usar / Saquear / Interactuar", "ps5": "SQUARE", "pc": ["F", ""]},
+    {"label": "Curarse (consumible)", "ps5": "CROSS", "pc": ["H", ""]},
+    {"label": "Mirar atrás", "ps5": "TRIANGLE", "pc": ["CAPSLOCK", ""]},
+    {"label": "Sentido de superviviente", "ps5": "R3", "pc": ["Q", ""]},
+    {"label": "Linterna", "ps5": "DPAD_DOWN", "pc": ["T", ""]},
+    {"label": "Accesorios / Equipo siguiente", "ps5": "DPAD_LEFT", "pc": ["WHEEL_DOWN", "1"]},
+    {"label": "Cambiar arma / Menú armas", "ps5": "DPAD_RIGHT", "pc": ["TAB", ""]},
+    {"label": "Inventario", "ps5": "TOUCHPAD", "pc": ["I", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

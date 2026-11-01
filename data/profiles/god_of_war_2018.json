@@ -1,0 +1,37 @@
+{
+  "id": "god_of_war_2018",
+  "name": "God of War (2018)",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "La versión de PS4/PS5 solo se juega con control (PlayStation lista solo controles de DualShock/DualSense). Teclado/mouse es exclusivo del port de PC (Jetpack/Santa Monica, 2022).",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "Layout de PS: Cruz = esquivar y Círculo = interactuar (game8, magicgameworld y gamenguides coinciden; la guía oficial de PlayStation dice Círculo para el paso lateral, pero es minoría). Ira espartana = L3+R3 y en PC = Shift+MMB, que sale sola porque LSHIFT = L3 y MMB = R3 (shacknews dice Q+MMB; magicgameworld y gamenguides dicen Shift+MMB). El agarre aturdidor también es R3/MMB. Las combinaciones rúnicas (L1+R1/R2) salen solas con Q + click. Enfundar (1) se mapeó al D-pad derecha (Hacha Leviatán); en PS5 las Espadas del Caos van al D-pad izquierda y no hay tecla de PC confirmada. Los menús Armas (I), Habilidades (K) y Objetivos (J) no tienen botón directo en PS5 (se navega por pestañas desde el menú), y el modo foto (P) es lado izquierdo del touchpad, que el tool no distingue: se omitieron.",
+  "sources": [
+    "https://www.shacknews.com/article/128344/god-of-war-pc-keybindings-controls",
+    "https://www.magicgameworld.com/god-of-war-pc-keyboard-controls-guide/",
+    "https://www.gamenguides.com/god-of-war-pc-keyboard-controls",
+    "https://www.gamenguides.com/god-of-war-pc-gamepad-controls",
+    "https://game8.co/games/God-of-War-2018/archives/316513",
+    "https://www.magicgameworld.com/?p=17523",
+    "https://twinfinite.net/?p=344490",
+    "https://www.playstation.com/en-sg/editorial/the-playstation-guide-to-god-of-war/"
+  ],
+  "actions": [
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Giro rápido", "ps5": "DPAD_DOWN", "pc": ["X", ""]},
+    {"label": "Interactuar", "ps5": "CIRCLE", "pc": ["E", ""]},
+    {"label": "Esquivar / Rodar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Ataque liviano", "ps5": "R1", "pc": ["MOUSE1", ""]},
+    {"label": "Ataque pesado", "ps5": "R2", "pc": ["MOUSE2", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["LCTRL", ""]},
+    {"label": "Bloquear / Parry", "ps5": "L1", "pc": ["Q", ""]},
+    {"label": "Fijar blanco / Agarre aturdidor", "ps5": "R3", "pc": ["MOUSE3", ""]},
+    {"label": "Llamar al hacha", "ps5": "TRIANGLE", "pc": ["R", ""]},
+    {"label": "Acción de Atreus", "ps5": "SQUARE", "pc": ["F", ""]},
+    {"label": "Tipo de flecha", "ps5": "DPAD_UP", "pc": ["T", ""]},
+    {"label": "Enfundar / Desenfundar", "ps5": "DPAD_RIGHT", "pc": ["1", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Menú de pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

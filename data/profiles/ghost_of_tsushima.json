@@ -1,0 +1,40 @@
+{
+  "id": "ghost_of_tsushima",
+  "name": "Ghost of Tsushima (Director's Cut)",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "La versión de PS5 no soporta teclado/mouse para jugar; los controles de PS (gamewith) son solo de DualSense, y gestos/Viento Guía usan deslizamientos en el touchpad. Teclado/mouse es exclusivo del port de PC (Nixxes, 2024).",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "Las fuentes de PC no coinciden: tutorialtactic y keyboardista dicen Esquivar = LALT y Apuntar = LCTRL; sportskeeda dice al revés. Se usó la mayoría (LALT esquivar, LCTRL apuntar). Interactuar es E (keyboardista dice F, que es arma rápida). Interactuar en PS5 = Triángulo (comparte botón con el ataque fuerte), deducido por los prompts del juego: confianza media. Disparar el arco en PC es click izquierdo mientras apuntás, pero MOUSE1 ya es ataque rápido (Cuadrado). Por eso disparar va en T = R2, que en PS5 es disparar y también mantener para elegir postura. Para tirar con el arco: LCTRL + T. Posturas 1-4 = R2 + Triángulo (Piedra) / Cuadrado (Agua) / Cruz (Viento) / Círculo (Luna); el orden de Viento/Luna es inferido. Seleccionar arma rápida (R) se omitió: en PS5 es mantener R2 + D-pad. Viento Guía (G), flauta (Y), gestos (5/6/7) y técnica especial (V) en PS5 son deslizamientos en el touchpad o combos inciertos, y se omitieron.",
+  "sources": [
+    "https://tutorialtactic.com/blog/ghost-of-tsushima-shortcuts/",
+    "https://keyboardista.pages.dev/en/shortcuts/ghost-of-tsushima-game",
+    "https://www.sportskeeda.com/gaming-tech/best-ghost-tsushima-pc-controller-settings",
+    "https://gamewith.net/ghost-of-tsushima/article/show/20168",
+    "https://www.gamepressure.com/newsroom/ghost-of-tsushima-pc-sheath-sword-with-keyboard-and-xbox-controll/z06dcc"
+  ],
+  "actions": [
+    {"label": "Saltar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Correr / Galopar", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Agacharse", "ps5": "R3", "pc": ["C", ""]},
+    {"label": "Interactuar", "ps5": "TRIANGLE", "pc": ["E", ""]},
+    {"label": "Ataque rápido / Asesinar", "ps5": "SQUARE", "pc": ["MOUSE1", ""]},
+    {"label": "Ataque fuerte", "ps5": "TRIANGLE", "pc": ["MOUSE2", ""]},
+    {"label": "Bloquear / Parry", "ps5": "L1", "pc": ["Q", ""]},
+    {"label": "Esquivar", "ps5": "CIRCLE", "pc": ["LALT", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["LCTRL", ""]},
+    {"label": "Disparar / Elegir postura", "ps5": "R2", "pc": ["T", ""]},
+    {"label": "Postura Piedra", "ps5": "R2+TRIANGLE", "pc": ["1", ""]},
+    {"label": "Postura Agua", "ps5": "R2+SQUARE", "pc": ["2", ""]},
+    {"label": "Postura Viento", "ps5": "R2+CROSS", "pc": ["3", ""]},
+    {"label": "Postura Luna", "ps5": "R2+CIRCLE", "pc": ["4", ""]},
+    {"label": "Usar arma rápida", "ps5": "R1", "pc": ["F", ""]},
+    {"label": "Curar (Resolución)", "ps5": "DPAD_DOWN", "pc": ["Z", ""]},
+    {"label": "Duelo", "ps5": "DPAD_UP", "pc": ["X", ""]},
+    {"label": "Llamar al caballo", "ps5": "DPAD_LEFT", "pc": ["H", ""]},
+    {"label": "Modo foto", "ps5": "DPAD_RIGHT", "pc": ["P", ""]},
+    {"label": "Escucha concentrada", "ps5": "TOUCHPAD", "pc": ["MOUSE3", ""]},
+    {"label": "Menú", "ps5": "OPTIONS", "pc": ["TAB", "ESC"]}
+  ]
+}

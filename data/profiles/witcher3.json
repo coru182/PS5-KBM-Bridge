@@ -1,0 +1,42 @@
+{
+  "id": "witcher3",
+  "name": "The Witcher 3: Wild Hunt – Complete Edition",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "La versión PS5 (next-gen) no soporta teclado/mouse para jugar; las guías de controles de PS4/PS5 solo listan mando.",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PC tomado de input.settings (teclado vanilla) + fextralife/gosunoob; PS5 = esquema clásico por defecto (fextralife + input.settings). El ataque fuerte en PC es LSHIFT+MOUSE1 (combo no representable): se usa MOUSE4 como tecla alternativa. SPACE en PC salta fuera de combate (Círculo) pero rueda en combate (Cruz): se mapea a Círculo (salto / esquive); para rodar en combate tocar LSHIFT (Cruz = rodar/correr). E (interactuar) y LSHIFT (correr) comparten Cruz igual que en PS5. Señales 3-7 (Aard, Yrden, Igni, Quen, Axii) no tienen botón directo en PS5 (se eligen en el menú radial L1/TAB), por eso se omiten. Pociones 3/4 (T/Y) omitidas. En PS5 inventario, mapa y diario se abren desde el menú del juego (touchpad). Envainar en PS5 = mantener la cruceta izquierda/derecha.",
+  "sources": [
+    "https://thewitcher3.wiki.fextralife.com/Controls",
+    "https://www.gosunoob.com/witcher-3/controls-keyboard-commands/",
+    "https://raw.githubusercontent.com/kaloan/savefiles/HEAD/The%20Witcher%203/input.settings",
+    "https://raw.githubusercontent.com/b3nj5m1n/dotfiles/HEAD/files/games/thewitcher/input.settings",
+    "https://www.gamepressure.com/thewitcher3/ps4-ps5-controls/z277c1"
+  ],
+  "actions": [
+    {"label": "Ataque rápido", "ps5": "SQUARE", "pc": ["MOUSE1", ""]},
+    {"label": "Ataque fuerte (PC: Shift+clic)", "ps5": "TRIANGLE", "pc": ["MOUSE4", ""]},
+    {"label": "Bloquear / sentidos de brujo", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Lanzar señal", "ps5": "R2", "pc": ["Q", ""]},
+    {"label": "Esquivar", "ps5": "CIRCLE", "pc": ["LALT", ""]},
+    {"label": "Saltar / trepar", "ps5": "CIRCLE", "pc": ["SPACE", ""]},
+    {"label": "Correr / rodar (combate)", "ps5": "CROSS", "pc": ["LSHIFT", ""]},
+    {"label": "Interactuar", "ps5": "CROSS", "pc": ["E", ""]},
+    {"label": "Menú radial (señales/objetos)", "ps5": "L1", "pc": ["TAB", ""]},
+    {"label": "Usar objeto (ballesta/bomba)", "ps5": "R1", "pc": ["MOUSE3", ""]},
+    {"label": "Fijar objetivo", "ps5": "R3", "pc": ["Z", ""]},
+    {"label": "Resaltar objetivo de misión", "ps5": "R3", "pc": ["V", ""]},
+    {"label": "Espada de acero", "ps5": "DPAD_LEFT", "pc": ["1", ""]},
+    {"label": "Espada de plata", "ps5": "DPAD_RIGHT", "pc": ["2", ""]},
+    {"label": "Envainar espada (mantener)", "ps5": "DPAD_LEFT", "pc": ["C", ""]},
+    {"label": "Poción 1", "ps5": "DPAD_UP", "pc": ["R", ""]},
+    {"label": "Poción 2", "ps5": "DPAD_DOWN", "pc": ["F", ""]},
+    {"label": "Llamar a Sardinilla", "ps5": "L3", "pc": ["X", ""]},
+    {"label": "Menú del juego", "ps5": "TOUCHPAD", "pc": ["BACKSPACE", ""]},
+    {"label": "Inventario", "ps5": "TOUCHPAD", "pc": ["I", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Diario de misiones", "ps5": "TOUCHPAD", "pc": ["J", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "id": "doom_eternal",
+  "name": "DOOM Eternal",
+  "template": "fps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "The PS5/PS4 version has no native keyboard/mouse gameplay support. It is not on Push Square's list of PS5/PS4 games with mouse and keyboard support (pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support).",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "There is no sprint (you always run). PC weapon keys 1-8 and mouse wheel next/previous have no direct PS5 equivalent: on PS5 you tap R1 to swap to the last weapon or hold R1 for the weapon wheel (pick with the right stick), so only Q is mapped. Dossier on Touchpad is inferred from the standard id layout (Xbox View = Dossier); no source lists it explicitly. Mission info (LALT) and push-to-talk (B) are omitted.",
+  "sources": [
+    "https://www.shacknews.com/article/117015/doom-eternal-controls-and-keybindings",
+    "https://www.magicgameworld.com/?p=43814",
+    "https://www.magicgameworld.com/?p=124441",
+    "https://scufgaming.com/int/gaming/getting-started-doom-eternal-game-guide/"
+  ],
+  "actions": [
+    {"label": "Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Mod de arma", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Saltar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Dash", "ps5": "CIRCLE", "pc": ["LSHIFT", ""]},
+    {"label": "Melee / Glory Kill", "ps5": "R3", "pc": ["E", ""]},
+    {"label": "Motosierra", "ps5": "SQUARE", "pc": ["C", ""]},
+    {"label": "Lanzador de equipo", "ps5": "L1", "pc": ["LCTRL", ""]},
+    {"label": "Flame Belch", "ps5": "TRIANGLE", "pc": ["R", ""]},
+    {"label": "Crucible", "ps5": "DPAD_RIGHT", "pc": ["V", ""]},
+    {"label": "Cambiar arma / rueda (mantener)", "ps5": "R1", "pc": ["Q", ""]},
+    {"label": "Cambiar mod de arma", "ps5": "DPAD_UP", "pc": ["F", ""]},
+    {"label": "Cambiar equipo", "ps5": "DPAD_LEFT", "pc": ["G", ""]},
+    {"label": "Dossier / mapa", "ps5": "TOUCHPAD", "pc": ["TAB", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

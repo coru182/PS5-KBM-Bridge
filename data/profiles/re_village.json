@@ -1,0 +1,34 @@
+{
+  "id": "re_village",
+  "name": "Resident Evil Village",
+  "template": "fps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No native keyboard/mouse gameplay support on PS5; not listed among PS5 KBM-supported games (wepc.com list) and official controls are controller-only (source: https://www.wepc.com/gaming/what-ps5-games-support-keyboard-and-mouse/)",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "PS5 Type A layout. Not mapped: sniper scope zoom (Alt) - its PS5 button is not given by the sources. Quick turn = LS back + Circle. Weapons 1/2/3/4 = D-pad left/up/right/down.",
+  "sources": [
+    "https://www.magicgameworld.com/?p=49809",
+    "https://shacknews.com/article/124121/resident-evil-village-controls-and-keybindings",
+    "https://www.magicgameworld.com/?p=126249",
+    "https://www.wepc.com/gaming/what-ps5-games-support-keyboard-and-mouse/"
+  ],
+  "actions": [
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Agacharse / Pararse", "ps5": "R3", "pc": ["C", ""]},
+    {"label": "Giro rápido", "ps5": "LS_DOWN+CIRCLE", "pc": ["Q", "X"]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Atacar / Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Bloquear", "ps5": "L1", "pc": ["SPACE", ""]},
+    {"label": "Curarse", "ps5": "R1", "pc": ["LCTRL", ""]},
+    {"label": "Examinar / Recoger", "ps5": "CROSS", "pc": ["F", "ENTER"]},
+    {"label": "Recargar", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Arma izquierda", "ps5": "DPAD_LEFT", "pc": ["1", ""]},
+    {"label": "Arma arriba", "ps5": "DPAD_UP", "pc": ["2", ""]},
+    {"label": "Arma derecha", "ps5": "DPAD_RIGHT", "pc": ["3", ""]},
+    {"label": "Arma abajo", "ps5": "DPAD_DOWN", "pc": ["4", ""]},
+    {"label": "Inventario", "ps5": "TRIANGLE", "pc": ["TAB", "I"]},
+    {"label": "Mapa / Diario", "ps5": "TOUCHPAD", "pc": ["V", "M"]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["P", ""]}
+  ]
+}

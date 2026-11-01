@@ -1,0 +1,151 @@
+{
+ "id": "fps",
+ "name": "Plantilla: Shooter en primera persona",
+ "template": "fps",
+ "actions": [
+  {
+   "label": "Disparar",
+   "ps5": "R2",
+   "pc": [
+    "MOUSE1",
+    ""
+   ]
+  },
+  {
+   "label": "Apuntar",
+   "ps5": "L2",
+   "pc": [
+    "MOUSE2",
+    ""
+   ]
+  },
+  {
+   "label": "Recargar / Interactuar",
+   "ps5": "SQUARE",
+   "pc": [
+    "R",
+    "E"
+   ]
+  },
+  {
+   "label": "Saltar",
+   "ps5": "CROSS",
+   "pc": [
+    "SPACE",
+    ""
+   ]
+  },
+  {
+   "label": "Agacharse / Cuerpo a tierra",
+   "ps5": "CIRCLE",
+   "pc": [
+    "LCTRL",
+    "C"
+   ]
+  },
+  {
+   "label": "Correr",
+   "ps5": "L3",
+   "pc": [
+    "LSHIFT",
+    ""
+   ]
+  },
+  {
+   "label": "Cuerpo a cuerpo",
+   "ps5": "R3",
+   "pc": [
+    "V",
+    "MOUSE4"
+   ]
+  },
+  {
+   "label": "Granada / Letal",
+   "ps5": "R1",
+   "pc": [
+    "G",
+    "MOUSE5"
+   ]
+  },
+  {
+   "label": "Táctico / Habilidad",
+   "ps5": "L1",
+   "pc": [
+    "Q",
+    ""
+   ]
+  },
+  {
+   "label": "Cambiar arma",
+   "ps5": "TRIANGLE",
+   "pc": [
+    "1",
+    "WHEEL_UP"
+   ]
+  },
+  {
+   "label": "Arma siguiente (rueda)",
+   "ps5": "TRIANGLE",
+   "pc": [
+    "2",
+    "WHEEL_DOWN"
+   ]
+  },
+  {
+   "label": "Marcar / Ping",
+   "ps5": "DPAD_UP",
+   "pc": [
+    "Z",
+    "MOUSE3"
+   ]
+  },
+  {
+   "label": "Equipo / Accesorio",
+   "ps5": "DPAD_DOWN",
+   "pc": [
+    "X",
+    ""
+   ]
+  },
+  {
+   "label": "Habilidad especial",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "4",
+    ""
+   ]
+  },
+  {
+   "label": "Objeto / Curación",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "3",
+    ""
+   ]
+  },
+  {
+   "label": "Mapa / Puntuación",
+   "ps5": "TOUCHPAD",
+   "pc": [
+    "TAB",
+    "M"
+   ]
+  },
+  {
+   "label": "Pausa",
+   "ps5": "OPTIONS",
+   "pc": [
+    "ESC",
+    "P"
+   ]
+  },
+  {
+   "label": "Volver",
+   "ps5": "CIRCLE",
+   "pc": [
+    "BACKSPACE",
+    ""
+   ]
+  }
+ ]
+}

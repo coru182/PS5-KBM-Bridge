@@ -1,0 +1,25 @@
+{
+  "id": "far_cry_6",
+  "name": "Far Cry 6",
+  "template": "fps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "Not confirmed. No source was retrieved (web search limit reached). Believed to be controller-only on PS5; check this before relying on it.",
+  "ads_pct": 100,
+  "confidence": "low",
+  "notes": "No controls page could be retrieved for Far Cry 6: the web search limit was reached and the IGN and magicgameworld pages were blocked or missing. Both the PC keys and the PS5 buttons come from general knowledge of the Far Cry 5/6 default layouts and must be checked in-game before use. Only the core actions I'm fairly sure of are included. Left out: Supremo, Amigo commands, healing, vehicle/horse call and gear menus, because their bindings could not be confirmed. On PS5, Square is both reload and interact (context-dependent), and PC splits it into R and E.",
+  "sources": [],
+  "actions": [
+    {"label": "Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Recargar", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Interactuar", "ps5": "SQUARE", "pc": ["E", ""]},
+    {"label": "Saltar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Agacharse / Deslizarse", "ps5": "CIRCLE", "pc": ["C", ""]},
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Cuerpo a cuerpo / Derribo", "ps5": "R3", "pc": ["F", ""]},
+    {"label": "Cambiar arma", "ps5": "TRIANGLE", "pc": ["WHEEL_UP", "WHEEL_DOWN"]},
+    {"label": "Arrojadizo", "ps5": "L1", "pc": ["G", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

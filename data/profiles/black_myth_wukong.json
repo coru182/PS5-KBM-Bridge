@@ -1,0 +1,39 @@
+{
+  "id": "black_myth_wukong",
+  "name": "Black Myth: Wukong",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "PS5 version is controller-only (Type 1/Type 2 presets); no keyboard/mouse gameplay support found in any controls source",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PS5 Type 1 layout. Spells are R2+face buttons on PS5 and keys 1-4 on PC. Confirmed combos: Immobilize = R2+Square (Steam thread), Transformation = R2+Circle (Shacknews). The 1-4 to slot order (1 Mysticism, 2 Alteration, 3 Strand, 4 Transformation) and Cross/Triangle for slots 2/3 are inferred: verify in game. Interact = R2 tap and Spirit = L2+R2 come only from Game8. On-hand item (Q = R2+D-pad) omitted because the exact D-pad direction is unclear. Menu ESC assumed (standard).",
+  "sources": [
+    "https://game8.co/games/Black-Myth-Wukong/archives/468458",
+    "https://primagames.com/tips/black-myth-wukong-complete-controls-for-pc-controller",
+    "https://www.magicgameworld.com/black-myth-wukong-pc-keyboard-controls-guide/",
+    "https://altema.jp/wukong/sousa",
+    "https://steamcommunity.com/app/2358720/discussions/0/4763207146657703890",
+    "https://shacknews.com/article/141266/how-to-change-transformation-black-myth-wukong"
+  ],
+  "actions": [
+    {"label": "Ataque ligero", "ps5": "SQUARE", "pc": ["MOUSE1", ""]},
+    {"label": "Ataque pesado", "ps5": "TRIANGLE", "pc": ["MOUSE2", ""]},
+    {"label": "Saltar", "ps5": "CROSS", "pc": ["LCTRL", ""]},
+    {"label": "Esquivar", "ps5": "CIRCLE", "pc": ["SPACE", ""]},
+    {"label": "Correr", "ps5": "R1", "pc": ["LSHIFT", ""]},
+    {"label": "Girar el bastón", "ps5": "L2", "pc": ["V", ""]},
+    {"label": "Tomar de la calabaza", "ps5": "L1", "pc": ["R", ""]},
+    {"label": "Fijar objetivo", "ps5": "R3", "pc": ["MOUSE3", ""]},
+    {"label": "Interactuar", "ps5": "R2", "pc": ["E", ""]},
+    {"label": "Habilidad de espíritu", "ps5": "L2+R2", "pc": ["F", ""]},
+    {"label": "Hechizo 1 (Inmovilizar)", "ps5": "R2+SQUARE", "pc": ["1", ""]},
+    {"label": "Hechizo 2 (Alteración)", "ps5": "R2+CROSS", "pc": ["2", ""]},
+    {"label": "Hechizo 3 (Hebra)", "ps5": "R2+TRIANGLE", "pc": ["3", ""]},
+    {"label": "Hechizo 4 (Transformación)", "ps5": "R2+CIRCLE", "pc": ["4", ""]},
+    {"label": "Postura Smash", "ps5": "DPAD_LEFT", "pc": ["Z", ""]},
+    {"label": "Postura Pillar", "ps5": "DPAD_UP", "pc": ["X", ""]},
+    {"label": "Postura Thrust", "ps5": "DPAD_RIGHT", "pc": ["C", ""]},
+    {"label": "Modo foto", "ps5": "R2+TOUCHPAD", "pc": ["P", ""]},
+    {"label": "Menú", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

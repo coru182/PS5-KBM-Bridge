@@ -1,0 +1,36 @@
+{
+  "id": "alan_wake_2",
+  "name": "Alan Wake 2",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No native keyboard/mouse gameplay support on PS5; not listed among PS5 KBM-supported games (wepc.com list) and official controls are controller-only (source: https://www.wepc.com/gaming/what-ps5-games-support-keyboard-and-mouse/)",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PS5 buttons were converted from the Xbox layout (magicgameworld) and checked where possible: dodge L1 (sportskeeda), flashlight toggle Circle and boost R1 (gamerevolution), Mind Place/Writer's Room on the touchpad, right side (gameskinny/sportskeeda). Holding the touchpad opens the map directly, so M also maps to the touchpad. The tool's TOUCHPAD is a generic click and the game expects the right side. Reload Square and inventory Triangle are inferred from Xbox X/Y. magicgameworld lists the PC flashlight boost as 'Mouse wheel'; middle click (MOUSE3) was assumed so it can be held, so verify it in game. Pause ESC is assumed. Not mapped: flashlight battery reload (Q), because its PS5 button is unknown. Dialogue choices 1-3 share keys with quick slots 1-3.",
+  "sources": [
+    "https://www.magicgameworld.com/?p=128472",
+    "https://sportskeeda.com/esports/alan-wake-2-guide-how-dodge-enemy-attacks",
+    "https://www.gamerevolution.com/guides/951896-how-to-use-flashlight-alan-wake-2",
+    "https://www.gameskinny.com/tips/alan-wake-2-how-to-open-the-map/",
+    "https://sportskeeda.com/esports/alan-wake-2-guide-how-access-use-saga-s-mind-place",
+    "https://www.wepc.com/gaming/what-ps5-games-support-keyboard-and-mouse/"
+  ],
+  "actions": [
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Esquivar", "ps5": "L1", "pc": ["SPACE", ""]},
+    {"label": "Interactuar", "ps5": "CROSS", "pc": ["F", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Recargar", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Prender/apagar linterna", "ps5": "CIRCLE", "pc": ["E", ""]},
+    {"label": "Potenciar linterna", "ps5": "R1", "pc": ["MOUSE3", ""]},
+    {"label": "Inventario", "ps5": "TRIANGLE", "pc": ["LCTRL", ""]},
+    {"label": "Atajo 1", "ps5": "DPAD_LEFT", "pc": ["1", ""]},
+    {"label": "Atajo 2", "ps5": "DPAD_UP", "pc": ["2", ""]},
+    {"label": "Atajo 3", "ps5": "DPAD_RIGHT", "pc": ["3", ""]},
+    {"label": "Atajo 4", "ps5": "DPAD_DOWN", "pc": ["4", ""]},
+    {"label": "Mind Place / Writer's Room", "ps5": "TOUCHPAD", "pc": ["TAB", ""]},
+    {"label": "Mapa (mantener)", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

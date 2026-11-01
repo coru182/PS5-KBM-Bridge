@@ -1,0 +1,37 @@
+{
+  "id": "re7",
+  "name": "Resident Evil 7 biohazard",
+  "template": "fps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No native keyboard/mouse gameplay support on PS5; not listed among PS5 KBM-supported games (wepc.com list) and official controls are controller-only (source: https://www.wepc.com/gaming/what-ps5-games-support-keyboard-and-mouse/)",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PC keys are solid (DefKey list). The PS button is confirmed by sources for guard (L1), heal (R1), crouch (R3), interact, aim, fire, reload (Square) and quick turn (LS back + Circle). Run (L3), inventory (Triangle), map/files (touchpad) and the D-pad order for slots 1-4 are inferred from the identical RE Village Type A scheme. Not mapped: change ammo (G), because no PS5 button was found. V is also 'Sort' inside menus.",
+  "sources": [
+    "https://defkey.com/resident-evil-7-biohazard-shortcuts",
+    "https://www.trueachievements.com/game/Resident-Evil-7/walkthrough/2",
+    "https://twinfinite.net/guides/180-turn-resident-evil-7-how/",
+    "https://twinfinite.net/2017/01/resident-evil-7-how-to-reload/",
+    "https://twinfinite.net/ps4/resident-evil-7-tips-tricks-beginners/2/",
+    "https://www.gamepressure.com/residentevil7/controls-keybinds/z495ea",
+    "https://www.wepc.com/gaming/what-ps5-games-support-keyboard-and-mouse/"
+  ],
+  "actions": [
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Agacharse", "ps5": "R3", "pc": ["C", ""]},
+    {"label": "Giro rápido", "ps5": "LS_DOWN+CIRCLE", "pc": ["X", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Disparar / Golpear", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Bloquear", "ps5": "L1", "pc": ["SPACE", ""]},
+    {"label": "Curarse (botiquín)", "ps5": "R1", "pc": ["LCTRL", ""]},
+    {"label": "Interactuar", "ps5": "CROSS", "pc": ["F", "ENTER"]},
+    {"label": "Recargar", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Atajo 1", "ps5": "DPAD_LEFT", "pc": ["1", ""]},
+    {"label": "Atajo 2", "ps5": "DPAD_UP", "pc": ["2", ""]},
+    {"label": "Atajo 3", "ps5": "DPAD_RIGHT", "pc": ["3", ""]},
+    {"label": "Atajo 4", "ps5": "DPAD_DOWN", "pc": ["4", ""]},
+    {"label": "Inventario", "ps5": "TRIANGLE", "pc": ["TAB", ""]},
+    {"label": "Mapa / Archivos", "ps5": "TOUCHPAD", "pc": ["M", "V"]},
+    {"label": "Menú / Pausa", "ps5": "OPTIONS", "pc": ["ESC", "P"]}
+  ]
+}

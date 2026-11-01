@@ -1,0 +1,151 @@
+{
+ "id": "generic",
+ "name": "Genérico (todos los botones)",
+ "template": "generic",
+ "actions": [
+  {
+   "id": "cross",
+   "label": "Cruz ✕",
+   "ps5": "CROSS",
+   "pc": [
+    "E",
+    "ENTER"
+   ]
+  },
+  {
+   "id": "circle",
+   "label": "Círculo ○",
+   "ps5": "CIRCLE",
+   "pc": [
+    "SPACE",
+    "BACKSPACE"
+   ]
+  },
+  {
+   "id": "square",
+   "label": "Cuadrado □",
+   "ps5": "SQUARE",
+   "pc": [
+    "R",
+    ""
+   ]
+  },
+  {
+   "id": "triangle",
+   "label": "Triángulo △",
+   "ps5": "TRIANGLE",
+   "pc": [
+    "F",
+    ""
+   ]
+  },
+  {
+   "id": "l1",
+   "label": "L1",
+   "ps5": "L1",
+   "pc": [
+    "Q",
+    ""
+   ]
+  },
+  {
+   "id": "r1",
+   "label": "R1",
+   "ps5": "R1",
+   "pc": [
+    "MOUSE3",
+    ""
+   ]
+  },
+  {
+   "id": "l2",
+   "label": "L2",
+   "ps5": "L2",
+   "pc": [
+    "MOUSE2",
+    ""
+   ]
+  },
+  {
+   "id": "r2",
+   "label": "R2",
+   "ps5": "R2",
+   "pc": [
+    "MOUSE1",
+    ""
+   ]
+  },
+  {
+   "id": "l3",
+   "label": "L3 (stick izq.)",
+   "ps5": "L3",
+   "pc": [
+    "LSHIFT",
+    "RSHIFT"
+   ]
+  },
+  {
+   "id": "r3",
+   "label": "R3 (stick der.)",
+   "ps5": "R3",
+   "pc": [
+    "LCTRL",
+    "RCTRL"
+   ]
+  },
+  {
+   "id": "options",
+   "label": "Options",
+   "ps5": "OPTIONS",
+   "pc": [
+    "ESC",
+    ""
+   ]
+  },
+  {
+   "id": "touchpad",
+   "label": "Touchpad",
+   "ps5": "TOUCHPAD",
+   "pc": [
+    "TAB",
+    ""
+   ]
+  },
+  {
+   "id": "dpad_up",
+   "label": "Cruceta ↑",
+   "ps5": "DPAD_UP",
+   "pc": [
+    "1",
+    ""
+   ]
+  },
+  {
+   "id": "dpad_down",
+   "label": "Cruceta ↓",
+   "ps5": "DPAD_DOWN",
+   "pc": [
+    "2",
+    ""
+   ]
+  },
+  {
+   "id": "dpad_left",
+   "label": "Cruceta ←",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "3",
+    "WHEEL_UP"
+   ]
+  },
+  {
+   "id": "dpad_right",
+   "label": "Cruceta →",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "4",
+    "WHEEL_DOWN"
+   ]
+  }
+ ]
+}

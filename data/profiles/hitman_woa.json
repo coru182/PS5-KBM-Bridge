@@ -1,0 +1,42 @@
+{
+  "id": "hitman_woa",
+  "name": "Hitman World of Assassination",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No source found showing keyboard/mouse gameplay support on PS5; console guides list DualSense controls only. Not explicitly confirmed by an official statement.",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PC keys come from Feral's official HITMAN (2016) manual, which uses the same Glacier engine and control scheme; WoA's defaults should match but were not checked in-game. M (map) is from keyboardista. PS buttons come from gamertweak (Hitman 3 PS4) and gfinity (R1 tap = reload, hold = Instinct), cross-checked against Feral's numbered gamepad layout. Square = melee / use item (hold), Triangle = interact / pick up (hold), Circle = cover / drag body (hold), Cross = agility / take disguise (hold). D-pad: Feral says left/right = inventory, down = drop, up = holster; gamertweak says down = inventory and left = drop. Feral's layout was used. On PC, G is both use item (hold) and drop item, so G goes to use item and Z (keyboardista) to drop. The wheel zoom on a sniper rifle uses D-pad up/down while aiming, which shares D-pad up with holster.",
+  "sources": [
+    "https://www.feralinteractive.com/en/manual/hitman/latest/linux/",
+    "https://gamertweak.com/ps4-control-guide-hitman-3",
+    "https://www.gfinityesports.com/hitman-3/hitman-3-how-to-reload-your-weapon-xbox-ps4-ps5-pc-stadia/",
+    "https://www.gamepressure.com/hitman-iii/controls-keybinds/zfe109",
+    "https://keyboardista.pages.dev/en/shortcuts/hitman-3-game"
+  ],
+  "actions": [
+    {"label": "Correr", "ps5": "L1", "pc": ["LSHIFT", ""]},
+    {"label": "Agacharse", "ps5": "R3", "pc": ["C", ""]},
+    {"label": "Cubrirse / Soltar cuerpo", "ps5": "CIRCLE", "pc": ["SPACE", ""]},
+    {"label": "Arrastrar cuerpo", "ps5": "CIRCLE", "pc": ["B", ""]},
+    {"label": "Acción de agilidad", "ps5": "CROSS", "pc": ["X", ""]},
+    {"label": "Tomar disfraz", "ps5": "CROSS", "pc": ["T", ""]},
+    {"label": "Instinto", "ps5": "R1", "pc": ["LCTRL", ""]},
+    {"label": "Recargar", "ps5": "R1", "pc": ["R", ""]},
+    {"label": "Interactuar", "ps5": "TRIANGLE", "pc": ["E", ""]},
+    {"label": "Recoger", "ps5": "TRIANGLE", "pc": ["F", ""]},
+    {"label": "Cuerpo a cuerpo", "ps5": "SQUARE", "pc": ["Q", ""]},
+    {"label": "Usar objeto", "ps5": "SQUARE", "pc": ["G", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Disparar / Lanzar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Colocar objeto", "ps5": "L1+R1", "pc": ["LALT", ""]},
+    {"label": "Inventario", "ps5": "DPAD_RIGHT", "pc": ["I", ""]},
+    {"label": "Enfundar arma/objeto", "ps5": "DPAD_UP", "pc": ["CAPSLOCK", ""]},
+    {"label": "Soltar objeto", "ps5": "DPAD_DOWN", "pc": ["Z", ""]},
+    {"label": "Zoom mira +", "ps5": "DPAD_UP", "pc": ["WHEEL_UP", ""]},
+    {"label": "Zoom mira -", "ps5": "DPAD_DOWN", "pc": ["WHEEL_DOWN", ""]},
+    {"label": "Cambiar hombro", "ps5": "L3", "pc": ["V", ""]},
+    {"label": "Mapa / Objetivos", "ps5": "TOUCHPAD", "pc": ["M", "F1"]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

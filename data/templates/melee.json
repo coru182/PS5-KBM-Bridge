@@ -1,0 +1,151 @@
+{
+ "id": "melee",
+ "name": "Plantilla: Acción / souls-like (cuerpo a cuerpo)",
+ "template": "melee",
+ "actions": [
+  {
+   "label": "Ataque ligero",
+   "ps5": "R1",
+   "pc": [
+    "MOUSE1",
+    ""
+   ]
+  },
+  {
+   "label": "Ataque fuerte",
+   "ps5": "R2",
+   "pc": [
+    "MOUSE4",
+    "R"
+   ]
+  },
+  {
+   "label": "Bloquear / Guardia",
+   "ps5": "L1",
+   "pc": [
+    "MOUSE2",
+    ""
+   ]
+  },
+  {
+   "label": "Habilidad / Parry",
+   "ps5": "L2",
+   "pc": [
+    "Q",
+    "MOUSE5"
+   ]
+  },
+  {
+   "label": "Esquivar / Rodar",
+   "ps5": "CIRCLE",
+   "pc": [
+    "SPACE",
+    ""
+   ]
+  },
+  {
+   "label": "Correr",
+   "ps5": "CIRCLE",
+   "pc": [
+    "LSHIFT",
+    ""
+   ]
+  },
+  {
+   "label": "Saltar",
+   "ps5": "CROSS",
+   "pc": [
+    "F",
+    ""
+   ]
+  },
+  {
+   "label": "Interactuar",
+   "ps5": "TRIANGLE",
+   "pc": [
+    "E",
+    ""
+   ]
+  },
+  {
+   "label": "Usar objeto",
+   "ps5": "SQUARE",
+   "pc": [
+    "C",
+    "X"
+   ]
+  },
+  {
+   "label": "Fijar objetivo",
+   "ps5": "R3",
+   "pc": [
+    "MOUSE3",
+    "T"
+   ]
+  },
+  {
+   "label": "Agacharse / Sigilo",
+   "ps5": "L3",
+   "pc": [
+    "LCTRL",
+    ""
+   ]
+  },
+  {
+   "label": "Cambiar objeto ↓",
+   "ps5": "DPAD_DOWN",
+   "pc": [
+    "3",
+    ""
+   ]
+  },
+  {
+   "label": "Cambiar arma der. →",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "2",
+    "WHEEL_DOWN"
+   ]
+  },
+  {
+   "label": "Cambiar arma izq. ←",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "1",
+    "WHEEL_UP"
+   ]
+  },
+  {
+   "label": "Cambiar hechizo ↑",
+   "ps5": "DPAD_UP",
+   "pc": [
+    "4",
+    ""
+   ]
+  },
+  {
+   "label": "Mapa / Menú",
+   "ps5": "TOUCHPAD",
+   "pc": [
+    "TAB",
+    "M"
+   ]
+  },
+  {
+   "label": "Pausa",
+   "ps5": "OPTIONS",
+   "pc": [
+    "ESC",
+    "P"
+   ]
+  },
+  {
+   "label": "Volver",
+   "ps5": "CIRCLE",
+   "pc": [
+    "BACKSPACE",
+    ""
+   ]
+  }
+ ]
+}

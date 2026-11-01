@@ -1,0 +1,39 @@
+{
+  "id": "spiderman_miles",
+  "name": "Marvel's Spider-Man: Miles Morales",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "La versión de PS5 no soporta teclado/mouse para jugar; las guías de PS5/PS4 (outsidergaming, fandom) solo listan el DualSense. Teclado/mouse es exclusivo de la versión PC (Nixxes).",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "CONFLICTO: en PC, 'Apuntar' y 'Modificador Venom' vienen los dos en click derecho (MOUSE2). En PS5 son botones distintos (L2 apuntar, L1 Venom). Acá MOUSE2 va a L1 (Venom: L1+Cuadrado/Triángulo/Cruz, L1+Círculo+Triángulo = Mega Venom Blast = MOUSE2+2), porque es lo que más se usa en combate. Apuntar (L2) se movió a MOUSE5, que no es un default de PC. El zip a punto (C = L2+R2) no se ve afectado. E en PS5 es R1: tocar dispara la telaraña/gadget y mantener abre la rueda de gadgets. El truco aéreo (T) en PS5 es mantener Cuadrado + stick izquierdo. La app del FNSM (M) es un deslizamiento en el touchpad, que no se puede mapear, así que se omitió. Atajos 1/2 (P/G) = D-pad izquierda/derecha.",
+  "sources": [
+    "https://www.magicgameworld.com/marvels-spider-man-miles-morales-pc-keyboard-controls-key-bindings/",
+    "https://outsidergaming.com/spider-man-miles-morales-complete-controls-guide-for-ps5-ps4/",
+    "https://marvels-spider-man.fandom.com/wiki/Miles_Morales_controls",
+    "https://www.cheatbook.de/files/marvelsspidermanmilesmorales.htm"
+  ],
+  "actions": [
+    {"label": "Saltar / Web zip", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Balancearse / Correr", "ps5": "R2", "pc": ["LSHIFT", ""]},
+    {"label": "Zip a punto", "ps5": "L2+R2", "pc": ["C", ""]},
+    {"label": "Posarse / Zambullirse", "ps5": "L3", "pc": ["X", ""]},
+    {"label": "Truco aéreo", "ps5": "SQUARE", "pc": ["T", ""]},
+    {"label": "Atacar", "ps5": "SQUARE", "pc": ["MOUSE1", ""]},
+    {"label": "Golpe de telaraña", "ps5": "TRIANGLE", "pc": ["F", ""]},
+    {"label": "Esquivar", "ps5": "CIRCLE", "pc": ["LCTRL", ""]},
+    {"label": "Agarrar y tirar objeto", "ps5": "L1+R1", "pc": ["Q", ""]},
+    {"label": "Modificador Venom", "ps5": "L1", "pc": ["MOUSE2", ""]},
+    {"label": "Apuntar (no es default de PC)", "ps5": "L2", "pc": ["MOUSE5", ""]},
+    {"label": "Camuflaje", "ps5": "DPAD_UP", "pc": ["R", ""]},
+    {"label": "Luz cegadora", "ps5": "L3+R3", "pc": ["3", ""]},
+    {"label": "Remate", "ps5": "TRIANGLE+CIRCLE", "pc": ["2", ""]},
+    {"label": "Curar", "ps5": "DPAD_DOWN", "pc": ["1", ""]},
+    {"label": "Gadget (tocar) / rueda (mantener)", "ps5": "R1", "pc": ["E", ""]},
+    {"label": "Atajo 1", "ps5": "DPAD_LEFT", "pc": ["P", ""]},
+    {"label": "Atajo 2", "ps5": "DPAD_RIGHT", "pc": ["G", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["TAB", ""]},
+    {"label": "Mostrar objetivo / Escanear", "ps5": "R3", "pc": ["V", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

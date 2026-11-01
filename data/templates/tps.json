@@ -1,0 +1,143 @@
+{
+ "id": "tps",
+ "name": "Plantilla: Acción en tercera persona con armas",
+ "template": "tps",
+ "actions": [
+  {
+   "label": "Disparar",
+   "ps5": "R2",
+   "pc": [
+    "MOUSE1",
+    ""
+   ]
+  },
+  {
+   "label": "Apuntar",
+   "ps5": "L2",
+   "pc": [
+    "MOUSE2",
+    ""
+   ]
+  },
+  {
+   "label": "Recargar",
+   "ps5": "SQUARE",
+   "pc": [
+    "R",
+    ""
+   ]
+  },
+  {
+   "label": "Saltar / Escalar",
+   "ps5": "CROSS",
+   "pc": [
+    "SPACE",
+    ""
+   ]
+  },
+  {
+   "label": "Agacharse / Cobertura",
+   "ps5": "CIRCLE",
+   "pc": [
+    "LCTRL",
+    "C"
+   ]
+  },
+  {
+   "label": "Correr",
+   "ps5": "L3",
+   "pc": [
+    "LSHIFT",
+    ""
+   ]
+  },
+  {
+   "label": "Interactuar",
+   "ps5": "TRIANGLE",
+   "pc": [
+    "E",
+    "F"
+   ]
+  },
+  {
+   "label": "Cuerpo a cuerpo",
+   "ps5": "R3",
+   "pc": [
+    "V",
+    "Q"
+   ]
+  },
+  {
+   "label": "Granada / Lanzar",
+   "ps5": "R1",
+   "pc": [
+    "G",
+    "MOUSE5"
+   ]
+  },
+  {
+   "label": "Cambiar hombro / Esquivar",
+   "ps5": "L1",
+   "pc": [
+    "LALT",
+    "MOUSE4"
+   ]
+  },
+  {
+   "label": "Armas: cruceta ↑",
+   "ps5": "DPAD_UP",
+   "pc": [
+    "1",
+    ""
+   ]
+  },
+  {
+   "label": "Armas: cruceta →",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "2",
+    "WHEEL_DOWN"
+   ]
+  },
+  {
+   "label": "Armas: cruceta ↓",
+   "ps5": "DPAD_DOWN",
+   "pc": [
+    "3",
+    ""
+   ]
+  },
+  {
+   "label": "Armas: cruceta ←",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "4",
+    "WHEEL_UP"
+   ]
+  },
+  {
+   "label": "Mapa / Menú",
+   "ps5": "TOUCHPAD",
+   "pc": [
+    "TAB",
+    "M"
+   ]
+  },
+  {
+   "label": "Pausa",
+   "ps5": "OPTIONS",
+   "pc": [
+    "ESC",
+    "P"
+   ]
+  },
+  {
+   "label": "Volver",
+   "ps5": "CIRCLE",
+   "pc": [
+    "BACKSPACE",
+    ""
+   ]
+  }
+ ]
+}

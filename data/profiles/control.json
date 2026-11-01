@@ -1,0 +1,34 @@
+{
+  "id": "control",
+  "name": "Control (Ultimate Edition)",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No source found showing keyboard/mouse gameplay support on PS5; PS Store and guides list only DualSense controls. Not explicitly confirmed by an official statement.",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PC keys from magicgameworld. PS buttons from pushsquare (X jump, L3 sprint, R2 shoot, L2 aim, Triangle melee, Square use/seize/switch weapon, L1 shield, R1 launch, Circle evade, R3 crouch/ground slam, D-pad up map) plus twinfinite (D-pad down = switch shoulder, Circle evade, Triangle melee). Loadout (G) -> TOUCHPAD is inferred from the gamepressure button order (Equipment listed between L2 and Options); the separate PC menu keys M (missions), I (assets) and N (collectibles) were left out because they are tabs of the same menu. Square: tap = switch weapon / use, hold = seize.",
+  "sources": [
+    "https://www.magicgameworld.com/?p=37949",
+    "https://www.pushsquare.com/guides/control-tips-and-tricks-for-beginners",
+    "https://twinfinite.net/guides/control-switch-shoulder-view-how/?amp=1",
+    "https://twinfinite.net/guides/control-how-to-melee/?amp=1",
+    "https://twinfinite.net/guides/control-how-to-dodge-evade/?amp=1",
+    "https://www.gamepressure.com/control/ps4-s/z3c8ce"
+  ],
+  "actions": [
+    {"label": "Saltar / Levitar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Golpe cuerpo a cuerpo", "ps5": "TRIANGLE", "pc": ["V", ""]},
+    {"label": "Usar / Dominar / Cambiar arma", "ps5": "SQUARE", "pc": ["F", ""]},
+    {"label": "Escudo", "ps5": "L1", "pc": ["Q", ""]},
+    {"label": "Lanzar (telequinesis)", "ps5": "R1", "pc": ["E", ""]},
+    {"label": "Esquivar", "ps5": "CIRCLE", "pc": ["LCTRL", ""]},
+    {"label": "Agacharse / Golpe al suelo", "ps5": "R3", "pc": ["C", ""]},
+    {"label": "Mapa", "ps5": "DPAD_UP", "pc": ["TAB", ""]},
+    {"label": "Cambiar hombro", "ps5": "DPAD_DOWN", "pc": ["R", ""]},
+    {"label": "Equipamiento / Menú", "ps5": "TOUCHPAD", "pc": ["G", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

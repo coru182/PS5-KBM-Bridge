@@ -1,0 +1,33 @@
+{
+  "id": "sekiro",
+  "name": "Sekiro: Shadows Die Twice",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "PS4 version (played on PS5 via backward compatibility) is controller-only; no keyboard/mouse gameplay support found in any controls source",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "PS4 layout. Combat Art is L1+R1 on PS: pressing RMB+LMB together sends L1+R1 (no separate PC key listed in sources). LSHIFT = Circle: tap to dodge, hold to sprint. Hold E = hold Square (collect loot). Slow walk (Alt) omitted.",
+  "sources": [
+    "https://sekiroshadowsdietwice.wiki.fextralife.com/Controls",
+    "https://www.magicgameworld.com/?p=31070",
+    "https://www.gosunoob.com/sekiro-shadows-die-twice/controls-list-playstation-4-xbox-one-pc/",
+    "https://samurai-gamers.com/sekiro-shadows-die-twice/game-controls-6/"
+  ],
+  "actions": [
+    {"label": "Saltar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Esquivar / correr", "ps5": "CIRCLE", "pc": ["LSHIFT", ""]},
+    {"label": "Agacharse", "ps5": "L3", "pc": ["Q", ""]},
+    {"label": "Fijar objetivo / centrar cámara", "ps5": "R3", "pc": ["MOUSE3", ""]},
+    {"label": "Atacar", "ps5": "R1", "pc": ["MOUSE1", ""]},
+    {"label": "Desviar / bloquear", "ps5": "L1", "pc": ["MOUSE2", ""]},
+    {"label": "Usar herramienta prostética", "ps5": "R2", "pc": ["LCTRL", ""]},
+    {"label": "Gancho", "ps5": "L2", "pc": ["F", ""]},
+    {"label": "Interactuar / juntar", "ps5": "SQUARE", "pc": ["E", ""]},
+    {"label": "Cambiar herramienta prostética", "ps5": "TRIANGLE", "pc": ["Z", ""]},
+    {"label": "Usar objeto rápido", "ps5": "DPAD_UP", "pc": ["R", ""]},
+    {"label": "Escuchar a escondidas", "ps5": "DPAD_DOWN", "pc": ["V", ""]},
+    {"label": "Objeto siguiente", "ps5": "DPAD_RIGHT", "pc": ["X", ""]},
+    {"label": "Objeto anterior", "ps5": "DPAD_LEFT", "pc": ["C", ""]},
+    {"label": "Menú", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

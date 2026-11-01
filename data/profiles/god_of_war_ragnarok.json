@@ -1,0 +1,33 @@
+{
+  "id": "god_of_war_ragnarok",
+  "name": "God of War Ragnarök",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "La versión de PS5 solo se juega con control (shacknews detalla solo el layout del DualSense y su personalización). Teclado/mouse es exclusivo del port de PC (2024).",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "Botones de PS5 según shacknews; teclas de PC según magicgameworld. Ira espartana = L3+R3, en PC Shift+MMB (sale sola). Giro rápido = L1 + D-pad abajo, en PC Q+3 (sale solo). Agarre aturdidor = R3 = MMB. Las armas en el D-pad son lo menos seguro: Q+3 = L1+abajo implica que 3 (manos vacías / guardar arma) = D-pad abajo, así que el arma secundaria (2) quedó en D-pad izquierda, aunque shacknews dice abajo = secundaria e izquierda = terciaria. La tecla del mapa (M) se infirió del God of War 2018: en PS5 el mapa es el lado izquierdo del touchpad y Armas (I) el derecho, y el tool no distingue el lado. Armas (I) se omitió. Activar reliquia (L1+Círculo) sale sola con Q+E.",
+  "sources": [
+    "https://www.magicgameworld.com/?p=106988",
+    "https://shacknews.com/article/133014/controls-buttons-god-of-war-ragnarok",
+    "https://steamcommunity.com/app/2322010/discussions/0/4843148117770587948"
+  ],
+  "actions": [
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Interactuar / Saltar huecos", "ps5": "CIRCLE", "pc": ["E", ""]},
+    {"label": "Esquivar / Rodar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Ataque liviano", "ps5": "R1", "pc": ["MOUSE1", "DELETE"]},
+    {"label": "Ataque pesado", "ps5": "R2", "pc": ["MOUSE2", "PAGEDOWN"]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["LCTRL", ""]},
+    {"label": "Bloquear / Parry", "ps5": "L1", "pc": ["Q", ""]},
+    {"label": "Fijar blanco / Agarre aturdidor", "ps5": "R3", "pc": ["MOUSE3", "END"]},
+    {"label": "Habilidad del arma", "ps5": "TRIANGLE", "pc": ["R", ""]},
+    {"label": "Acción del compañero", "ps5": "SQUARE", "pc": ["F", ""]},
+    {"label": "Tipo de flecha", "ps5": "DPAD_UP", "pc": ["T", ""]},
+    {"label": "Arma principal", "ps5": "DPAD_RIGHT", "pc": ["1", ""]},
+    {"label": "Arma secundaria", "ps5": "DPAD_LEFT", "pc": ["2", ""]},
+    {"label": "Manos vacías / Guardar arma", "ps5": "DPAD_DOWN", "pc": ["3", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Menú de pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "id": "returnal",
+  "name": "Returnal",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "La versión de PS5 solo se juega con DualSense: depende de los gatillos adaptativos (L2 a medio recorrido = apuntar, a fondo = disparo alternativo, según gamepressure). Teclado/mouse es exclusivo del port de PC (2023).",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "Preset 'Adaptive' de PS5. En PS5 apuntar es L2 a medio recorrido y el disparo alternativo es L2 a fondo. Con ads_pct 100, MOUSE2 aprieta L2 a fondo y por eso dispara el alternativo; si el tool permite presión parcial para apuntar (~50%), usala. En PC el apuntado con foco (MOUSE2) y el disparo alternativo (Q) van los dos a L2. Hay varias cosas inciertas: usar consumible = L1 se deduce del orden de la tabla de gamepressure (PS5) y no está confirmado. El gancho comparte E con Interactuar en PC y se mapeó a Triángulo. PC tiene teclas directas por ranura de consumible (1/2/3); PS5 tiene un solo botón de usar más D-pad izq/der para cambiar, así que 1/X = usar, 2/C = siguiente (der.) y 3/V = anterior (izq.). Dash = Círculo (mantener lo alarga) y escaneo = R3 están confirmados. Se omitieron por no tener botón de PS5 confirmado: sprint (L3 en PS5, sin tecla de PC listada), HUD extendido (Z), nominar consumible (R), ping (ALT) y modo foto (G).",
+  "sources": [
+    "https://www.magicgameworld.com/returnal-pc-controls/",
+    "https://www.gamepressure.com/returnal/controls/zce610",
+    "https://www.gamepressure.com/returnal/beginners-guide/z5e619",
+    "https://www.gamepressure.com/returnal/alt-fire-how-to-unlock/z2e616",
+    "https://www.pcgamingwiki.com/wiki/Returnal"
+  ],
+  "actions": [
+    {"label": "Saltar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Dash", "ps5": "CIRCLE", "pc": ["LSHIFT", ""]},
+    {"label": "Gancho / Interactuar", "ps5": "TRIANGLE", "pc": ["E", ""]},
+    {"label": "Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Apuntar / Disparo alternativo", "ps5": "L2", "pc": ["MOUSE2", "Q"]},
+    {"label": "Cuerpo a cuerpo", "ps5": "SQUARE", "pc": ["MOUSE3", "F"]},
+    {"label": "Usar consumible", "ps5": "L1", "pc": ["1", "X"]},
+    {"label": "Consumible siguiente", "ps5": "DPAD_RIGHT", "pc": ["2", "C"]},
+    {"label": "Consumible anterior", "ps5": "DPAD_LEFT", "pc": ["3", "V"]},
+    {"label": "Escaneo de área", "ps5": "R3", "pc": ["T", ""]},
+    {"label": "Computadora del traje / Mapa", "ps5": "TOUCHPAD", "pc": ["TAB", "M"]},
+    {"label": "Menú", "ps5": "OPTIONS", "pc": ["ESC", "P"]}
+  ]
+}

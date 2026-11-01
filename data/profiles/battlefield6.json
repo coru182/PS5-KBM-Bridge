@@ -1,0 +1,41 @@
+{
+  "id": "battlefield6",
+  "name": "Battlefield 6",
+  "template": "fps",
+  "native_kbm_ps5": true,
+  "native_kbm_note": "DICE confirmed keyboard and mouse support for the console versions, PS5 included (mp1st.com/news/battlefield-6-keyboard-target-framerates-on-all-consoles-and-crossplay-explained; consolepcgaming.com/dice-confirms-mouse-and-keyboard-support-for-battlefield-6-on-consoles).",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "Infantry bindings only; vehicles use different PS5 buttons (e.g. exit vehicle is Square; E on PC). Crouch on PS5 is a Circle toggle and prone is a Circle hold. PC hold-crouch (LCTRL) and toggle (C) both map to Circle. Weapon slots 1/2 map to Triangle, which cycles primary/secondary; armor plate (5) is a Triangle hold. Sources conflict on melee: Prima lists L3, Destructoid lists R3; R3 is used here because L3 is sprint. Fire mode/zeroing (B) and laser/flashlight (T) are on the D-pad: Prima says D-pad Down, Destructoid says Right; Prima's Down is used. Night vision (7) is a D-pad Up hold, the same button as class gadget (X). On PS5, Touchpad opens the big map, Touchpad hold opens inventory and Options hold opens the scoreboard. Steady scope = Shift while aiming (L3 while aiming). Vehicle seats F1-F6 omitted.",
+  "sources": [
+    "https://primagames.com/tips/battlefield-6-complete-controls",
+    "https://www.destructoid.com/all-battlefield-6-keyboard-and-controller-bindings/",
+    "https://mp1st.com/news/battlefield-6-keyboard-target-framerates-on-all-consoles-and-crossplay-explained"
+  ],
+  "actions": [
+    {"label": "Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Recargar", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Interactuar / subir a vehículo", "ps5": "SQUARE", "pc": ["E", ""]},
+    {"label": "Saltar / trepar / paracaídas", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Correr / estabilizar mira", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Agacharse", "ps5": "CIRCLE", "pc": ["LCTRL", "C"]},
+    {"label": "Cuerpo a tierra", "ps5": "CIRCLE", "pc": ["Z", ""]},
+    {"label": "Cuerpo a cuerpo / bípode", "ps5": "R3", "pc": ["F", ""]},
+    {"label": "Granada", "ps5": "R1", "pc": ["G", ""]},
+    {"label": "Cambiar arma", "ps5": "TRIANGLE", "pc": ["1", "2"]},
+    {"label": "Placa de blindaje", "ps5": "TRIANGLE", "pc": ["5", ""]},
+    {"label": "Gadget 1", "ps5": "DPAD_LEFT", "pc": ["3", ""]},
+    {"label": "Gadget 2", "ps5": "DPAD_RIGHT", "pc": ["4", ""]},
+    {"label": "Inspeccionar arma", "ps5": "DPAD_RIGHT", "pc": ["I", ""]},
+    {"label": "Gadget de clase / progreso escuadra", "ps5": "DPAD_UP", "pc": ["X", ""]},
+    {"label": "Visión nocturna", "ps5": "DPAD_UP", "pc": ["7", ""]},
+    {"label": "Modo de disparo / reglaje", "ps5": "DPAD_DOWN", "pc": ["B", ""]},
+    {"label": "Láser / linterna", "ps5": "DPAD_DOWN", "pc": ["T", ""]},
+    {"label": "Marcar / CommoRose", "ps5": "L1", "pc": ["Q", ""]},
+    {"label": "Mapa grande", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Inventario", "ps5": "TOUCHPAD", "pc": ["TAB", ""]},
+    {"label": "Equipamiento rápido", "ps5": "TOUCHPAD", "pc": ["Y", ""]},
+    {"label": "Menú / pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

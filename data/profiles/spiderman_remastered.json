@@ -1,0 +1,39 @@
+{
+  "id": "spiderman_remastered",
+  "name": "Marvel's Spider-Man Remastered",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "La versión de PS5 solo se juega con DualSense; ninguna fuente de controles (outsidergaming, gamepressure, kamigame) menciona soporte de teclado/mouse en consola. Teclado/mouse es exclusivo de la versión PC (Nixxes).",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "Layout PS5 = el mismo del original de PS4 (L1 rueda de gadgets, R1 disparar gadget/telaraña, L3+R3 poder del traje, Triángulo+Círculo remate). Truco aéreo (T en PC) en PS es Triángulo+Círculo en el aire, el mismo combo que el remate (2 en PC): el juego decide por contexto. El modo foto no tiene atajo directo en PS5 (se abre desde Options), así que se omitió P. Caminar (LALT) no existe en PS5 (es inclinar poco el stick) y se omitió. Rueda arriba/abajo (gadget anterior/siguiente) no tiene equivalente directo en PS5; se usa la rueda con L1 + stick derecho. Dodge acepta también MOUSE4 en PC.",
+  "sources": [
+    "https://gamenguides.com/marvels-spider-man-remastered-controls-and-shortcuts-guide",
+    "https://outsidergaming.com/marvels-spider-man-complete-controls-guide-for-ps4/",
+    "https://www.yekbot.com/marvels-spider-man-ps4-controls/",
+    "https://kamigame.jp/%E3%82%B9%E3%83%91%E3%82%A4%E3%83%80%E3%83%BC%E3%83%9E%E3%83%B3/%E6%94%BB%E7%95%A5%E3%82%AC%E3%82%A4%E3%83%89/%E6%93%8D%E4%BD%9C.html",
+    "https://twinfinite.net/?p=376666",
+    "https://steamcommunity.com/app/1817070/discussions/0/3588834930884490260"
+  ],
+  "actions": [
+    {"label": "Saltar / Web zip", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Balancearse / Correr", "ps5": "R2", "pc": ["LSHIFT", ""]},
+    {"label": "Zip a punto", "ps5": "L2+R2", "pc": ["C", ""]},
+    {"label": "Posarse / Zambullirse", "ps5": "L3", "pc": ["X", ""]},
+    {"label": "Truco aéreo", "ps5": "TRIANGLE+CIRCLE", "pc": ["T", ""]},
+    {"label": "Atacar", "ps5": "SQUARE", "pc": ["MOUSE1", ""]},
+    {"label": "Golpe de telaraña", "ps5": "TRIANGLE", "pc": ["F", ""]},
+    {"label": "Esquivar", "ps5": "CIRCLE", "pc": ["LCTRL", "MOUSE4"]},
+    {"label": "Agarrar y tirar objeto", "ps5": "L1+R1", "pc": ["Q", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Poder del traje", "ps5": "L3+R3", "pc": ["3", ""]},
+    {"label": "Remate", "ps5": "TRIANGLE+CIRCLE", "pc": ["2", ""]},
+    {"label": "Curar", "ps5": "DPAD_DOWN", "pc": ["1", ""]},
+    {"label": "Usar gadget / telaraña", "ps5": "R1", "pc": ["E", ""]},
+    {"label": "Rueda de gadgets (mantener)", "ps5": "L1", "pc": ["MOUSE3", ""]},
+    {"label": "Sacar cámara", "ps5": "DPAD_UP", "pc": ["R", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["TAB", ""]},
+    {"label": "Mostrar objetivo", "ps5": "R3", "pc": ["V", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

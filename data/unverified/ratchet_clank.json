@@ -1,0 +1,31 @@
+{
+  "id": "ratchet_clank",
+  "name": "Ratchet & Clank: Rift Apart",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "PS5 version has no keyboard/mouse gameplay support; the official PlayStation game page lists only DualSense features and controller remapping, KBM is PC-only (Nixxes port).",
+  "ads_pct": 100,
+  "confidence": "low",
+  "notes": "PC defaults are solid (magicgameworld default key bindings table). PS5 side could not be confirmed from a text source (gamepressure's controls page shows the buttons only as icons; other guides were unreachable and the web search budget ran out), so PS5 buttons are inferred from the series' standard layout: CROSS jump/glide, SQUARE wrench melee, TRIANGLE quick select (hold = weapon wheel), L2/R2 aim/fire, L3 sprint/hoverboots, TOUCHPAD map, OPTIONS pause, D-pad = shortcuts 1-4 (PC arrows map 1:1 by direction). Lower confidence: Rift Tether/Swingshot on L1 (PC merges both on Q, gamepressure mentions L1 for them) and Phantom Dash on CIRCLE. Interact (PC E) and show objective (PC V) are omitted because their PS5 buttons could not be confirmed. LSHIFT is both sprint and hoverboots on PC (L3). PC 'Weapon Select: Mouse Wheel' is read as holding the wheel button (MOUSE3), since wheel up/down are listed separately as next/previous weapon. Weapon slots 1-8 and walk (LALT) have no single PS5 button; mouse wheel next/previous weapon is not reproduced. Verify in-game before relying on this profile.",
+  "sources": [
+    "https://www.magicgameworld.com/ratchet-clank-rift-apart-pc-keyboard-controls/",
+    "https://www.gamepressure.com/ratchet-clank-rift-apart/controls/z4e852",
+    "https://www.playstation.com/en-us/games/ratchet-and-clank-rift-apart/"
+  ],
+  "actions": [
+    {"label": "Saltar / planear", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Correr / botas flotantes", "ps5": "L3", "pc": ["LSHIFT", "C"]},
+    {"label": "Golpe con llave", "ps5": "SQUARE", "pc": ["F", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Rueda / cambio rápido de arma", "ps5": "TRIANGLE", "pc": ["MOUSE3", ""]},
+    {"label": "Anclaje de grieta / balanceo", "ps5": "L1", "pc": ["Q", ""]},
+    {"label": "Impulso fantasma", "ps5": "CIRCLE", "pc": ["LCTRL", ""]},
+    {"label": "Atajo 1", "ps5": "DPAD_UP", "pc": ["UP", ""]},
+    {"label": "Atajo 2", "ps5": "DPAD_RIGHT", "pc": ["RIGHT", ""]},
+    {"label": "Atajo 3", "ps5": "DPAD_DOWN", "pc": ["DOWN", ""]},
+    {"label": "Atajo 4", "ps5": "DPAD_LEFT", "pc": ["LEFT", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["TAB", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

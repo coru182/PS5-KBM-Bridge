@@ -1,0 +1,41 @@
+{
+  "id": "hogwarts_legacy",
+  "name": "Hogwarts Legacy",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "La versión PS5 no soporta teclado/mouse; game8 indica que en PS5 ni siquiera se pueden reasignar controles (solo los sets de hechizos).",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PS5 de game8 (lista completa). PC de fextralife (Shift correr, Espacio saltar, Ctrl esquivar, F interactuar, Q Protego, R Revelio, G curar, V brújula, Bloq Mayús fijar, X magia antigua, Z lanzamiento, 1-4 hechizos, F1-F4 sets). Sin fuente textual para: herramientas (T, supuesto), mapa (M) y qué botón de PS5 corresponde a cada número: se asumió 1=Cuadrado, 2=Triángulo, 3=Círculo, 4=Cruz (R2 + botón) y sets F1-F4 = R2 + cruceta arriba/derecha/abajo/izquierda; verificar en el juego. Mantener Q = Stupefy (mantener Triángulo). En PS5 Options abre la Guía de campo y el touchpad el mapa. Invocar escoba (L1+Círculo) omitido por falta de tecla de PC confirmada.",
+  "sources": [
+    "https://game8.co/games/Hogwarts-Legacy/archives/403918",
+    "https://hogwartslegacy.wiki.fextralife.com/Controls",
+    "https://www.gamepressure.com/hogwarts-legacy/controls/z31085e"
+  ],
+  "actions": [
+    {"label": "Hechizo básico", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Protego / Stupefy (mantener)", "ps5": "TRIANGLE", "pc": ["Q", ""]},
+    {"label": "Esquivar", "ps5": "CIRCLE", "pc": ["LCTRL", ""]},
+    {"label": "Saltar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Interactuar", "ps5": "SQUARE", "pc": ["F", ""]},
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Fijar objetivo", "ps5": "R3", "pc": ["CAPSLOCK", ""]},
+    {"label": "Hechizo 1", "ps5": "R2+SQUARE", "pc": ["1", ""]},
+    {"label": "Hechizo 2", "ps5": "R2+TRIANGLE", "pc": ["2", ""]},
+    {"label": "Hechizo 3", "ps5": "R2+CIRCLE", "pc": ["3", ""]},
+    {"label": "Hechizo 4", "ps5": "R2+CROSS", "pc": ["4", ""]},
+    {"label": "Set de hechizos 1", "ps5": "R2+DPAD_UP", "pc": ["F1", ""]},
+    {"label": "Set de hechizos 2", "ps5": "R2+DPAD_RIGHT", "pc": ["F2", ""]},
+    {"label": "Set de hechizos 3", "ps5": "R2+DPAD_DOWN", "pc": ["F3", ""]},
+    {"label": "Set de hechizos 4", "ps5": "R2+DPAD_LEFT", "pc": ["F4", ""]},
+    {"label": "Magia antigua", "ps5": "L1+R1", "pc": ["X", ""]},
+    {"label": "Lanzamiento de magia antigua", "ps5": "R1", "pc": ["Z", ""]},
+    {"label": "Revelio", "ps5": "DPAD_LEFT", "pc": ["R", ""]},
+    {"label": "Curarse (Wiggenweld)", "ps5": "DPAD_DOWN", "pc": ["G", ""]},
+    {"label": "Brújula / info de misión", "ps5": "DPAD_UP", "pc": ["V", ""]},
+    {"label": "Usar herramienta / rueda", "ps5": "L1", "pc": ["T", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Guía de campo / menú", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

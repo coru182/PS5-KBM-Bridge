@@ -1,0 +1,34 @@
+{
+  "id": "dead_space_remake",
+  "name": "Dead Space (2023)",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No native keyboard/mouse gameplay support on PS5; not listed among PS5 KBM-supported games (wepc.com list) and official controls are controller-only (source: https://www.wepc.com/gaming/what-ps5-games-support-keyboard-and-mouse/)",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PS5 Default preset. Context conflict: on PS5, R2 is Shoot while aiming and Stomp when not aiming, and R1 is Alt Fire while aiming and Melee when not aiming. On PC, LMB is Shoot/Melee and Space is Alt Fire/Stomp. The static mapping here (LMB->R2, Space->R1) is right while aiming but swaps Melee and Stomp when not aiming. In the same way, F = Med Pack (not aiming) and Kinesis (aiming), both Circle, and C = Use Stasis Pack and Stasis, both Triangle. Sources disagree on the Med Pack button (game8: Circle, vulkk: Cross); Circle was chosen because it pairs with Kinesis on F. Not mapped: zero-G rolls Q/E (L1/R1; E clashes with Interact). RIG Inventory/Map/Missions/Database (I/M/J/L) have no direct PS5 button and are reached from the RIG menu (touchpad). game8 says PC sprint is Space; the other sources say Shift.",
+  "sources": [
+    "https://vulkk.com/2023/01/28/dead-space-pc-and-console-controls-guide/",
+    "https://game8.co/games/Dead-Space-Remake/archives/403313",
+    "https://www.magicgameworld.com/dead-space-remake-pc-keyboard-controls-guide/",
+    "https://www.wepc.com/gaming/what-ps5-games-support-keyboard-and-mouse/"
+  ],
+  "actions": [
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Interactuar", "ps5": "CROSS", "pc": ["E", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Disparar (pisotón sin apuntar)", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Disparo alt. (golpe sin apuntar)", "ps5": "R1", "pc": ["SPACE", ""]},
+    {"label": "Recargar", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Botiquín / Kinesis", "ps5": "CIRCLE", "pc": ["F", ""]},
+    {"label": "Stasis / Pack de stasis", "ps5": "TRIANGLE", "pc": ["C", ""]},
+    {"label": "Localizador", "ps5": "R3", "pc": ["X", ""]},
+    {"label": "Despegar/Aterrizar (Gravedad 0)", "ps5": "L1+R1", "pc": ["Z", ""]},
+    {"label": "Arma 1", "ps5": "DPAD_UP", "pc": ["1", ""]},
+    {"label": "Arma 2", "ps5": "DPAD_RIGHT", "pc": ["2", ""]},
+    {"label": "Arma 3", "ps5": "DPAD_DOWN", "pc": ["3", ""]},
+    {"label": "Arma 4", "ps5": "DPAD_LEFT", "pc": ["4", ""]},
+    {"label": "Menú RIG", "ps5": "TOUCHPAD", "pc": ["TAB", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

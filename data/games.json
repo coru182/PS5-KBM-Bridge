@@ -1,0 +1,328 @@
+{
+ "_comment": "Name patterns (regex, full match) on NORMALIZED titles: lowercase, accents/™® removed, apostrophes removed, other punctuation -> space. Each entry assigns every Title ID (all regions, PS5 and PS4 versions) of matching games to a profile or template.",
+ "profiles": {
+  "re2r": [
+   "resident evil 2"
+  ],
+  "requiem": [
+   "resident evil requiem"
+  ],
+  "re3_remake": [
+   "resident evil 3"
+  ],
+  "re4_remake": [
+   "resident evil 4"
+  ],
+  "re_village": [
+   "resident evil village( gold edition)?"
+  ],
+  "re7": [
+   "resident evil 7 biohazard( gold edition)?",
+   "resident evil 7"
+  ],
+  "dead_space_remake": [
+   "dead space"
+  ],
+  "alan_wake_2": [
+   "alan wake 2( deluxe edition)?"
+  ],
+  "silent_hill_2_remake": [
+   "silent hill 2"
+  ],
+  "spiderman_remastered": [
+   "marvels spider man remastered",
+   "marvels spider man game of the year edition",
+   "marvels spider man"
+  ],
+  "spiderman_miles": [
+   "marvels spider man miles morales"
+  ],
+  "spiderman2": [
+   "marvels spider man 2"
+  ],
+  "god_of_war_2018": [
+   "god of war"
+  ],
+  "god_of_war_ragnarok": [
+   "god of war ragnarok"
+  ],
+  "ghost_of_tsushima": [
+   "ghost of tsushima( directors cut)?"
+  ],
+  "returnal": [
+   "returnal"
+  ],
+  "horizon_zero_dawn": [
+   "horizon zero dawn( remastered| complete edition)?"
+  ],
+  "horizon_forbidden_west": [
+   "horizon forbidden west( complete edition)?"
+  ],
+  "tlou_part1": [
+   "the last of us part i"
+  ],
+  "tlou_part2": [
+   "the last of us part ii( remastered)?"
+  ],
+  "uncharted_lot": [
+   "uncharted legacy of thieves collection",
+   "uncharted 4 a thiefs end",
+   "uncharted the lost legacy"
+  ],
+  "ratchet_clank": [
+   "ratchet clank rift apart"
+  ],
+  "days_gone": [
+   "days gone( remastered)?"
+  ],
+  "elden_ring": [
+   "elden ring( nightreign)?"
+  ],
+  "sekiro": [
+   "sekiro shadows die twice( goty edition)?"
+  ],
+  "lies_of_p": [
+   "lies of p"
+  ],
+  "black_myth_wukong": [
+   "black myth wukong"
+  ],
+  "stellar_blade": [
+   "stellar blade"
+  ],
+  "monster_hunter_wilds": [
+   "monster hunter wilds"
+  ],
+  "star_wars_jedi_survivor": [
+   "star wars jedi survivor"
+  ],
+  "cyberpunk_2077": [
+   "cyberpunk 2077( ultimate edition)?"
+  ],
+  "witcher3": [
+   "the witcher 3 wild hunt( complete edition| game of the year edition)?"
+  ],
+  "rdr2": [
+   "red dead redemption 2"
+  ],
+  "gta5": [
+   "grand theft auto v",
+   "grand theft auto v premium edition",
+   "grand theft auto v ps5"
+  ],
+  "hogwarts_legacy": [
+   "hogwarts legacy"
+  ],
+  "ac_shadows": [
+   "assassins creed shadows"
+  ],
+  "kcd2": [
+   "kingdom come deliverance ii"
+  ],
+  "doom_eternal": [
+   "doom eternal"
+  ],
+  "doom_dark_ages": [
+   "doom the dark ages"
+  ],
+  "helldivers2": [
+   "helldivers 2"
+  ],
+  "destiny2": [
+   "destiny 2"
+  ],
+  "apex_legends": [
+   "apex legends"
+  ],
+  "battlefield6": [
+   "battlefield 6"
+  ],
+  "indiana_jones": [
+   "indiana jones and the great circle"
+  ],
+  "control": [
+   "control( ultimate edition)?"
+  ],
+  "dying_light_2": [
+   "dying light 2 stay human",
+   "dying light 2"
+  ],
+  "hitman_woa": [
+   "hitman world of assassination",
+   "hitman 3"
+  ],
+  "death_stranding": [
+   "death stranding directors cut",
+   "death stranding"
+  ],
+  "marvel_rivals": [
+   "marvel rivals"
+  ],
+  "far_cry_6": [
+   "far cry 6"
+  ],
+  "sniper_elite_5": [
+   "sniper elite 5"
+  ]
+ },
+ "templates": {
+  "fps": [
+   "call of duty.*",
+   "battlefield 2042",
+   "battlefield v",
+   "battlefield 1",
+   "metro exodus.*",
+   "far cry (5|6|new dawn|primal)",
+   "borderlands (3|4)",
+   "tiny tinas wonderlands",
+   "atomic heart",
+   "deathloop",
+   "ghostwire tokyo",
+   "prey",
+   "dishonored 2",
+   "fallout (4|76)",
+   "the outer worlds( 2)?",
+   "crysis remastered",
+   "payday (2|3)",
+   "ready or not",
+   "insurgency sandstorm",
+   "hunt showdown( 1896)?",
+   "the finals",
+   "xdefiant",
+   "overwatch 2",
+   "tom clancys rainbow six siege.*",
+   "rainbow six siege.*",
+   "delta force",
+   "splitgate 2",
+   "bulletstorm.*",
+   "serious sam 4",
+   "quake",
+   "titanfall 2",
+   "warhammer 40 000 darktide",
+   "warhammer vermintide 2",
+   "back 4 blood",
+   "killing floor (2|3)",
+   "dying light",
+   "dead island 2",
+   "avatar frontiers of pandora",
+   "ghostrunner( 2)?",
+   "wolfenstein (ii the new colossus|youngblood)",
+   "doom",
+   "sniper ghost warrior contracts 2",
+   "s t a l k e r 2 heart of chornobyl",
+   "stalker 2 heart of chornobyl",
+   "chernobylite.*",
+   "the elder scrolls v skyrim.*"
+  ],
+  "tps": [
+   "mass effect legendary edition",
+   "tom clancys the division 2",
+   "the division 2",
+   "tom clancys ghost recon (breakpoint|wildlands)",
+   "watch dogs (2|legion)",
+   "mafia( definitive edition| the old country)?",
+   "mafia ii definitive edition",
+   "mafia iii definitive edition",
+   "remnant (ii|2)",
+   "outriders",
+   "warhammer 40 000 space marine 2",
+   "gotham knights",
+   "suicide squad kill the justice league",
+   "marvels guardians of the galaxy",
+   "marvels avengers",
+   "shadow of the tomb raider.*",
+   "rise of the tomb raider.*",
+   "just cause 4.*",
+   "saints row",
+   "the callisto protocol",
+   "the evil within 2",
+   "star wars outlaws",
+   "metal gear solid delta snake eater",
+   "metal gear solid v the phantom pain",
+   "alan wake remastered",
+   "uncharted.*",
+   "the last of us.*",
+   "max payne.*",
+   "sleeping dogs.*",
+   "evil west",
+   "atlas fallen",
+   "biomutant",
+   "the ascent",
+   "dead island",
+   "resident evil.*",
+   "dead space.*",
+   "sniper elite (4|5|resistance)",
+   "marvel rivals",
+   "ratchet clank rift apart"
+  ],
+  "melee": [
+   "dark souls (remastered|iii|ii scholar of the first sin)",
+   "bloodborne",
+   "demons souls",
+   "nioh( 2| collection)?",
+   "wo long fallen dynasty",
+   "rise of the ronin",
+   "lords of the fallen",
+   "mortal shell.*",
+   "devil may cry 5.*",
+   "assassins creed (valhalla|odyssey|origins|mirage|shadows)",
+   "ghost of yotei",
+   "middle earth shadow of war.*",
+   "batman arkham knight",
+   "final fantasy xvi",
+   "final fantasy vii (remake|rebirth).*",
+   "forspoken",
+   "kingdom hearts iii.*",
+   "tales of arise",
+   "dragons dogma 2",
+   "monster hunter (rise|world|wilds).*",
+   "dragon age the veilguard",
+   "star wars jedi (fallen order|survivor)",
+   "sifu",
+   "the first berserker khazan",
+   "wuchang fallen feathers",
+   "lost judgment",
+   "judgment",
+   "kena bridge of spirits",
+   "crimson desert",
+   "jusant",
+   "hellblade.*",
+   "a plague tale (innocence|requiem)",
+   "the lords of the fallen",
+   "black myth.*",
+   "god of war.*",
+   "elden ring.*",
+   "sekiro.*",
+   "lies of p.*",
+   "stellar blade.*",
+   "ghost of tsushima.*",
+   "kingdom come deliverance( ii)?"
+  ],
+  "racing": [
+   "gran turismo 7",
+   "f1 (2[2-5]|24|25|manager.*)",
+   "ea sports f1 (2[2-5]|24|25)",
+   "need for speed (unbound|heat|hot pursuit remastered)",
+   "forza horizon (5|6)",
+   "the crew motorfest",
+   "the crew 2",
+   "assetto corsa competizione",
+   "assetto corsa evo",
+   "ea sports wrc",
+   "wrc generations.*",
+   "dirt (5|rally 2 0)",
+   "grid legends",
+   "hot wheels unleashed( 2 turbocharged)?",
+   "wreckfest",
+   "burnout paradise remastered",
+   "motogp (2[2-5]|24|25)",
+   "ride (4|5)",
+   "project cars 3",
+   "tokyo xtreme racer"
+  ]
+ },
+ "title_overrides": {
+  "_comment": "Title ID -> profile/template for its whole concept, when a name pattern would pick the wrong game (e.g. the 2005 RE4 port shares the name with the 2023 remake).",
+  "CUSA04885": "tps"
+ }
+}

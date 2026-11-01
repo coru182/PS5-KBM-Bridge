@@ -1,0 +1,34 @@
+{
+  "id": "re3_remake",
+  "name": "Resident Evil 3 (2020)",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No native keyboard/mouse gameplay support on PS5; not listed among PS5 KBM-supported games (wepc.com list) and official controls are controller-only (source: https://www.wepc.com/gaming/what-ps5-games-support-keyboard-and-mouse/)",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "PS5 Type A layout. game8 lists Pause as PS button, which is an error: pause is OPTIONS. Space also confirms in menus. Quick turn = LS back + Circle. Change weapon 1/2/3/4 = D-pad left/up/right/down. Backstep = hold aim + LS back + Dodge.",
+  "sources": [
+    "https://www.magicgameworld.com/?p=44044",
+    "https://game8.co/games/resident-evil-3-remake/archives/284337",
+    "https://www.gamepressure.com/resident-evil-3-remake/controls/zcd125",
+    "https://www.wepc.com/gaming/what-ps5-games-support-keyboard-and-mouse/"
+  ],
+  "actions": [
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Esquivar", "ps5": "R1", "pc": ["SPACE", ""]},
+    {"label": "Giro rápido", "ps5": "LS_DOWN+CIRCLE", "pc": ["Q", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Atacar / Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Interactuar", "ps5": "CROSS", "pc": ["F", ""]},
+    {"label": "Recargar", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Cambiar munición", "ps5": "L1", "pc": ["E", ""]},
+    {"label": "Arma izquierda", "ps5": "DPAD_LEFT", "pc": ["1", ""]},
+    {"label": "Arma arriba", "ps5": "DPAD_UP", "pc": ["2", ""]},
+    {"label": "Arma derecha", "ps5": "DPAD_RIGHT", "pc": ["3", ""]},
+    {"label": "Arma abajo", "ps5": "DPAD_DOWN", "pc": ["4", ""]},
+    {"label": "Inventario", "ps5": "TRIANGLE", "pc": ["TAB", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["P", ""]},
+    {"label": "Centrar cámara", "ps5": "R3", "pc": ["MOUSE3", ""]}
+  ]
+}

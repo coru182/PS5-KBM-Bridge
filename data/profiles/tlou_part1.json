@@ -1,0 +1,34 @@
+{
+  "id": "tlou_part1",
+  "name": "The Last of Us Part I",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "PS5 version has no keyboard/mouse gameplay support; KBM controls were added only in the PC port (Naughty Dog/Iron Galaxy). No source lists KBM support on PS5.",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "PC MOUSE1 does reload/quick throw/use when not aiming and fire while aiming; both are R2 on PS5, so it maps cleanly (R is a secondary reload key on PC). E = interact (TRIANGLE); on PC E is also scope while aiming, which is CROSS on PS5 (not reproduced). TAB = backpack (TOUCHPAD; B is a secondary key); on PC TAB is also shoulder swap while aiming, which is SQUARE on PS5 (not reproduced). Mouse wheel cycles the weapon cross (gameskinny pairs it with D-pad up/left and down/right); mapped to D-pad left/right for weapons. Key 7 (health kit) mapped to D-pad up (health kit is on D-pad up per n4g). Other number slots (1-6, 8, 9), crafting from the wheel (SPACE), slow walk (LCTRL), shake flashlight (J, motion on PS5) have no single PS5 button equivalent and are omitted.",
+  "sources": [
+    "https://gameskinny.com/tips/the-last-of-us-part-1-all-controls-list-for-pc",
+    "https://www.destructoid.com/the-last-of-us-part-1-all-controls-list-for-pc/",
+    "https://magicgameworld.com/?p=78357",
+    "https://whatifgaming.com/?p=89721",
+    "https://n4g.com/articles/how-to-heal-in-the-last-of-us-part-1"
+  ],
+  "actions": [
+    {"label": "Saltar / trepar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Correr", "ps5": "L1", "pc": ["LSHIFT", ""]},
+    {"label": "Agacharse", "ps5": "CIRCLE", "pc": ["C", ""]},
+    {"label": "Interactuar / agarrar", "ps5": "TRIANGLE", "pc": ["E", ""]},
+    {"label": "Modo escucha / cambiar arma", "ps5": "R1", "pc": ["Q", ""]},
+    {"label": "Cuerpo a cuerpo", "ps5": "SQUARE", "pc": ["F", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Disparar / recargar / lanzar", "ps5": "R2", "pc": ["MOUSE1", "R"]},
+    {"label": "Mirar / asistencia navegación", "ps5": "L3", "pc": ["X", ""]},
+    {"label": "Linterna", "ps5": "R3", "pc": ["T", ""]},
+    {"label": "Mochila", "ps5": "TOUCHPAD", "pc": ["TAB", "B"]},
+    {"label": "Arma anterior", "ps5": "DPAD_LEFT", "pc": ["WHEEL_UP", ""]},
+    {"label": "Arma siguiente", "ps5": "DPAD_RIGHT", "pc": ["WHEEL_DOWN", ""]},
+    {"label": "Botiquín", "ps5": "DPAD_UP", "pc": ["7", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

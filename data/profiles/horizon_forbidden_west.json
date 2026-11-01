@@ -1,0 +1,40 @@
+{
+  "id": "horizon_forbidden_west",
+  "name": "Horizon Forbidden West",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "PS4/PS5 version is not playable with keyboard+mouse; the game ignores KBM and asks for a controller (windowsreport.com/horizon-forbidden-west-keyboard-and-mouse, gamepur).",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PC defaults from vulkk's 'KBM Default' column (some defaults changed in patches: TAB used to open the map before 1.1.47, weapon wheel is F by default). On-foot light melee key on PC is not explicitly listed; assumed MOUSE1 (as in HZD), so MOUSE1 is mapped to R2 (primary fire while aiming; heavy melee when not aiming). Light melee / weapon technique (R1) goes on MOUSE3, which is the PC weapon-technique key while aiming. G (PC heavy melee) also sends R2. LSHIFT = sprint (L3); PC also uses LSHIFT for Concentration while aiming (R3 on PS5) and mount speed-up (CROSS), not reproduced. E = use/pullcaster (TRIANGLE); PC also uses E to mount, which is SQUARE on PS5. SPACE = jump/grapple/swim up (CROSS); PC also uses SPACE for Shieldwing in air (SQUARE) and Valor Surge in wheel (R1), not reproduced. C = crouch/quick swap target/swim down (SQUARE). R = tool use / hold Hunter's Kit (DPAD_DOWN). Show HUD (PC H) is a touchpad swipe on PS5, omitted. Weapon slots 1-6, wheel scroll and walk (LALT) have no PS5 equivalent.",
+  "sources": [
+    "https://vulkk.com/2024/03/21/horizon-forbidden-west-pc-and-console-controls-guide-and-keybinds-recommendations/",
+    "https://www.shacknews.com/article/128892/controller-button-layout-and-customization-horizon-forbidden-west",
+    "https://tryhardguides.com/horizon-forbidden-west-controls-and-buttons-guide/",
+    "https://samurai-gamers.com/horizon-forbidden-west/game-controls-38/",
+    "https://progameguides.com/horizon-forbidden-west/how-to-crouch-in-horizon-forbidden-west",
+    "https://windowsreport.com/horizon-forbidden-west-keyboard-and-mouse/"
+  ],
+  "actions": [
+    {"label": "Saltar / gancho", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Esquivar / soltar alaescudo", "ps5": "CIRCLE", "pc": ["LCTRL", ""]},
+    {"label": "Agacharse / cambio rápido", "ps5": "SQUARE", "pc": ["C", ""]},
+    {"label": "Usar / gancho de tracción", "ps5": "TRIANGLE", "pc": ["E", ""]},
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Activar foco", "ps5": "R3", "pc": ["V", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Disparar / ataque fuerte", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Ataque fuerte cuerpo a cuerpo", "ps5": "R2", "pc": ["G", ""]},
+    {"label": "Ataque ligero / técnica de arma", "ps5": "R1", "pc": ["MOUSE3", ""]},
+    {"label": "Rueda de armas", "ps5": "L1", "pc": ["F", ""]},
+    {"label": "Curar / rellenar bolsa", "ps5": "DPAD_UP", "pc": ["Q", ""]},
+    {"label": "Usar herramienta / kit cazador", "ps5": "DPAD_DOWN", "pc": ["R", ""]},
+    {"label": "Herramienta/técnica anterior", "ps5": "DPAD_LEFT", "pc": ["Z", ""]},
+    {"label": "Herramienta/técnica siguiente", "ps5": "DPAD_RIGHT", "pc": ["X", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Inventario", "ps5": "TOUCHPAD", "pc": ["I", ""]},
+    {"label": "Habilidades", "ps5": "TOUCHPAD", "pc": ["K", ""]},
+    {"label": "Misiones", "ps5": "TOUCHPAD", "pc": ["J", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

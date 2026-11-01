@@ -1,0 +1,33 @@
+{
+  "id": "lies_of_p",
+  "name": "Lies of P",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "PS5 version is controller-only; no keyboard/mouse gameplay support found in any controls source (Fextralife lists only DualSense layout for PS5)",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "On PC Space is both dash/dodge and forward jump (context); on PS5 jump forward is L3, which has no separate PC key, so Space only sends Circle. Pulse Cell (heal) is a belt item: select it with T/G and use with R. Some Fable Arts use guard+Triangle (Shift+F works naturally). Extra-bag keys 1-4 and walk toggle (Z) omitted: no documented PS5 equivalent found.",
+  "sources": [
+    "https://liesofp.wiki.fextralife.com/Controls",
+    "https://whatifgaming.com/lies-of-p-all-controls-list-pc-controller/",
+    "https://www.magicgameworld.com/?p=81025",
+    "https://samurai-gamers.com/lies-of-p/combat-control-guide/"
+  ],
+  "actions": [
+    {"label": "Esquivar / dash", "ps5": "CIRCLE", "pc": ["SPACE", ""]},
+    {"label": "Interactuar", "ps5": "CROSS", "pc": ["E", ""]},
+    {"label": "Ataque normal", "ps5": "R1", "pc": ["MOUSE1", ""]},
+    {"label": "Ataque especial / cargado", "ps5": "R2", "pc": ["MOUSE2", ""]},
+    {"label": "Fijar objetivo", "ps5": "R3", "pc": ["MOUSE3", ""]},
+    {"label": "Guardia", "ps5": "L1", "pc": ["LSHIFT", ""]},
+    {"label": "Fable Arts", "ps5": "TRIANGLE", "pc": ["F", ""]},
+    {"label": "Usar brazo Legión", "ps5": "L2", "pc": ["LCTRL", ""]},
+    {"label": "Usar objeto del cinturón", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Cinturón superior", "ps5": "DPAD_UP", "pc": ["T", ""]},
+    {"label": "Cinturón inferior", "ps5": "DPAD_DOWN", "pc": ["G", ""]},
+    {"label": "Cambiar arma", "ps5": "DPAD_RIGHT", "pc": ["TAB", ""]},
+    {"label": "Cambiar brazo Legión", "ps5": "DPAD_LEFT", "pc": ["X", ""]},
+    {"label": "Detalles / registros", "ps5": "TOUCHPAD", "pc": ["C", ""]},
+    {"label": "Menú", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

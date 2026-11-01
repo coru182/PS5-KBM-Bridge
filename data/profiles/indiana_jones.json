@@ -1,0 +1,36 @@
+{
+  "id": "indiana_jones",
+  "name": "Indiana Jones and the Great Circle",
+  "template": "fps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No source mentions keyboard/mouse support on PS5, and it is not on Push Square's PS5 mouse+keyboard games list. Mouse controls were advertised only for the Switch 2 version (nintendolife.com/news/2026/05/icymi-indiana-jones-on-switch-2-will-support-mouse-and-gyro-controls).",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "There is no separate reload key: pressing shoot (LMB/R2) while not aiming reloads. Lean left/right is L3/R3 on PS5, shared with sprint (L3) and push (R3), so leaning probably only works in context (e.g. while crouched/aiming). Lean left is Z per Prima (MagicGameWorld lists Y). D-pad left/right: Prima says Weapon = Left and Inventory = Right, MagicGameWorld (Xbox) says the reverse; Prima is used because the PC alternates (Left arrow = Weapon, Right arrow = Inventory) match it. In menus, Q/E also act as previous/next tab (L1/R1 on PS5), which this mapping doesn't cover (Q = drop/Triangle, E = use/Square). Block secondary is LALT, journal secondary CAPSLOCK.",
+  "sources": [
+    "https://primagames.com/tips/indiana-jones-and-the-great-circle-complete-controls-for-pc-and-controller",
+    "https://www.magicgameworld.com/indiana-jones-and-the-great-circle-pc-keyboard-controls-guide/",
+    "https://www.magicgameworld.com/?p=108064",
+    "https://parrot-spinach-nd46.squarespace.com/articles/how-to-fight-in-indiana-jones-and-the-great-circle-on-pc-xbox-and-playstation"
+  ],
+  "actions": [
+    {"label": "Golpe der. / disparar / lanzar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Golpe izq. / apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Bloquear / parry", "ps5": "L1", "pc": ["V", "LALT"]},
+    {"label": "Látigo / agarrar", "ps5": "R1", "pc": ["F", ""]},
+    {"label": "Empujar", "ps5": "R3", "pc": ["R", ""]},
+    {"label": "Saltar / esquivar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Agacharse", "ps5": "CIRCLE", "pc": ["LCTRL", ""]},
+    {"label": "Usar / recoger", "ps5": "SQUARE", "pc": ["E", ""]},
+    {"label": "Soltar / desequipar", "ps5": "TRIANGLE", "pc": ["Q", ""]},
+    {"label": "Inclinarse a la izquierda", "ps5": "L3", "pc": ["Z", ""]},
+    {"label": "Inclinarse a la derecha", "ps5": "R3", "pc": ["C", ""]},
+    {"label": "Arma", "ps5": "DPAD_LEFT", "pc": ["1", "LEFT"]},
+    {"label": "Herramientas", "ps5": "DPAD_UP", "pc": ["2", "UP"]},
+    {"label": "Consumibles", "ps5": "DPAD_DOWN", "pc": ["3", "DOWN"]},
+    {"label": "Inventario", "ps5": "DPAD_RIGHT", "pc": ["TAB", "RIGHT"]},
+    {"label": "Diario", "ps5": "TOUCHPAD", "pc": ["J", "CAPSLOCK"]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

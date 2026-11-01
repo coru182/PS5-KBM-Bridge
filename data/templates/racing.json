@@ -1,0 +1,128 @@
+{
+ "id": "racing",
+ "name": "Plantilla: Carreras",
+ "template": "racing",
+ "actions": [
+  {
+   "label": "Acelerar",
+   "ps5": "R2",
+   "pc": [
+    "W",
+    "UP"
+   ]
+  },
+  {
+   "label": "Frenar / Reversa",
+   "ps5": "L2",
+   "pc": [
+    "S",
+    "DOWN"
+   ]
+  },
+  {
+   "label": "Girar a la izquierda",
+   "ps5": "LS_LEFT",
+   "pc": [
+    "A",
+    "LEFT"
+   ]
+  },
+  {
+   "label": "Girar a la derecha",
+   "ps5": "LS_RIGHT",
+   "pc": [
+    "D",
+    "RIGHT"
+   ]
+  },
+  {
+   "label": "Freno de mano",
+   "ps5": "CROSS",
+   "pc": [
+    "SPACE",
+    ""
+   ]
+  },
+  {
+   "label": "Nitro / Turbo",
+   "ps5": "CIRCLE",
+   "pc": [
+    "LSHIFT",
+    ""
+   ]
+  },
+  {
+   "label": "Cambiar cámara",
+   "ps5": "TRIANGLE",
+   "pc": [
+    "C",
+    ""
+   ]
+  },
+  {
+   "label": "Mirar atrás",
+   "ps5": "R3",
+   "pc": [
+    "B",
+    ""
+   ]
+  },
+  {
+   "label": "Rebobinar",
+   "ps5": "SQUARE",
+   "pc": [
+    "R",
+    ""
+   ]
+  },
+  {
+   "label": "Subir marcha",
+   "ps5": "R1",
+   "pc": [
+    "E",
+    ""
+   ]
+  },
+  {
+   "label": "Bajar marcha",
+   "ps5": "L1",
+   "pc": [
+    "Q",
+    ""
+   ]
+  },
+  {
+   "label": "Bocina / Extra",
+   "ps5": "L3",
+   "pc": [
+    "H",
+    ""
+   ]
+  },
+  {
+   "label": "Mapa",
+   "ps5": "TOUCHPAD",
+   "pc": [
+    "TAB",
+    "M"
+   ]
+  },
+  {
+   "label": "Pausa",
+   "ps5": "OPTIONS",
+   "pc": [
+    "ESC",
+    "P"
+   ]
+  },
+  {
+   "label": "Volver",
+   "ps5": "CIRCLE",
+   "pc": [
+    "BACKSPACE",
+    ""
+   ]
+  }
+ ],
+ "no_auto_move": true
+}

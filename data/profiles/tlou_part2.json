@@ -1,0 +1,33 @@
+{
+  "id": "tlou_part2",
+  "name": "The Last of Us Part II Remastered",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "PS5 Remastered has no keyboard/mouse gameplay support; KBM controls exist only in the 2025 PC port (Nixxes). No source lists KBM support on PS4/PS5.",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PC keys from magicgameworld's PC controls guide, which also lists the default gamepad layout (Xbox names converted: A=CROSS, B=CIRCLE, X=SQUARE, Y=TRIANGLE, LB=L1, RB=R1, LT=L2, RT=R2, LS/RS click=L3/R3, Select=TOUCHPAD); gamepressure confirms L1 sprint, R2 reload when not aiming and L2 aim. PS5 L1 does both sprint (hold) and dodge (tap); PC splits them into LSHIFT and LALT, both mapped to L1. MOUSE1 = fire / quick throw / use (R2); reload is R2 when not aiming on PS5, PC reload key not confirmed by the source (in Part I it is MOUSE1 or R). Y = weapon action / ammo swap while aiming (TRIANGLE). Mouse wheel switches items in the weapon wheel; mapped to D-pad left/right (lower confidence). Shoulder swap (SQUARE while aiming) and scope (CROSS while aiming) have no listed PC key. Weapon slots 1-4 and gear 5-9, slow walk (LCTRL), shake flashlight (J) and Seattle map (hold touchpad) have no single PS5 button equivalent, omitted.",
+  "sources": [
+    "https://www.magicgameworld.com/the-last-of-us-part-2-remastered-pc-controls-guide-keyboard-gamepad/",
+    "https://www.gamepressure.com/the-last-of-us-part-ii/controls/z5d5e7",
+    "https://gameskinny.com/tips/the-last-of-us-part-1-all-controls-list-for-pc"
+  ],
+  "actions": [
+    {"label": "Saltar / trepar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Correr", "ps5": "L1", "pc": ["LSHIFT", ""]},
+    {"label": "Esquivar", "ps5": "L1", "pc": ["LALT", ""]},
+    {"label": "Agacharse / cuerpo a tierra", "ps5": "CIRCLE", "pc": ["C", ""]},
+    {"label": "Interactuar / agarrar", "ps5": "TRIANGLE", "pc": ["E", ""]},
+    {"label": "Modo escucha / cambiar arma", "ps5": "R1", "pc": ["Q", ""]},
+    {"label": "Cuerpo a cuerpo", "ps5": "SQUARE", "pc": ["F", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Disparar / recargar / lanzar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Cambiar munición / modo arma", "ps5": "TRIANGLE", "pc": ["Y", ""]},
+    {"label": "Mirar / asistencia navegación", "ps5": "L3", "pc": ["X", ""]},
+    {"label": "Linterna", "ps5": "R3", "pc": ["T", ""]},
+    {"label": "Mochila", "ps5": "TOUCHPAD", "pc": ["TAB", ""]},
+    {"label": "Objeto/arma anterior", "ps5": "DPAD_LEFT", "pc": ["WHEEL_UP", ""]},
+    {"label": "Objeto/arma siguiente", "ps5": "DPAD_RIGHT", "pc": ["WHEEL_DOWN", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

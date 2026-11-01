@@ -1,0 +1,41 @@
+{
+  "id": "destiny2",
+  "name": "Destiny 2",
+  "template": "fps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "Bungie supports a keyboard on consoles only for text chat (help.bungie.net/hc/en-us/articles/360048719292). Mein-MMO's PS5/PS4 KBM test lists Destiny 2 as 'Nein' (no support). Push Square's KBM list includes Destiny 2 with no detail, probably because of the chat keyboard.",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "PC defaults are toggle sprint (Shift) and toggle crouch (Ctrl); PS5 uses L3 for sprint and Circle for crouch. Class ability (V) is a Circle hold on PS5 and crouch is a Circle tap. Interact (E) is a Square hold on PS5 and reload (R) is a Square tap. Weapon slots 1/2/3 and the wheel have no direct PS5 equivalent: Triangle tap swaps kinetic/energy and Triangle hold takes the heavy weapon, so 1/2 map to Triangle and 3 to Triangle (hold). Ghost (Tab) is a Touchpad press; Director/map (M) is a Touchpad hold. Super is L1+R1 together. Emotes are on the D-pad (arrow keys on PC).",
+  "sources": [
+    "https://www.shacknews.com/article/101153/destiny-2-key-bindings-and-key-mapping",
+    "https://www.mejoress.com/en/destiny-2-controls-pc-playstation-xbox/",
+    "https://www.magicgameworld.com/?p=40590",
+    "https://twinfinite.net/guides/destiny-2-use-map-how/",
+    "https://mein-mmo.de/en/ps5-ps4-with-mouse-and-keyboard-how-well-does-it-actually-work,800943"
+  ],
+  "actions": [
+    {"label": "Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Recargar", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Interactuar", "ps5": "SQUARE", "pc": ["E", ""]},
+    {"label": "Saltar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Habilidad de salto (aire)", "ps5": "CROSS", "pc": ["X", ""]},
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Agacharse / deslizarse", "ps5": "CIRCLE", "pc": ["LCTRL", ""]},
+    {"label": "Habilidad de clase", "ps5": "CIRCLE", "pc": ["V", ""]},
+    {"label": "Cuerpo a cuerpo", "ps5": "R1", "pc": ["C", ""]},
+    {"label": "Granada", "ps5": "L1", "pc": ["Q", ""]},
+    {"label": "Súper", "ps5": "L1+R1", "pc": ["F", ""]},
+    {"label": "Cambiar arma (cinética/energía)", "ps5": "TRIANGLE", "pc": ["1", "2"]},
+    {"label": "Arma pesada (mantener)", "ps5": "TRIANGLE", "pc": ["3", ""]},
+    {"label": "Remate / resaltar jugador", "ps5": "R3", "pc": ["G", ""]},
+    {"label": "Espectro (Ghost)", "ps5": "TOUCHPAD", "pc": ["TAB", ""]},
+    {"label": "Director / mapa (mantener)", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Menú de personaje", "ps5": "OPTIONS", "pc": ["I", "ESC"]},
+    {"label": "Gesto 1", "ps5": "DPAD_UP", "pc": ["UP", ""]},
+    {"label": "Gesto 2", "ps5": "DPAD_DOWN", "pc": ["DOWN", ""]},
+    {"label": "Gesto 3", "ps5": "DPAD_LEFT", "pc": ["LEFT", ""]},
+    {"label": "Gesto 4", "ps5": "DPAD_RIGHT", "pc": ["RIGHT", ""]}
+  ]
+}

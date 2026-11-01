@@ -1,0 +1,33 @@
+{
+  "id": "silent_hill_2_remake",
+  "name": "Silent Hill 2 (2024)",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No native keyboard/mouse gameplay support on PS5; not listed among PS5 KBM-supported games (wepc.com list) and official controls are controller-only (source: https://www.wepc.com/gaming/what-ps5-games-support-keyboard-and-mouse/)",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "Prima lists both PC and PlayStation; game8 cross-checks the PS5 buttons. Next/previous ranged weapon (mouse wheel) has no listed PS5 button, so it is not mapped. Back in gameplay (RMB/Circle) clashes with aim on PC, so it is not mapped. The investigation zoom (MMB) uses L2, the same button as aim. Struggle uses LMB on PC and Cross on PS5; it is not mapped and the LMB->R2 mapping covers attack. Inventory is also Tab on PC. V: tap = quick heal, hold = syringe.",
+  "sources": [
+    "https://primagames.com/tips/silent-hill-2-remake-complete-controls-for-pc-and-controller",
+    "https://game8.co/games/Silent-Hill-2-Remake/archives/476910",
+    "https://www.wepc.com/gaming/what-ps5-games-support-keyboard-and-mouse/"
+  ],
+  "actions": [
+    {"label": "Correr", "ps5": "L1", "pc": ["LSHIFT", ""]},
+    {"label": "Giro rápido", "ps5": "R1", "pc": ["Q", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Atacar / Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Recargar", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Esquivar", "ps5": "CIRCLE", "pc": ["SPACE", ""]},
+    {"label": "Interactuar", "ps5": "CROSS", "pc": ["E", ""]},
+    {"label": "Linterna", "ps5": "R3", "pc": ["F", ""]},
+    {"label": "Curarse", "ps5": "TRIANGLE", "pc": ["V", ""]},
+    {"label": "Pistola", "ps5": "DPAD_LEFT", "pc": ["1", ""]},
+    {"label": "Escopeta", "ps5": "DPAD_DOWN", "pc": ["2", ""]},
+    {"label": "Rifle", "ps5": "DPAD_RIGHT", "pc": ["3", ""]},
+    {"label": "Inventario", "ps5": "TOUCHPAD", "pc": ["I", "TAB"]},
+    {"label": "Mapa", "ps5": "DPAD_UP", "pc": ["M", ""]},
+    {"label": "Menú / Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]},
+    {"label": "Zoom (investigar)", "ps5": "L2", "pc": ["MOUSE3", ""]}
+  ]
+}

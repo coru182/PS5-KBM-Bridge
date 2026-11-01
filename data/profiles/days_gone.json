@@ -1,0 +1,39 @@
+{
+  "id": "days_gone",
+  "name": "Days Gone",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "PS4/PS5 versions (incl. Remastered) have no keyboard/mouse gameplay support; KBM controls exist only in the PC port (PCGamingWiki Input section covers PC only; no source lists KBM on PlayStation).",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "Mapping built from StrategyWiki's PS4/PC control table, cross-checked with magicgameworld's PC defaults (PS5 layout is the same as PS4). SPACE on PC is climb/mantle, roll and contextual action 2; mapped to CROSS (climb, contextual, shoulder swap while aiming), so roll (R1 on PS) is not reproduced. R on PC is reload (SQUARE) and also contextual action 1/craft (CIRCLE on PS); kept as reload. F on PC is listed as secondary interact (TRIANGLE) and flashlight (D-pad down) by different sources; mapped to flashlight. Weapon swap (TRIANGLE tap, hold for special) has no single PC key (PC uses 1-6 and mouse wheel); mouse wheel is mapped to TRIANGLE, which also covers secondary interactions. PC uses LCTRL or C for crouch. Menu tabs open with touchpad swipes on PS; the tool can only click the touchpad, so I/J/O/M are mapped to TOUCHPAD click (opens the menu, then change tabs with L1/R1). Bike: with this map W/S drive the left stick, so throttle and brake on the bike come from MOUSE1 (R2) and MOUSE2 (L2); nitro LALT -> CROSS; drift (PC SPACE, PS CIRCLE) and bike fire/lock-on (PS R1/L1) are not reproduced.",
+  "sources": [
+    "https://strategywiki.org/wiki/Days_Gone/Controls",
+    "https://www.magicgameworld.com/days-gone-pc-keyboard-controls/",
+    "https://www.gamepressure.com/days-gone/controls/zcc1dd",
+    "https://www.pcgamingwiki.com/wiki/Days_Gone"
+  ],
+  "actions": [
+    {"label": "Trepar / acción contextual", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Agacharse / deslizarse", "ps5": "CIRCLE", "pc": ["C", "LCTRL"]},
+    {"label": "Apuntar / frenar moto", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Atacar / disparar / acelerar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Recargar", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Interactuar / saquear", "ps5": "SQUARE", "pc": ["E", ""]},
+    {"label": "Cambiar arma / interactuar 2", "ps5": "TRIANGLE", "pc": ["WHEEL_DOWN", "WHEEL_UP"]},
+    {"label": "Rueda de supervivencia", "ps5": "L1", "pc": ["Q", ""]},
+    {"label": "Visión de supervivencia", "ps5": "R3", "pc": ["V", "MOUSE3"]},
+    {"label": "Curación rápida", "ps5": "DPAD_LEFT", "pc": ["X", ""]},
+    {"label": "Linterna", "ps5": "DPAD_DOWN", "pc": ["F", ""]},
+    {"label": "Detonador", "ps5": "DPAD_RIGHT", "pc": ["G", ""]},
+    {"label": "Binoculares", "ps5": "DPAD_UP", "pc": ["B", ""]},
+    {"label": "Cambiar hombro al apuntar", "ps5": "CROSS", "pc": ["Z", ""]},
+    {"label": "Nitro (moto)", "ps5": "CROSS", "pc": ["LALT", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Inventario", "ps5": "TOUCHPAD", "pc": ["I", ""]},
+    {"label": "Historias", "ps5": "TOUCHPAD", "pc": ["J", ""]},
+    {"label": "Habilidades", "ps5": "TOUCHPAD", "pc": ["O", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

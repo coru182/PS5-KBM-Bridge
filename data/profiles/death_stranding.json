@@ -1,0 +1,38 @@
+{
+  "id": "death_stranding",
+  "name": "Death Stranding Director's Cut",
+  "template": "generic",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No source found showing keyboard/mouse gameplay support on PS5; 505 Games' FAQ confirms keyboard and mouse only for the PC version. Not explicitly confirmed for PS5.",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PC keys from shacknews, strategywiki and magicgameworld. PS buttons from magicgameworld, culturedvultures and samurai-gamers (X jump, Circle posture, Square action, Triangle load cargo, L1 compass, R1 scan / hold breath (hold), L2/R2 left/right-hand balance, L3 sprint, R3 switch camera side, D-pad up equipment / right tools / left items / down structures, Touchpad call out, Options pause / Cuff Links). Mouse buttons follow the balance actions (LMB = left = L2, RMB = right = R2). On PC, RMB also readies/aims an item and LMB fires, and no PS source confirmed which buttons do that on PS5, so combat aim/fire may feel swapped; test it. Left out: PC walk (Ctrl, analog only on PS), reload (R), melee (V), ammo type (Z), cargo menu (I) and select structure, because no reliable PS5 or PC counterpart was found.",
+  "sources": [
+    "https://shacknews.com/article/119166/pc-keybindings-and-controls-death-stranding",
+    "https://strategywiki.org/wiki/Death_Stranding/Controls",
+    "https://www.magicgameworld.com/death-stranding-pc-keyboard-controls-guide/",
+    "https://www.magicgameworld.com/ps4-controls-for-death-stranding/",
+    "https://culturedvultures.com/death-stranding-controls/",
+    "https://samurai-gamers.com/death-stranding/game-controls-and-settings/",
+    "https://505games.com/?p=37944"
+  ],
+  "actions": [
+    {"label": "Saltar / Trepar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Agacharse / Pararse", "ps5": "CIRCLE", "pc": ["C", ""]},
+    {"label": "Acción / Interactuar / Terminal", "ps5": "SQUARE", "pc": ["F", ""]},
+    {"label": "Cargar a la espalda", "ps5": "TRIANGLE", "pc": ["E", ""]},
+    {"label": "Escanear (Odradek)", "ps5": "R1", "pc": ["Q", ""]},
+    {"label": "Contener la respiración", "ps5": "R1", "pc": ["LALT", ""]},
+    {"label": "Modo brújula", "ps5": "L1", "pc": ["G", ""]},
+    {"label": "Equilibrio izq. / Mano izq.", "ps5": "L2", "pc": ["MOUSE1", ""]},
+    {"label": "Equilibrio der. / Mano der.", "ps5": "R2", "pc": ["MOUSE2", ""]},
+    {"label": "Cambiar lado de cámara", "ps5": "R3", "pc": ["T", ""]},
+    {"label": "Elegir herramienta / arma", "ps5": "DPAD_RIGHT", "pc": ["1", ""]},
+    {"label": "Elegir objeto", "ps5": "DPAD_LEFT", "pc": ["3", ""]},
+    {"label": "Elegir equipamiento", "ps5": "DPAD_UP", "pc": ["4", ""]},
+    {"label": "Llamar / Like", "ps5": "TOUCHPAD", "pc": ["5", ""]},
+    {"label": "Cuff Links (menú/mapa)", "ps5": "OPTIONS", "pc": ["TAB", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

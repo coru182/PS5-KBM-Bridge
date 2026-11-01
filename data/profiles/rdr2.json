@@ -1,0 +1,40 @@
+{
+  "id": "rdr2",
+  "name": "Red Dead Redemption 2",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "Versión de PS4 corriendo en PS5: no soporta teclado/mouse para jugar (las guías de PS4 solo listan mando).",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PS5 (versión PS4) de primagames/shacknews/progameguides. PC de naguide/steelseries (combate, armas, Dead Eye); sin fuente textual verificable para: agacharse (LCTRL), silbar (H), alforja (B), diario (J), mapa (M) y cámara (V), que son los defaults conocidos de PC pero conviene verificarlos. Caps Lock y clic central hacen Dead Eye (apuntando) u Ojo de águila (sin apuntar) en PC: se mapean CAPSLOCK -> R3 (con MOUSE2 apretado da L2+R3 = Dead Eye) y MOUSE3 -> L3+R3 (Ojo de águila). R en PC también bloquea en pelea cuerpo a cuerpo (Cuadrado en PS) y E/R son interacciones positivas en fijación; se priorizó Recargar. Tocar TAB enfunda/desenfunda, mantener abre la rueda (igual que L1). Recoger/cargar objetos (mantener Cuadrado en PS) no se mapeó por conflicto de teclas.",
+  "sources": [
+    "https://primagames.com/tips/red-dead-redemption-2-controls",
+    "https://shacknews.com/article/108116/playstation-4-controls-red-dead-redemption-2",
+    "https://progameguides.com/?p=496039",
+    "https://naguide.com/?p=13795",
+    "https://steelseries.com/blog/how-to-use-dead-eye-in-rdr2-1225"
+  ],
+  "actions": [
+    {"label": "Correr / esprintar (tocar)", "ps5": "CROSS", "pc": ["LSHIFT", ""]},
+    {"label": "Saltar / trepar / esquivar", "ps5": "SQUARE", "pc": ["SPACE", ""]},
+    {"label": "Agacharse / sigilo", "ps5": "L3", "pc": ["LCTRL", ""]},
+    {"label": "Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Apuntar / fijar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Recargar", "ps5": "CIRCLE", "pc": ["R", ""]},
+    {"label": "Golpe cuerpo a cuerpo", "ps5": "CIRCLE", "pc": ["F", ""]},
+    {"label": "Interactuar / agarrar / montar", "ps5": "TRIANGLE", "pc": ["E", ""]},
+    {"label": "Cubrirse / marcar en Dead Eye", "ps5": "R1", "pc": ["Q", ""]},
+    {"label": "Rueda de armas / enfundar", "ps5": "L1", "pc": ["TAB", ""]},
+    {"label": "Dead Eye (apuntando)", "ps5": "R3", "pc": ["CAPSLOCK", ""]},
+    {"label": "Ojo de águila", "ps5": "L3+R3", "pc": ["MOUSE3", ""]},
+    {"label": "Mirar atrás", "ps5": "R3", "pc": ["C", ""]},
+    {"label": "Cambiar hombro (apuntando)", "ps5": "DPAD_LEFT", "pc": ["X", ""]},
+    {"label": "Disparo de advertencia", "ps5": "DPAD_UP", "pc": ["U", ""]},
+    {"label": "Silbar al caballo", "ps5": "DPAD_UP", "pc": ["H", ""]},
+    {"label": "Alforja (mantener)", "ps5": "DPAD_RIGHT", "pc": ["B", ""]},
+    {"label": "Diario (mantener)", "ps5": "DPAD_LEFT", "pc": ["J", ""]},
+    {"label": "Mapa (mantener Options)", "ps5": "OPTIONS", "pc": ["M", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]},
+    {"label": "Cambiar cámara", "ps5": "TOUCHPAD", "pc": ["V", ""]}
+  ]
+}

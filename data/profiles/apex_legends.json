@@ -1,0 +1,36 @@
+{
+  "id": "apex_legends",
+  "name": "Apex Legends",
+  "template": "fps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "The PS5 version has no native keyboard/mouse support. EA's controls help page lists only controller defaults for PlayStation, and many EA forum threads ask for native PS5 KBM support (e.g. forums.ea.com/discussions/apex-legends-feedback-en/add-keyboard--mouse-support-on-ps5/12417891).",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "EA's page lists PC ping as 'R1'; the real PC default is middle mouse (MOUSE3). Weapon slots 1/2 have no direct PS5 equivalent (Triangle tap cycles weapons), so both map to Triangle. Holster (3) is a Triangle hold. Interact (E) and reload (R) are both Square on PS5. Fire select (B -> D-pad Left) comes from memory of the PS5 default and isn't in EA's table. ESC is a secondary for Options, which opens inventory/menu on PS5. Health item (4) is a D-pad Up tap; holding it opens the health wheel.",
+  "sources": [
+    "https://help.ea.com/en/articles/apex-legends/pc-and-controller-settings/",
+    "https://forums.ea.com/discussions/apex-legends-feedback-en/add-keyboard--mouse-support-on-ps5/12417891"
+  ],
+  "actions": [
+    {"label": "Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Recargar", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Interactuar / recoger", "ps5": "SQUARE", "pc": ["E", ""]},
+    {"label": "Saltar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Agacharse", "ps5": "CIRCLE", "pc": ["LCTRL", "C"]},
+    {"label": "Cuerpo a cuerpo", "ps5": "R3", "pc": ["V", ""]},
+    {"label": "Habilidad táctica", "ps5": "L1", "pc": ["Q", ""]},
+    {"label": "Habilidad definitiva", "ps5": "L1+R1", "pc": ["Z", ""]},
+    {"label": "Cambiar arma", "ps5": "TRIANGLE", "pc": ["1", "2"]},
+    {"label": "Enfundar arma", "ps5": "TRIANGLE", "pc": ["3", ""]},
+    {"label": "Granada", "ps5": "DPAD_RIGHT", "pc": ["G", ""]},
+    {"label": "Inspeccionar arma", "ps5": "DPAD_RIGHT", "pc": ["N", ""]},
+    {"label": "Curación / rueda de salud", "ps5": "DPAD_UP", "pc": ["4", ""]},
+    {"label": "Acción extra de leyenda", "ps5": "DPAD_DOWN", "pc": ["H", ""]},
+    {"label": "Modo de disparo", "ps5": "DPAD_LEFT", "pc": ["B", ""]},
+    {"label": "Marcar (ping)", "ps5": "R1", "pc": ["MOUSE3", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Inventario / menú", "ps5": "OPTIONS", "pc": ["TAB", "ESC"]}
+  ]
+}

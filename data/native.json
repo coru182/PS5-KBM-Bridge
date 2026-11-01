@@ -1,0 +1,402 @@
+{
+ "_comment": "Games whose PS5 version supports keyboard+mouse for gameplay (research Nov 2026). Only used as a SUGGESTION in the UI unless the user enables auto_native. Patterns: normalized names, full match.",
+ "patterns": [
+  "call of duty modern warfare ii",
+  "call of duty modern warfare iii",
+  "call of duty black ops 6",
+  "call of duty black ops 7",
+  "call of duty warzone",
+  "fortnite",
+  "fortnite battle royale",
+  "final fantasy xiv online",
+  "warframe",
+  "minecraft",
+  "minecraft playstation4 edition",
+  "paladins",
+  "smite 2",
+  "roblox",
+  "diablo iv",
+  "battlefield 6",
+  "the finals",
+  "delta force",
+  "once human",
+  "sea of thieves",
+  "war thunder",
+  "deep rock galactic",
+  "dayz",
+  "cities skylines remastered",
+  "the sims 4"
+ ],
+ "games": [
+  {
+   "name": "Call of Duty: Modern Warfare II (2022)",
+   "patterns": [
+    "call of duty modern warfare ii"
+   ],
+   "weak_source": false,
+   "note": "Native KBM on PS4/PS5, a series feature since MW (2019).",
+   "sources": [
+    "https://www.pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support",
+    "https://charlieintel.com/call-of-duty-modern-warfare-will-support-keyboard-mouse-play-on-consoles/55668"
+   ]
+  },
+  {
+   "name": "Call of Duty: Modern Warfare III (2023)",
+   "patterns": [
+    "call of duty modern warfare iii"
+   ],
+   "weak_source": false,
+   "note": "Native KBM on PS4/PS5.",
+   "sources": [
+    "https://www.pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support"
+   ]
+  },
+  {
+   "name": "Call of Duty: Black Ops 6",
+   "patterns": [
+    "call of duty black ops 6"
+   ],
+   "weak_source": false,
+   "note": "Native KBM on PS4/PS5.",
+   "sources": [
+    "https://www.pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support",
+    "https://orzly.com/blogs/guides/ps5-games-compatible-with-keyboard-mouse"
+   ]
+  },
+  {
+   "name": "Call of Duty: Black Ops 7",
+   "patterns": [
+    "call of duty black ops 7"
+   ],
+   "weak_source": true,
+   "note": "Same series KBM support; PS5 KBM how-to guides exist and Treyarch refers to console KBM users. No explicit Activision patch note found, so confidence is moderate-high.",
+   "sources": [
+    "https://www.youtube.com/watch?v=NAvIEl33kLo",
+    "https://www.pcgamer.com/games/call-of-duty/controller-players-are-winning-slightly-more-in-close-range-engagements-treyarch-throws-a-live-grenade-into-controller-vs-mouse-debate-says-aim-assist-will-be-less-forgiving-in-black-ops-7"
+   ]
+  },
+  {
+   "name": "Call of Duty: Warzone",
+   "patterns": [
+    "call of duty warzone"
+   ],
+   "weak_source": false,
+   "note": "Native KBM on PS5.",
+   "sources": [
+    "https://gamesradar.com/ps5-keyboard-mouse-support",
+    "https://orzly.com/blogs/guides/ps5-games-compatible-with-keyboard-mouse"
+   ]
+  },
+  {
+   "name": "Fortnite",
+   "patterns": [
+    "fortnite",
+    "fortnite battle royale"
+   ],
+   "weak_source": false,
+   "note": "Official support on PS5; Epic has a help article for KBM on PS5. Uses input-based matchmaking (KBM players are matched with PC).",
+   "sources": [
+    "https://www.epicgames.com/help/c-202300000001636/c-202300000001719/what-do-i-do-if-i-receive-a-connect-controller-pop-up-when-playing-fortnite-with-a-mouse-and-keyboard-on-ps5-a202300000009698",
+    "https://www.pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support"
+   ]
+  },
+  {
+   "name": "Final Fantasy XIV Online",
+   "patterns": [
+    "final fantasy xiv online"
+   ],
+   "weak_source": false,
+   "note": "Fully playable with KBM on PS4/PS5. A controller is still needed for the PS button and login.",
+   "sources": [
+    "https://primagames.com/tips/final-fantasy-xiv-can-you-use-keyboard-mouse-on-playstation-4-5"
+   ]
+  },
+  {
+   "name": "Warframe",
+   "patterns": [
+    "warframe"
+   ],
+   "weak_source": false,
+   "note": "Playable with KBM on PlayStation, but there are no keybind or sensitivity options on PS and some actions (chat send, gear wheel) still need the pad.",
+   "sources": [
+    "https://forums.warframe.com/topic/1194131-keyboard-and-mouse-controls-on-console",
+    "https://www.pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support"
+   ]
+  },
+  {
+   "name": "Minecraft (Bedrock, PS5 edition)",
+   "patterns": [
+    "minecraft",
+    "minecraft playstation4 edition"
+   ],
+   "weak_source": false,
+   "note": "KBM supported on PS4 and the native PS5 edition. A Mojang bug report (1.21.51) covers mouse detection on PS5, which shows the feature exists.",
+   "sources": [
+    "https://www.pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support",
+    "https://bugs-legacy.mojang.com/browse/MCPE-189462"
+   ]
+  },
+  {
+   "name": "Paladins",
+   "patterns": [
+    "paladins"
+   ],
+   "weak_source": false,
+   "note": "KBM supported on the PS4 version, which runs on PS5 via backward compatibility. Only list-based sources found.",
+   "sources": [
+    "https://www.pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support",
+    "https://mein-mmo.de/en/ps5-ps4-with-mouse-and-keyboard-how-well-does-it-actually-work,800943"
+   ]
+  },
+  {
+   "name": "Smite 2",
+   "patterns": [
+    "smite 2"
+   ],
+   "weak_source": true,
+   "note": "Listed as KBM-supported on PS5 by Push Square and Orzly. Not shown in the PS Store feature list, and no Hi-Rez patch note found, so confidence is moderate.",
+   "sources": [
+    "https://www.pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support",
+    "https://orzly.com/blogs/guides/ps5-games-compatible-with-keyboard-mouse"
+   ]
+  },
+  {
+   "name": "Roblox",
+   "patterns": [
+    "roblox"
+   ],
+   "weak_source": false,
+   "note": "The PlayStation app (PS4 build, playable on PS5) treats a connected KBM as keyboard/mouse input. Games must handle that input themselves.",
+   "sources": [
+    "https://www.pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support",
+    "https://devforum.roblox.com/t/console-support-with-computer-keyboard/4018142"
+   ]
+  },
+  {
+   "name": "Diablo IV",
+   "patterns": [
+    "diablo iv"
+   ],
+   "weak_source": false,
+   "note": "Added to consoles in Season 9 (patch 2.3.0, July 2025): 'Keyboard and Mouse play is now supported on consoles.'",
+   "sources": [
+    "https://www.destructoid.com/diablo-4-season-9-patch-notes-2-3-0-build-explained/",
+    "https://www.pcgamer.com/games/rpg/diablo-4s-roadmap-reveals-this-year-our-console-brothers-and-sisters-will-finally-get-keyboard-and-mouse-support"
+   ]
+  },
+  {
+   "name": "Battlefield 6",
+   "patterns": [
+    "battlefield 6"
+   ],
+   "weak_source": false,
+   "note": "DICE confirmed KBM support on consoles at launch (Oct 2025).",
+   "sources": [
+    "https://mp1st.com/news/battlefield-6-keyboard-target-framerates-on-all-consoles-and-crossplay-explained",
+    "https://www.notebookcheck.net/Battlefield-6-frame-rates-cross-play-MnK-support-for-consoles-explained.1078551.0.html"
+   ]
+  },
+  {
+   "name": "The Finals",
+   "patterns": [
+    "the finals"
+   ],
+   "weak_source": false,
+   "note": "Console KBM support added with Season 8 (Sept 10, 2025).",
+   "sources": [
+    "https://mp1st.com/news/the-finals-adds-mouse-and-keyboard-support-on-consoles"
+   ]
+  },
+  {
+   "name": "Delta Force",
+   "patterns": [
+    "delta force"
+   ],
+   "weak_source": false,
+   "note": "Native KBM added to console versions in the 'Ahsarah' season (Nov 18, 2025), alongside console-only crossplay.",
+   "sources": [
+    "https://mp1st.com/news/delta-force-ahsarah-new-season-console-only-crossplay-native-kbm-support",
+    "https://consolepcgaming.com/delta-force-ahsarah-season-adds-console-only-crossplay-and-native-kbm-support"
+   ]
+  },
+  {
+   "name": "Once Human",
+   "patterns": [
+    "once human"
+   ],
+   "weak_source": true,
+   "note": "Console launch (Aug 2026). The game's Console Launch FAQ is quoted as saying it supports controller and KBM on console with custom keybinds. There is a reported PS5 bug where only the keyboard or only the mouse registers. Secondary source only.",
+   "sources": [
+    "https://timesaver.gg/blog/once-human-mouse-keyboard-ps5-xbox",
+    "https://massivelyop.com/2026/07/10/once-human-will-launch-on-ps5-and-xbox-august-25-with-full-cross-play-and-cross-progression/"
+   ]
+  },
+  {
+   "name": "Sea of Thieves",
+   "patterns": [
+    "sea of thieves"
+   ],
+   "weak_source": false,
+   "note": "Console KBM fully supported (Apr 2024 PS5-launch patch notes).",
+   "sources": [
+    "https://comicbook.com/gaming/news/sea-of-thieves-ps5-update-patch-notes-early-access-release",
+    "https://windowscentral.com/sea-thieves-will-get-option-disable-cross-play-mouse-and-keyboard-support-coming-soon"
+   ]
+  },
+  {
+   "name": "War Thunder",
+   "patterns": [
+    "war thunder"
+   ],
+   "weak_source": false,
+   "note": "KBM supported on PS4/PS5.",
+   "sources": [
+    "https://www.pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support"
+   ]
+  },
+  {
+   "name": "Deep Rock Galactic",
+   "patterns": [
+    "deep rock galactic"
+   ],
+   "weak_source": false,
+   "note": "KBM supported on PS4/PS5.",
+   "sources": [
+    "https://www.pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support",
+    "https://gamesradar.com/ps5-keyboard-mouse-support"
+   ]
+  },
+  {
+   "name": "DayZ",
+   "patterns": [
+    "dayz"
+   ],
+   "weak_source": false,
+   "note": "KBM supported on the PS4 version (playable on PS5).",
+   "sources": [
+    "https://www.pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support",
+    "https://gamesradar.com/ps5-keyboard-mouse-support"
+   ]
+  },
+  {
+   "name": "Cities: Skylines Remastered",
+   "patterns": [
+    "cities skylines remastered"
+   ],
+   "weak_source": false,
+   "note": "KBM supported on PS5 (the first game, not II).",
+   "sources": [
+    "https://www.pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support"
+   ]
+  },
+  {
+   "name": "The Sims 4",
+   "patterns": [
+    "the sims 4"
+   ],
+   "weak_source": false,
+   "note": "Console KBM added in 2019 (PS4 version, playable on PS5).",
+   "sources": [
+    "https://www.pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support",
+    "https://simscommunity.info/2019/04/09/the-sims-4-console-is-getting-keyboard-mouse-support-next-week/"
+   ]
+  }
+ ],
+ "not_native": [
+  {
+   "name": "Overwatch 2",
+   "status": "unclear",
+   "note": "Blizzard says KBM on console is 'allowed, although unsupported'. There is no official KBM mode, and adapters/'unapproved peripherals' are bannable. Some lists say it works but a controller is needed for menus."
+  },
+  {
+   "name": "The Elder Scrolls Online",
+   "status": false,
+   "note": "Keyboard only works for some text fields. Mouse gameplay is not supported on console (some lists wrongly include it)."
+  },
+  {
+   "name": "Dying Light 2",
+   "status": "unclear",
+   "note": "Reportedly no KBM at launch (2022), and no later console patch adding it was found. It is not in any major KBM list."
+  },
+  {
+   "name": "Palworld",
+   "status": "unclear",
+   "note": "Players report KBM is only partially supported on Xbox/PS5 (menus/drag-drop poor). No official PS5 KBM statement found."
+  },
+  {
+   "name": "ARK: Survival Ascended",
+   "status": "unclear",
+   "note": "The Orzly list includes it, but the PlayStation product page lists no KBM support and no Wildcard patch note was found. ARK: Survival Evolved (PS4) did support KBM."
+  },
+  {
+   "name": "Cities: Skylines II",
+   "status": false,
+   "note": "Not released on PS5 yet (console version delayed indefinitely and the developer changed). Cities: Skylines Remastered (the first game) does support KBM on PS5."
+  },
+  {
+   "name": "Baldur's Gate 3",
+   "status": false,
+   "note": "Controller-only on PS5."
+  },
+  {
+   "name": "Path of Exile 2",
+   "status": false,
+   "note": "Players report the PS5 version ignores KBM. No GGG announcement found, and many threads ask for it."
+  },
+  {
+   "name": "Marvel Rivals",
+   "status": false,
+   "note": "Controller-only on console. NetEase penalizes KBM adapters on console."
+  },
+  {
+   "name": "Destiny 2",
+   "status": false,
+   "note": "Keyboard only works for text chat. No mouse gameplay on console."
+  },
+  {
+   "name": "Apex Legends",
+   "status": false,
+   "note": "Not supported. Respawn: 'We don't condone it' and is working on detecting it."
+  },
+  {
+   "name": "Battlefield 2042",
+   "status": false,
+   "note": "Not at launch, and DICE said in Sept 2022 that console KBM was not planned."
+  },
+  {
+   "name": "Rainbow Six Siege (X)",
+   "status": false,
+   "note": "Not supported. Ubisoft's MouseTrap detects console KBM and adds input-latency penalties."
+  },
+  {
+   "name": "Enshrouded",
+   "status": "unclear",
+   "note": "1.0 launched on PS5 on Oct 15, 2026. No source found confirming or denying KBM on PS5."
+  },
+  {
+   "name": "Satisfactory",
+   "status": "unclear",
+   "note": "Launched on PS5 on Nov 4, 2025, with no KBM mentioned. The community wiki says KBM works on console 'as of Version 1.2' via Dynamic Gamepad Swap, but no official console patch note was found."
+  },
+  {
+   "name": "Hell Let Loose",
+   "status": false,
+   "note": "Devs (Oct 2021): 'no plans to add mouse and keyboard support for consoles'. Not supported on Xbox either (2024)."
+  },
+  {
+   "name": "Squad",
+   "status": false,
+   "note": "Not on PS5 yet. The console version was announced in Oct 2026 for 2027, and KBM support is unknown."
+  },
+  {
+   "name": "Genshin Impact",
+   "status": false,
+   "note": "Keyboard only works for text chat."
+  },
+  {
+   "name": "Rocket League",
+   "status": false,
+   "note": "Keyboard only works for text chat."
+  }
+ ]
+}

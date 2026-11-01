@@ -1,0 +1,165 @@
+{
+ "id": "requiem",
+ "name": "Resident Evil Requiem",
+ "template": "fps",
+ "native_kbm_ps5": false,
+ "ads_pct": 150,
+ "confidence": "high",
+ "notes": "Perfil original de v0.7 (probado por el usuario en RE2R y Requiem).",
+ "sources": [],
+ "actions": [
+  {
+   "id": "run",
+   "label": "Correr",
+   "ps5": "L3",
+   "pc": [
+    "LSHIFT",
+    ""
+   ]
+  },
+  {
+   "id": "crouch",
+   "label": "Agacharse",
+   "ps5": "R3",
+   "pc": [
+    "LCTRL",
+    ""
+   ]
+  },
+  {
+   "id": "aim",
+   "label": "Apuntar",
+   "ps5": "L2",
+   "pc": [
+    "MOUSE2",
+    ""
+   ]
+  },
+  {
+   "id": "attack",
+   "label": "Atacar / Disparar",
+   "ps5": "R2",
+   "pc": [
+    "MOUSE1",
+    ""
+   ]
+  },
+  {
+   "id": "parry",
+   "label": "Parry / Arma cuerpo a cuerpo",
+   "ps5": "L1",
+   "pc": [
+    "SPACE",
+    ""
+   ]
+  },
+  {
+   "id": "interact",
+   "label": "Interactuar / Confirmar",
+   "ps5": "CROSS",
+   "pc": [
+    "F",
+    "ENTER"
+   ]
+  },
+  {
+   "id": "reload",
+   "label": "Recargar",
+   "ps5": "SQUARE",
+   "pc": [
+    "R",
+    ""
+   ]
+  },
+  {
+   "id": "cancel",
+   "label": "Volver / Cancelar",
+   "ps5": "CIRCLE",
+   "pc": [
+    "ESC",
+    "BACKSPACE"
+   ]
+  },
+  {
+   "id": "quickturn",
+   "label": "Giro rápido 180°",
+   "ps5": "LS_DOWN+CIRCLE",
+   "pc": [
+    "X",
+    ""
+   ]
+  },
+  {
+   "id": "heal",
+   "label": "Curarse",
+   "ps5": "R1",
+   "pc": [
+    "Q",
+    ""
+   ]
+  },
+  {
+   "id": "inventory",
+   "label": "Inventario",
+   "ps5": "TRIANGLE",
+   "pc": [
+    "TAB",
+    ""
+   ]
+  },
+  {
+   "id": "weapon_left",
+   "label": "Arma (cruceta ←)",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "1",
+    "WHEEL_UP"
+   ]
+  },
+  {
+   "id": "weapon_down",
+   "label": "Arma (cruceta ↓)",
+   "ps5": "DPAD_DOWN",
+   "pc": [
+    "2",
+    ""
+   ]
+  },
+  {
+   "id": "weapon_right",
+   "label": "Arma (cruceta →)",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "3",
+    "WHEEL_DOWN"
+   ]
+  },
+  {
+   "id": "flashlight",
+   "label": "Linterna",
+   "ps5": "DPAD_UP",
+   "pc": [
+    "G",
+    ""
+   ]
+  },
+  {
+   "id": "map",
+   "label": "Mapa",
+   "ps5": "TOUCHPAD",
+   "pc": [
+    "M",
+    ""
+   ]
+  },
+  {
+   "id": "pause",
+   "label": "Pausa",
+   "ps5": "OPTIONS",
+   "pc": [
+    "P",
+    ""
+   ]
+  }
+ ]
+}

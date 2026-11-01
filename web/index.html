@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PS5 KBM Bridge</title>
+<style>
+:root{
+  --bg:#0d1016;--panel:#151a23;--panel2:#1b2230;--line:#263043;--text:#e8edf5;--dim:#8d99ad;
+  --acc:#3d8bff;--acc2:#2a6fe0;--ok:#33c27f;--warn:#e8a33d;--bad:#ef5a5a;--chip:#222b3b;
+  --r:12px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);
+  font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+header{position:sticky;top:0;z-index:5;background:rgba(13,16,22,.92);backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;gap:12px}
+header h1{font-size:17px;margin:0;font-weight:650;letter-spacing:.2px}
+header .ver{color:var(--dim);font-size:12px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--dim);flex:none}
+.dot.active{background:var(--ok);box-shadow:0 0 10px var(--ok)}
+.dot.native{background:var(--warn)}.dot.off{background:var(--bad)}
+main{max-width:920px;margin:0 auto;padding:16px;display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+section{min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+section h2{margin:0 0 12px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.stat{background:var(--panel2);border-radius:10px;padding:10px 12px}
+.stat .k{font-size:12px;color:var(--dim)}.stat .v{font-size:17px;font-weight:600;margin-top:2px;overflow-wrap:break-word}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,select,input[type=number]{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);
+  border-radius:9px;padding:8px 12px}
+button{cursor:pointer}
+button:hover{border-color:var(--acc)}
+button.primary{background:var(--acc2);border-color:var(--acc2)}
+button.danger{border-color:#5a2a2a;color:#ffb3b3}
+button.small{padding:5px 9px;font-size:13px}
+select.small{padding:5px 6px;font-size:13px;max-width:96px}
+.targets{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.targets button.on{background:var(--acc2);border-color:var(--acc2)}
+.targets button.native.on{background:#8a5a12;border-color:#8a5a12}
+.tabs-label{color:var(--dim);font-size:13px;margin:0 0 6px}
+.gname{font-size:20px;font-weight:650;margin:0 0 6px;overflow-wrap:anywhere}
+.badge{display:inline-block;font-size:12px;padding:2px 8px;border-radius:20px;background:var(--chip);color:var(--dim);border:1px solid var(--line)}
+.badge.ok{color:var(--ok);border-color:#1f5a3f}.badge.warn{color:var(--warn);border-color:#6a4a1a}
+.plist h3{font-size:12px;color:var(--dim);font-weight:600;margin:12px 0 6px;text-transform:uppercase;letter-spacing:.06em}
+.plist .targets{margin-top:0}
+details{margin-top:8px}summary{cursor:pointer;color:var(--dim);font-size:13px}
+button:disabled{opacity:.45;cursor:default}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button.on{background:var(--acc2);border-color:var(--acc2)}
+.slider{display:grid;grid-template-columns:150px 1fr 54px;gap:10px;align-items:center;margin:8px 0}
+.slider label{color:var(--dim);font-size:14px}
+.slider output{text-align:right;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.check{display:flex;gap:8px;align-items:center;margin:6px 0;color:var(--text)}
+.check input{width:18px;height:18px;accent-color:var(--acc)}
+table{width:100%;border-collapse:collapse}
+td,th{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:middle;text-align:left}
+th{font-size:12px;color:var(--dim);font-weight:600}
+td.out{color:var(--dim);font-size:13px;white-space:nowrap}
+.key{display:inline-flex;gap:4px;align-items:center}
+.chip{display:inline-block;min-width:44px;text-align:center;background:var(--chip);border:1px solid var(--line);
+  border-radius:7px;padding:4px 8px;font-size:13px;font-weight:600;white-space:nowrap}
+.chip.empty{color:var(--dim);font-weight:400}
+.chip.cap{border-color:var(--warn);color:var(--warn);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.4}}
+.muted{color:var(--dim);font-size:13px}
+.note{background:var(--panel2);border-left:3px solid var(--acc);padding:10px 12px;border-radius:8px;font-size:14px}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#222c3d;border:1px solid var(--line);
+  padding:10px 16px;border-radius:10px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw}
+.toast.show{opacity:1}
+.offline{display:none;background:#3a1f1f;border:1px solid #6a2c2c;color:#ffd0d0;padding:10px 14px;border-radius:10px}
+/* TV (PS5 browser at 1080p+): everything bigger, readable from the couch */
+@media (min-width:1500px){ body{zoom:1.4} }
+.ps5hint{display:none;margin-left:auto;color:var(--dim);font-size:12px}
+.isps5 .ps5hint{display:inline}
+@media (max-width:640px){
+  .slider{grid-template-columns:1fr 54px}.slider label{grid-column:1/3}
+  #binds,#binds tr,#binds td{display:block}
+  table thead{display:none}
+  #binds tr{padding:10px 0;border-bottom:1px solid var(--line)}
+  #binds td{border:0;padding:3px 0}
+  #binds td:first-child{font-weight:600}
+  #binds td.out{display:block;padding-top:0}
+  .key{flex-wrap:wrap}
+  main{padding:12px}section{padding:14px}
+}
+</style>
+</head>
+<body>
+<header>
+  <span class="dot" id="dot"></span>
+  <h1>PS5 KBM Bridge</h1>
+  <span class="ver" id="ver"></span>
+  <span class="ps5hint">Para salir: botón PS (o tecla Windows)</span>
+</header>
+<main>
+  <div class="offline" id="offline">No hay conexión con el bridge. ¿Está corriendo en la PS5 y estás en la misma red?</div>
+
+  <section>
+    <h2>Estado</h2>
+    <div class="stats" id="stats"></div>
+    <div class="row" id="ptrRow" style="margin-top:10px"></div>
+  </section>
+
+  <section id="gameSec">
+    <h2>Juego actual</h2>
+    <div id="game"></div>
+  </section>
+
+  <section>
+    <h2>Perfil</h2>
+    <p class="tabs-label">Perfil que estás editando (no cambia el del juego):</p>
+    <div id="pcur"></div>
+    <div class="plist" id="plist"></div>
+    <div id="pnotes"></div>
+    <div id="params"></div>
+    <div class="row" style="margin-top:10px">
+      <button class="small" id="btnUseGame" style="display:none"></button>
+      <button class="small" id="btnDefault">Usar como perfil por defecto (juegos que no reconozco)</button>
+      <button class="small danger" id="btnReset">Restaurar teclas de fábrica</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Asignación de teclas</h2>
+    <p class="muted" style="margin-top:-4px">Tocá <b>Capturar</b> y apretá la tecla o botón del mouse nuevo en el teclado conectado a la PS5. También podés elegirla de la lista. F8, F9, F11 y F12 están reservadas.</p>
+    <table><thead><tr><th>Acción</th><th class="out">Mando</th><th>Tecla 1</th><th>Tecla 2</th></tr></thead>
+    <tbody id="binds"></tbody></table>
+  </section>
+
+  <section>
+    <h2>General</h2>
+    <div class="row" style="margin-bottom:8px">
+      <label class="muted" for="hz">Frecuencia de inyección</label>
+      <select id="hz">
+        <option value="0">Auto (250 Hz, sirve para 30/60/120 fps)</option>
+        <option value="60">60 Hz</option><option value="120">120 Hz</option><option value="250">250 Hz</option>
+      </select>
+    </div>
+    <label class="check"><input type="checkbox" id="auto"> Activar el DualSense virtual solo (sin F8) cuando respondan teclado y mouse</label>
+    <label class="check"><input type="checkbox" id="nat"> En juegos marcados como nativos, devolver el teclado/mouse a la PS5</label>
+    <label class="check"><input type="checkbox" id="autonat"> Marcar como nativos, sin preguntar, los juegos que según la base de datos ya soportan teclado/mouse en PS5 (Fortnite, Call of Duty, Battlefield 6…)</label>
+    <label class="check"><input type="checkbox" id="rel"> Al salir (F12), devolver el teclado/mouse a la PS5</label>
+    <div id="autostartRow">
+    <label class="check"><input type="checkbox" id="autostart"> Iniciar automáticamente al cargar etaHEN</label>
+    <p class="muted" id="autostartNote" style="margin:0 0 8px 26px"></p>
+    </div>
+    <div class="slider"><label for="psens">Velocidad del cursor (modo puntero)</label>
+      <input type="range" id="psens" min="1" max="50" step="1"><output id="psens_o"></output></div>
+    <p class="muted" style="margin-top:0">Modo puntero: el mouse mueve el cursor del navegador de la PS5 (clic izq. = ✕, clic der. = ○, rueda = scroll). Se activa solo al abrir esta página desde el ícono o con <b>F11</b> (también en medio de un juego) y se desactiva con el botón PS, al abrir un juego o con F9.</p>
+    <label class="check"><input type="checkbox" id="openpage"> Al abrir el ícono "PS5 KBM Bridge", mostrar esta página en la PS5</label>
+    <div class="row" style="margin:6px 0">
+      <label class="muted" for="idle">Apagar si no se usa</label>
+      <select id="idle">
+        <option value="0">Nunca (recomendado con autoarranque)</option>
+        <option value="15">Después de 15 min</option><option value="30">Después de 30 min</option><option value="60">Después de 60 min</option>
+      </select>
+    </div>
+    <p class="muted" id="hzNote"></p>
+  </section>
+
+  <section>
+    <h2>Juegos recordados</h2>
+    <div id="titles"></div>
+  </section>
+
+  <section>
+    <div class="row" style="justify-content:space-between">
+      <span class="muted">Ajustes guardados en la PS5: /data/ps5-kbm/config.ini</span>
+      <button class="danger" id="btnStop">Detener bridge</button>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const API = location.protocol.startsWith("http") ? "" : "http://127.0.0.1:8099";
+const $ = id => document.getElementById(id);
+let S = null, sel = null, lastCfg = "", busy = false, showOther = false, showList = false;
+
+const KEYNAMES = {MOUSE1:"Clic izq.",MOUSE2:"Clic der.",MOUSE3:"Clic rueda",MOUSE4:"Mouse 4",MOUSE5:"Mouse 5",
+  WHEEL_UP:"Rueda ↑",WHEEL_DOWN:"Rueda ↓",LSHIFT:"Shift izq.",RSHIFT:"Shift der.",LCTRL:"Ctrl izq.",RCTRL:"Ctrl der.",
+  LALT:"Alt",RALT:"AltGr",LGUI:"Win",RGUI:"Win der.",SPACE:"Espacio",ESC:"Esc",ENTER:"Enter",BACKSPACE:"Borrar",
+  TAB:"Tab",UP:"↑",DOWN:"↓",LEFT:"←",RIGHT:"→",SEMICOLON:"Ñ",CAPSLOCK:"Bloq May",GRAVE:"º",MINUS:"' ?",
+  EQUAL:"¡ ¿",LBRACKET:"` ^",RBRACKET:"+ *",BACKSLASH:"Ç",QUOTE:"´ ¨",COMMA:",",PERIOD:".",SLASH:"-",
+  ISO_BACKSLASH:"< >",PAGEUP:"RePág",PAGEDOWN:"AvPág",DELETE:"Supr",INSERT:"Insert",HOME:"Inicio",END:"Fin"};
+const OUTNAMES = {CROSS:"✕",CIRCLE:"○",SQUARE:"□",TRIANGLE:"△",L1:"L1",R1:"R1",L2:"L2",R2:"R2",L3:"L3",R3:"R3",
+  OPTIONS:"Options",TOUCHPAD:"Touchpad",PS:"Botón PS",DPAD_UP:"Cruceta ↑",DPAD_DOWN:"Cruceta ↓",DPAD_LEFT:"Cruceta ←",
+  DPAD_RIGHT:"Cruceta →",LS_UP:"Stick izq. ↑",LS_DOWN:"Stick izq. ↓",LS_LEFT:"Stick izq. ←",LS_RIGHT:"Stick izq. →"};
+const STATUS = {waiting:"Esperando teclado y mouse",active:"Activo",native:"Juego nativo: teclado/mouse en la PS5",
+  released:"Receptor liberado",stopped:"Detenido",diag:"Diagnóstico (sin mando virtual)"};
+const kn = k => k ? (KEYNAMES[k] || k) : "—";
+const on = o => o.split("+").map(x => OUTNAMES[x] || x).join(" + ");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),2600);}
+async function call(path, params){
+  const qs = new URLSearchParams(params||{}).toString();
+  try{
+    const r = await fetch(API + path + (qs?"?"+qs:""));
+    const j = await r.json();
+    if(!j.ok) toast("Error: " + (j.error||r.status));
+    else if(j.moved_from) toast("Esa tecla estaba en «" + j.moved_from + "»; se la saqué de ahí");
+    await refresh(true);
+    return j;
+  }catch(e){toast("Sin conexión con el bridge");return null;}
+}
+function profile(){ return S.config.edit || {id:"", name:"", actions:[], notes:""}; }
+const pinfo = id => S.config.profiles.find(p => p.id === id);
+const pname = id => { const p = pinfo(id); return p ? p.name.replace(/^Plantilla: /, "") : id; };
+const byName = (a, b) => a.name.localeCompare(b.name, "es", {sensitivity: "base"});
+const SRC = {game:"Perfil de este juego (teclas de la versión de PC)", template:"Plantilla por género (el juego no tiene perfil propio todavía)",
+  default:"Juego no reconocido: usa el perfil por defecto ★", rule:"Elegido por vos para este juego", native:"Nativo: el juego recibe el teclado y el mouse",
+  auto_native:"Nativo automático (la base de datos dice que el juego soporta teclado/mouse)", none:""};
+const CONF = {3:["ok","Teclas verificadas con fuentes"], 2:["warn","Algunas teclas inferidas: revisalas en el juego"], 1:["warn","Sin verificar"], 0:["","Plantilla genérica"]};
+function setHTML(el, html){ if (el._h === html) return false; el.innerHTML = html; el._h = html; return true; }
+/* While a <select> picker is open (PS5 shows its own overlay) do not touch the page. */
+let freezeUntil = 0;
+document.addEventListener("focusin", e => { if (e.target.tagName === "SELECT") freezeUntil = Date.now() + 15000; });
+document.addEventListener("pointerdown", e => { if (e.target.tagName === "SELECT") freezeUntil = Date.now() + 15000; });
+document.addEventListener("change", () => { freezeUntil = 0; });
+
+function renderRuntime(){
+  const r = S.runtime;
+  $("ver").textContent = "v" + r.version + (r.diag ? " · diag" : "");
+  const d = $("dot"); d.className = "dot " + (r.status==="active"?"active":r.status==="native"||r.status==="released"?"native":r.status==="stopped"?"off":"");
+  const lat = r.e2i_p95_us ? (r.e2i_p50_us/1000).toFixed(1) + " / " + (r.e2i_p95_us/1000).toFixed(1) + " ms" : "—";
+  const prof = S.config.profiles.find(p=>p.id===r.profile);
+  const items = [
+    ["Estado", STATUS[r.status] || r.status],
+    ["Juego", r.title ? (r.title_name || r.title) : "Ninguno (menú)"],
+    ["Perfil en uso", r.title_source === "native" || r.title_source === "auto_native" ? "Nativo" : (prof ? pname(prof.id) : r.profile)],
+    ["Receptor", r.receiver ? "Tomado por el bridge" : "En la PS5"],
+    ["Mando virtual", r.vda ? "Conectado" : "No"],
+    ["Inyección", r.hz + " Hz"],
+    ["Latencia p50 / p95", lat],
+    ["Reportes 5 s (tecl./mouse)", r.kb_reports_5s + " / " + r.mouse_reports_5s],
+    ["Mouse", r.pointer_mode ? "Cursor (modo puntero)" : "Cámara"],
+  ];
+  setHTML($("stats"), items.map(([k,v]) => `<div class="stat"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join(""));
+  /* Only rebuild interactive parts when they change: on the PS5 browser a node
+   * replaced between press and release (or while a picker is open) loses the click. */
+  if (setHTML($("ptrRow"), `<button class="small" id="ptrBtn">${r.pointer_mode ? "Usar mouse como cámara" : "Usar mouse como cursor"} (F9)</button>`))
+    $("ptrBtn").onclick = () => call("/api/pointer", {on: S.runtime.pointer_mode ? 0 : 1});
+
+  const g = $("game");
+  if(!r.title){ setHTML(g, `<p class="muted">No hay ningún juego abierto. Cuando abras uno lo reconozco por su Title ID y le aplico el perfil que corresponde.</p>`); }
+  else {
+    const rule = S.config.titles.find(t => t.tid === r.title);
+    const cur = rule ? rule.target : "auto";
+    const P = S.config.profiles;
+    const tpl = P.filter(p => p.kind === "template");
+    const games = P.filter(p => p.kind === "game").sort(byName);
+    const btn = (v, t, extra) => `<button class="${v===cur?"on":""} ${extra||""}" data-target="${v}">${v===cur?"✓ ":""}${esc(t)}</button>`;
+    let row = btn("auto", "Automático: " + pname(r.auto_profile)) + btn("native", "Nativo (teclado/mouse del juego)", "native")
+      + tpl.map(p => btn(p.id, pname(p.id))).join("");
+    if (cur !== "auto" && cur !== "native" && !tpl.some(p => p.id === cur)) row += btn(cur, pname(cur));
+    row += `<button data-other="1">${showOther ? "Ocultar lista" : "Otro juego…"}</button>`;
+    const other = showOther ? `<div class="plist"><h3>Perfiles de juegos (A–Z)</h3><div class="targets">${games.map(p => btn(p.id, p.name)).join("")}</div></div>` : "";
+    const sug = r.native_suggested ? `<p class="note">Según la base de datos, la versión de PS5 de este juego <b>soporta teclado y mouse</b>. Si preferís usar ese soporte, tocá <b>Nativo</b>: el bridge le devuelve el receptor al juego mientras esté abierto.</p>` : "";
+    const html = `<div class="gname">${esc(r.title_name || "Juego no reconocido")}</div>
+      <div class="row"><span class="chip">${esc(r.title)}</span><span class="muted">${esc(SRC[r.title_source] || "")}</span></div>
+      ${sug}
+      <div class="targets">${row}</div>${other}
+      <p class="muted">Lo que elijas se recuerda para este juego y se aplica al instante. "Automático" usa el perfil que trae el bridge para este juego.</p>`;
+    if (setHTML(g, html)) {
+      g.querySelectorAll("[data-target]").forEach(b => b.onclick = () => call("/api/title", {tid: S.runtime.title, target: b.dataset.target}));
+      g.querySelector("[data-other]").onclick = () => { showOther = !showOther; renderRuntime(); };
+    }
+  }
+  const ug = $("btnUseGame");
+  if (r.title) { ug.style.display = ""; ug.textContent = "Usar este perfil en " + (r.title_name || r.title); } else ug.style.display = "none";
+}
+
+function slider(id, label, min, max, step, val, unit){
+  return `<div class="slider"><label for="${id}">${label}</label>
+    <input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}">
+    <output id="${id}_o">${val}${unit||""}</output></div>`;
+}
+function renderConfig(){
+  const c = S.config;
+  const p = profile();
+  if(!sel) sel = p.id;
+  const star = id => (id === c.default_profile ? " ★" : "") + (pinfo(id) && pinfo(id).mod ? " •" : "");
+  const cf = CONF[p.kind === "template" ? 0 : p.conf] || CONF[0];
+  $("pcur").innerHTML = `<div class="row"><b style="font-size:17px">${esc(p.name)}${star(p.id)}</b>
+      <span class="badge ${cf[0]}">${esc(cf[1])}</span>${p.native?`<span class="badge ok">Teclado/mouse nativo en PS5</span>`:""}
+      <button class="small" id="pchg">${showList ? "Cerrar lista" : "Editar otro perfil…"}</button></div>`;
+  $("pchg").onclick = () => { showList = !showList; renderConfig(); };
+  const grp = (t, list) => `<h3>${t}</h3><div class="targets">${list.map(q => `<button class="${q.id===p.id?"on":""}" data-p="${q.id}">${esc(q.name.replace(/^Plantilla: /,""))}${star(q.id)}</button>`).join("")}</div>`;
+  $("plist").innerHTML = showList ? grp("En uso ahora", c.profiles.filter(q => q.id === S.runtime.profile))
+      + grp("Plantillas", c.profiles.filter(q => q.kind === "template"))
+      + grp("Juegos (A–Z)", c.profiles.filter(q => q.kind === "game").sort(byName))
+      + `<p class="muted">★ = perfil por defecto para juegos que no reconozco · • = modificado por vos</p>` : "";
+  $("plist").querySelectorAll("[data-p]").forEach(b => b.onclick = () => { sel = b.dataset.p; showList = false; refresh(true); });
+  $("pnotes").innerHTML = p.notes ? `<details><summary>Notas de la investigación de teclas (en inglés)</summary><p class="muted">${esc(p.notes)}</p></details>` : "";
+  $("params").innerHTML =
+    slider("sens","Sensibilidad",1,50,1,p.sens) +
+    slider("yratio","Vertical (% de X)",25,400,5,p.yratio,"%") +
+    slider("ads_pct","Sensibilidad al apuntar (ADS)",25,400,5,p.ads_pct,"%") +
+    slider("smooth_ms","Suavizado",4,60,1,p.smooth_ms," ms") +
+    slider("deadzone","Compensar zona muerta",0,90,1,p.deadzone) +
+    `<label class="check"><input type="checkbox" id="invert_y" ${p.invert_y?"checked":""}> Invertir eje vertical</label>`;
+  ["sens","yratio","ads_pct","smooth_ms","deadzone"].forEach(k => {
+    const el = $(k), o = $(k+"_o"), unit = o.textContent.replace(/^[0-9]+/,"");
+    el.oninput = () => { o.textContent = el.value + unit; busy = true; };
+    el.onchange = () => { busy = false; call("/api/profile", {id:p.id, [k]:el.value}); };
+  });
+  $("invert_y").onchange = e => call("/api/profile", {id:p.id, invert_y:e.target.checked?1:0});
+
+  const cap = S.runtime.capture;
+  $("binds").innerHTML = p.actions.map(a => `<tr><td>${esc(a.label)}</td><td class="out">${esc(on(a.out))}</td>
+    ${[0,1].map(s => {
+      const capping = cap.active && cap.profile===p.id && cap.action===a.id && cap.slot===s;
+      return `<td><span class="key"><span class="chip ${capping?"cap":a.keys[s]?"":"empty"}">${capping?"…":esc(kn(a.keys[s]))}</span>
+        <button class="small" data-a="${a.id}" data-s="${s}" data-act="cap" ${S.runtime.receiver?"":"disabled"}>Capturar</button>
+        <select class="small" data-a="${a.id}" data-s="${s}" data-act="pick" aria-label="Elegir tecla">
+          <option value="">…</option><option value="NONE">(ninguna)</option>
+          ${S.keys.map(k=>`<option value="${k}">${esc(kn(k))}</option>`).join("")}</select></span></td>`;}).join("")}</tr>`).join("");
+  $("binds").querySelectorAll("[data-act=cap]").forEach(b => b.onclick = () => {
+    call("/api/capture", {profile:p.id, action:b.dataset.a, slot:b.dataset.s}).then(j => j && j.ok && toast("Apretá la tecla nueva en el teclado de la PS5"));
+  });
+  $("binds").querySelectorAll("[data-act=pick]").forEach(s => s.onchange = () => {
+    if(s.value) call("/api/bind", {profile:p.id, action:s.dataset.a, slot:s.dataset.s, key:s.value});
+  });
+
+  $("hz").value = String(c.inject_hz);
+  const r = S.runtime;
+  $("autostartRow").style.display = r.etahen ? "" : "none";
+  $("autostart").checked = !!r.autostart_on;
+  $("autostart").disabled = !r.autostart_avail;
+  $("autostartNote").textContent = r.autostart_avail
+    ? (r.autostart_on ? "Activado: etaHEN lo arranca solo cada vez que lo cargás." : "El ELF ya está en /data/etaHEN/payloads/. Marcá la casilla para que arranque solo.")
+    : "Para activarlo, copiá ps5-kbm-bridge.elf (sin número de versión) a /data/etaHEN/payloads/ por FTP.";
+  $("idle").value = String([0,15,30,60].includes(c.idle_exit_min) ? c.idle_exit_min : 0);
+  $("openpage").checked = !!c.open_settings_on_launch;
+  $("psens").value = c.pointer_sens; $("psens_o").textContent = c.pointer_sens;
+  $("auto").checked = !!c.auto_activate; $("nat").checked = !!c.native_switch; $("autonat").checked = !!c.auto_native; $("rel").checked = !!c.release_on_exit;
+  $("hzNote").textContent = "En uso: " + c.effective_hz + " Hz. El mouse se convierte por velocidad, así que la sensación es la misma a cualquier frecuencia; más Hz solo baja la latencia.";
+
+  const T = c.titles;
+  $("titles").innerHTML = T.length ? `<table>${T.map(t => {
+      return `<tr><td>${esc(t.name || "?")} <span class="chip">${esc(t.tid)}</span></td><td>${esc(t.target==="native"?"Nativo":pname(t.target))}</td>
+      <td style="text-align:right"><button class="small danger" data-t="${t.tid}">Olvidar</button></td></tr>`;}).join("")}</table>`
+    : `<p class="muted">Todavía no cambiaste el perfil de ningún juego. Cada juego usa su perfil automático (o la plantilla de su género; los que no reconozco, el perfil por defecto ★).</p>`;
+  $("titles").querySelectorAll("[data-t]").forEach(b => b.onclick = () => call("/api/title", {tid:b.dataset.t, target:""}));
+}
+
+async function refresh(force){
+  try{
+    const r = await fetch(API + "/api/state" + (sel ? "?edit=" + encodeURIComponent(sel) : ""), {cache:"no-store"});
+    S = await r.json();
+    $("offline").style.display = "none";
+  }catch(e){ $("offline").style.display = "block"; return; }
+  if (!force && Date.now() < freezeUntil) return;
+  renderRuntime();
+  const cfg = JSON.stringify(S.config) + JSON.stringify(S.runtime.capture) + S.runtime.receiver + S.runtime.autostart_avail + S.runtime.autostart_on + S.runtime.pointer_mode;
+  const editing = busy || (document.activeElement && document.activeElement.tagName === "SELECT");
+  if(force || (cfg !== lastCfg && !editing)){ lastCfg = cfg; renderConfig(); }
+  if(S.runtime.capture.result && S.runtime.capture.result !== window._lastCap){
+    window._lastCap = S.runtime.capture.result;
+    if(!S.runtime.capture.active) toast(S.runtime.capture.result === "timeout" ? "No se apretó ninguna tecla (10 s)" :
+       S.runtime.capture.result === "cancelled" ? "Captura cancelada" : "Asignada: " + kn(S.runtime.capture.result));
+  }
+}
+
+$("btnDefault").onclick = () => call("/api/global", {default_profile: profile().id});
+$("btnUseGame").onclick = () => { if (S.runtime.title) call("/api/title", {tid: S.runtime.title, target: profile().id}); };
+$("btnReset").onclick = () => { if(confirm("¿Restaurar las teclas y ajustes de fábrica de este perfil?")) call("/api/reset", {profile: profile().id}); };
+$("hz").onchange = e => call("/api/global", {inject_hz: e.target.value});
+$("auto").onchange = e => call("/api/global", {auto_activate: e.target.checked?1:0});
+$("nat").onchange = e => call("/api/global", {native_switch: e.target.checked?1:0});
+$("autonat").onchange = e => call("/api/global", {auto_native: e.target.checked?1:0});
+$("rel").onchange = e => call("/api/global", {release_on_exit: e.target.checked?1:0});
+$("autostart").onchange = e => call("/api/autostart", {on: e.target.checked?1:0});
+$("idle").onchange = e => call("/api/global", {idle_exit_min: e.target.value});
+$("openpage").onchange = e => call("/api/global", {open_settings_on_launch: e.target.checked?1:0});
+$("psens").oninput = e => { $("psens_o").textContent = e.target.value; busy = true; };
+$("psens").onchange = e => { busy = false; call("/api/global", {pointer_sens: e.target.value}); };
+$("btnStop").onclick = () => { if(confirm("¿Detener el bridge? Se borra el mando virtual.")) call("/api/stop"); };
+
+if (/PlayStation/i.test(navigator.userAgent)) document.documentElement.classList.add("isps5");
+refresh(true);
+setInterval(refresh, 1000);
+</script>
+</body>
+</html>

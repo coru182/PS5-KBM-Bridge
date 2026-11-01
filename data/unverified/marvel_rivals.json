@@ -1,0 +1,26 @@
+{
+  "id": "marvel_rivals",
+  "name": "Marvel Rivals",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "Not confirmed. No source was found during this research (web search limit reached), and Wikipedia mentions only cross-play, not console keyboard/mouse. Believed to be controller-only on PS5; check this before relying on it.",
+  "ads_pct": 100,
+  "confidence": "low",
+  "notes": "PC keys are sourced from magicgameworld (LMB primary, RMB secondary, R reload, V melee, E ability 1, LShift ability 2, F ability 3, Q ultimate, Z/X/C team-ups, Space jump/ascend, LCtrl descend, H change hero, Tab scoreboard). The PS5 buttons were NOT verified from a source; they come from general knowledge of the default controller layout and must be checked in-game. Ability 3 (F), descend (LCtrl) and team-ups (Z/X/C) were left out because their PS5 buttons could not be confirmed. Abilities differ per hero, but the slot bindings are shared.",
+  "sources": [
+    "https://www.magicgameworld.com/marvel-rivals-pc-keyboard-controls-guide/",
+    "https://en.wikipedia.org/wiki/Marvel_Rivals"
+  ],
+  "actions": [
+    {"label": "Ataque principal", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Ataque secundario", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Recargar", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Saltar / Ascender", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Cuerpo a cuerpo", "ps5": "R3", "pc": ["V", ""]},
+    {"label": "Habilidad 1", "ps5": "R1", "pc": ["E", ""]},
+    {"label": "Habilidad 2", "ps5": "L1", "pc": ["LSHIFT", ""]},
+    {"label": "Definitiva", "ps5": "TRIANGLE", "pc": ["Q", ""]},
+    {"label": "Tabla de puntajes", "ps5": "TOUCHPAD", "pc": ["TAB", ""]},
+    {"label": "Menú / Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

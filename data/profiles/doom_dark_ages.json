@@ -1,0 +1,31 @@
+{
+  "id": "doom_dark_ages",
+  "name": "DOOM: The Dark Ages",
+  "template": "fps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No source says the PS5 version supports keyboard/mouse for gameplay, and it is not on Push Square's PS5 mouse+keyboard games list (pushsquare.com/guides/all-ps5-ps4-games-with-mouse-and-keyboard-support).",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "Slayer on-foot bindings only. Mech (Atlan) and dragon use the same PC keys for different PS5 buttons, so one profile can't cover them: Atlan dash is PC Space vs PS5 L2, and Atlan finisher is RMB vs R1. On the dragon, PC E/Q ascend/descend maps to PS5 R1/L1, Space dodge to Circle, LCTRL ability to R3 and RMB assault mode to L2. Shield bash is RMB held + LMB (L2 held + R2), which works automatically. PC weapon keys 1-6 have no PS5 equivalent (use R1 quick-switch). Game8 lists Touchpad = Pause and Options = Dossier, but MagicGameWorld and id's usual layout say Options = pause and Touchpad = dossier; this file uses the latter.",
+  "sources": [
+    "https://www.magicgameworld.com/?p=110071",
+    "https://www.shacknews.com/article/144238/pc-keybindings-controls-doom-dark-ages",
+    "https://game8.co/games/Doom-The-Dark-Ages/archives/521666"
+  ],
+  "actions": [
+    {"label": "Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Bloquear / parry con escudo", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Lanzar escudo", "ps5": "L1", "pc": ["R", ""]},
+    {"label": "Saltar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Cuerpo a cuerpo", "ps5": "R3", "pc": ["E", ""]},
+    {"label": "Arma de clase", "ps5": "SQUARE", "pc": ["F", ""]},
+    {"label": "Cambio rápido de arma", "ps5": "R1", "pc": ["Q", ""]},
+    {"label": "Ballesta BFC", "ps5": "TRIANGLE", "pc": ["V", ""]},
+    {"label": "Usar / interactuar", "ps5": "CIRCLE", "pc": ["G", ""]},
+    {"label": "Dossier", "ps5": "TOUCHPAD", "pc": ["TAB", ""]},
+    {"label": "Marcar objetivo", "ps5": "DPAD_DOWN", "pc": ["H", ""]},
+    {"label": "Zoom / lupa", "ps5": "DPAD_LEFT", "pc": ["B", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

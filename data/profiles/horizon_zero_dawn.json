@@ -1,0 +1,38 @@
+{
+  "id": "horizon_zero_dawn",
+  "name": "Horizon Zero Dawn (Remastered / Complete Edition)",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "PS5 version (Remastered) has no keyboard/mouse gameplay support; KBM controls exist only in the PC port. No source found listing KBM for the PS4/PS5 versions; the sequel is confirmed controller-only on PS (windowsreport.com/horizon-forbidden-west-keyboard-and-mouse).",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "PC MOUSE1 is light melee (R1) when not aiming and fire (R2) while aiming; mapped to R2 because firing the bow is the core action, so MOUSE1 without aiming gives heavy melee (R2). Light melee lands on R (PC reload-while-aiming = R1 on PS5). PC heavy melee is LSHIFT+MOUSE1; with this map MOUSE1 alone already does heavy melee. LSHIFT is sprint (L3) and also Concentration while aiming on PC; on PS5 Concentration is R3 while aiming, so it is not reproduced (LSHIFT kept as L3). Show HUD (PC H hold) is a touchpad swipe/touch on PS5 and cannot be sent as a button, omitted. Menu sub-pages (I/M/K/O/J/N) all open the touchpad menu on PS5; mapped to TOUCHPAD. Quick weapon keys 1-4, walk toggle (CAPSLOCK) and manual save (G) have no PS5 button equivalent. Remastered PS5 keeps the original layout.",
+  "sources": [
+    "https://twinfinite.net/guides/horizon-zero-dawn-pc-controls-guide/",
+    "https://defkey.com/horizon-zero-dawn-pc-shortcuts",
+    "https://www.magicgameworld.com/horizon-zero-dawn-pc-keyboard-controls-guide/",
+    "https://game8.co/games/Horizon-Zero-Dawn/archives/353988",
+    "https://www.gamepressure.com/horizon-zero-dawn/controls-keybinds-interface/z997de"
+  ],
+  "actions": [
+    {"label": "Saltar / acelerar montura", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Rodar / frenar montura", "ps5": "CIRCLE", "pc": ["LCTRL", ""]},
+    {"label": "Agacharse / deslizarse", "ps5": "SQUARE", "pc": ["C", ""]},
+    {"label": "Interactuar", "ps5": "TRIANGLE", "pc": ["E", ""]},
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Foco", "ps5": "R3", "pc": ["V", ""]},
+    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Disparar / ataque fuerte", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Ataque ligero / recargar", "ps5": "R1", "pc": ["R", ""]},
+    {"label": "Rueda de armas", "ps5": "L1", "pc": ["TAB", ""]},
+    {"label": "Usar botiquín de hierbas", "ps5": "DPAD_UP", "pc": ["Q", ""]},
+    {"label": "Usar herramienta / trampa", "ps5": "DPAD_DOWN", "pc": ["F", ""]},
+    {"label": "Herramienta anterior", "ps5": "DPAD_LEFT", "pc": ["Z", ""]},
+    {"label": "Herramienta siguiente", "ps5": "DPAD_RIGHT", "pc": ["X", ""]},
+    {"label": "Abrir menú", "ps5": "TOUCHPAD", "pc": ["ENTER", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Inventario", "ps5": "TOUCHPAD", "pc": ["I", ""]},
+    {"label": "Misiones", "ps5": "TOUCHPAD", "pc": ["J", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

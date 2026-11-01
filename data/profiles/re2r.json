@@ -1,0 +1,165 @@
+{
+ "id": "re2r",
+ "name": "Resident Evil 2 (2019)",
+ "template": "tps",
+ "native_kbm_ps5": false,
+ "ads_pct": 100,
+ "confidence": "high",
+ "notes": "Perfil original de v0.7 (probado por el usuario en RE2R y Requiem).",
+ "sources": [],
+ "actions": [
+  {
+   "id": "run",
+   "label": "Correr",
+   "ps5": "L3",
+   "pc": [
+    "LSHIFT",
+    ""
+   ]
+  },
+  {
+   "id": "aim",
+   "label": "Apuntar",
+   "ps5": "L2",
+   "pc": [
+    "MOUSE2",
+    ""
+   ]
+  },
+  {
+   "id": "attack",
+   "label": "Atacar / Disparar",
+   "ps5": "R2",
+   "pc": [
+    "MOUSE1",
+    ""
+   ]
+  },
+  {
+   "id": "interact",
+   "label": "Interactuar / Confirmar",
+   "ps5": "CROSS",
+   "pc": [
+    "F",
+    "ENTER"
+   ]
+  },
+  {
+   "id": "reload",
+   "label": "Recargar",
+   "ps5": "SQUARE",
+   "pc": [
+    "R",
+    ""
+   ]
+  },
+  {
+   "id": "subweapon",
+   "label": "Arma secundaria (cuchillo)",
+   "ps5": "L1",
+   "pc": [
+    "SPACE",
+    ""
+   ]
+  },
+  {
+   "id": "ammo",
+   "label": "Cambiar munición",
+   "ps5": "R1",
+   "pc": [
+    "E",
+    ""
+   ]
+  },
+  {
+   "id": "quickturn",
+   "label": "Giro rápido 180°",
+   "ps5": "LS_DOWN+CIRCLE",
+   "pc": [
+    "Q",
+    ""
+   ]
+  },
+  {
+   "id": "cancel",
+   "label": "Volver / Cancelar",
+   "ps5": "CIRCLE",
+   "pc": [
+    "ESC",
+    "BACKSPACE"
+   ]
+  },
+  {
+   "id": "inventory",
+   "label": "Inventario",
+   "ps5": "TRIANGLE",
+   "pc": [
+    "TAB",
+    "I"
+   ]
+  },
+  {
+   "id": "map",
+   "label": "Mapa",
+   "ps5": "TOUCHPAD",
+   "pc": [
+    "M",
+    "LCTRL"
+   ]
+  },
+  {
+   "id": "pause",
+   "label": "Pausa",
+   "ps5": "OPTIONS",
+   "pc": [
+    "P",
+    ""
+   ]
+  },
+  {
+   "id": "camera",
+   "label": "Centrar cámara",
+   "ps5": "R3",
+   "pc": [
+    "MOUSE3",
+    "LALT"
+   ]
+  },
+  {
+   "id": "weapon1",
+   "label": "Atajo de arma 1 (cruceta ↑)",
+   "ps5": "DPAD_UP",
+   "pc": [
+    "1",
+    ""
+   ]
+  },
+  {
+   "id": "weapon2",
+   "label": "Atajo de arma 2 (cruceta →)",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "2",
+    ""
+   ]
+  },
+  {
+   "id": "weapon3",
+   "label": "Atajo de arma 3 (cruceta ↓)",
+   "ps5": "DPAD_DOWN",
+   "pc": [
+    "3",
+    ""
+   ]
+  },
+  {
+   "id": "weapon4",
+   "label": "Atajo de arma 4 (cruceta ←)",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "4",
+    ""
+   ]
+  }
+ ]
+}
