@@ -47,7 +47,7 @@ static void press_edge(KbmEngine *e, uint8_t code, int now_down) {
         e->suppress[code] = 1;   /* the captured press must not reach the game */
         return;
     }
-    if (!was && !e->pointer_mode && e->map.has_layers && (layer_table(e)[code] & KBM_OUT_MODE_TOGGLE))
+    if (!was && e->map.has_layers && (layer_table(e)[code] & KBM_OUT_MODE_TOGGLE))
         e->layer = e->layer == KBM_LAYER_VEHICLE ? KBM_LAYER_FOOT : KBM_LAYER_VEHICLE;
     if (!was && !e->pointer_mode && (layer_table(e)[code] & KBM_BTN_PS)) ++e->ps_presses;
 }

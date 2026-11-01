@@ -59,6 +59,7 @@ static int fake_autostart(void *u, int on, char *msg, size_t n) {
 }
 
 static void fake_pointer(void *u, int on) { (void)u; rt.pointer_mode = on; }
+static void fake_layer(void *u, int l) { (void)u; rt.layer = l; }
 
 int main(int argc, char **argv) {
     signal(SIGPIPE, SIG_IGN);
@@ -78,7 +79,7 @@ int main(int argc, char **argv) {
     rt.kb_reports_5s = 12; rt.mouse_reports_5s = 480; rt.e2i_p50_us = 2100; rt.e2i_p95_us = 3900;
     changed(NULL); changes = 0;
     rt.autostart_avail = 1; rt.etahen = 1;
-    KbmApi api = { &cfg, &rt, NULL, lk, ul, changed, cap_start, cap_cancel, do_stop, fake_autostart, fake_pointer };
+    KbmApi api = { &cfg, &rt, NULL, lk, ul, changed, cap_start, cap_cancel, do_stop, fake_autostart, fake_pointer, fake_layer };
     if (kbm_http_start(port, &api) != 0) { perror("kbm_http_start"); return 1; }
     printf("host_server listening on %d\n", port); fflush(stdout);
     while (!stop_flag) usleep(100000);

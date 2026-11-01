@@ -88,6 +88,8 @@ try:
     k = {a["id"]: a["keys"] for a in api("/api/state?edit=gta_trilogy_de")[1]["config"]["edit"]["actions"]}
     assert k["car_fire"] == ["MOUSE1", "Q"] and k["look_left"] == ["", ""] and k["swap_phone"][0] == "Q", k
     assert api("/api/reset?profile=gta_trilogy_de")[1]["ok"]
+    # manual mode switch only for profiles with a vehicle mode (current title: RE2 -> none)
+    assert api("/api/layer?l=1")[1]["ok"] is False
     assert api("/api/global?notify_mode=1")[1]["ok"] and api("/api/state")[1]["config"]["notify_mode"] == 1
     g5 = api("/api/state?edit=gta5")[1]["config"]["edit"]
     assert g5["layers"] == 1 and any(a["id"] == "veh_fire" and a["out"] == "L1+R1" and a["layer"] == 1 for a in g5["actions"])

@@ -321,7 +321,9 @@ static void test_vehicle_layers(void) {
     assert(e.layer == KBM_LAYER_FOOT);
     kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_VEHICLE);   /* manual resync */
     kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_FOOT);
-    e.pointer_mode = 1; kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_FOOT);
+    /* the mode key also works with the browser cursor on (it follows the Triangle press) */
+    e.pointer_mode = 1; kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_VEHICLE);
+    kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_FOOT);
     e.pointer_mode = 0;
     /* Classic scheme variant: same keys, classic buttons */
     {

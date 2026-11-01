@@ -44,7 +44,7 @@
 #ifndef KBM_DIAG_ONLY
 #define KBM_DIAG_ONLY 0
 #endif
-#define KBM_VERSION "0.10.3"
+#define KBM_VERSION "0.10.4"
 
 extern void ghostpad_status_log(const char *fmt, ...);
 #define KLOG(...) ghostpad_status_log("[KBM] " __VA_ARGS__)
@@ -250,6 +250,12 @@ static void set_pointer_locked(int on, const char *why) {
     KLOG("pointer mode %s (%s)\n", on ? "ON" : "off", why);
 }
 static void api_set_pointer(void *u, int on) { (void)u; set_pointer_locked(on, "web UI"); }
+static void api_set_layer(void *u, int layer) {   /* lock held */
+    (void)u;
+    kbm_set_layer(&g_engine, layer);
+    g_rt.layer = g_engine.layer;
+    KLOG("MODE -> %s (web UI)\n", g_engine.layer ? "vehicle" : "on foot");
+}
 static void api_stop(void *u) { (void)u; g_stop_requested = 1; KLOG("stop requested from web UI\n"); }
 
 static int file_exists(const char *p) { struct stat st; return stat(p, &st) == 0; }
@@ -429,8 +435,13 @@ static int on_report(void *user, int kind, const uint8_t *buf, uint32_t len, uin
     int ok, active = 0, captured = -1;
     char moved[64] = {0};
     pthread_mutex_lock(&g_lock);
+    int layer_before = g_engine.layer;
     ok = kind == KBM_KIND_KEYBOARD ? kbm_keyboard(&g_engine, 0, buf, len)
                                    : kbm_mouse(&g_engine, 0, buf, len, t_ns);
+    if (g_engine.layer != layer_before) {
+        g_rt.layer = g_engine.layer;
+        KLOG("MODE -> %s (mode key%s)\n", g_engine.layer ? "vehicle" : "on foot", g_engine.pointer_mode ? ", pointer mode on" : "");
+    }
     if (g_engine.ps_presses != g_ps_seen) {          /* PS key: game <-> PS5 menu */
         g_ps_seen = g_engine.ps_presses;
         if (g_rt.title[0]) {
@@ -732,13 +743,22 @@ static void update_ip(void) {
 static void *watch_thread(void *unused) {
     (void)unused;
     char last[12] = "";
-    int first = 1, last_app = -2, last_layer = -1;
+    int first = 1, last_app = -2, last_layer = -1, empty_reads = 0;
     uint64_t launcher_seen_ns = 0, open_browser_at = 0;
     unsigned tick = 0;
     while (g_running && !g_stop_requested) {
         char tid[12];
         int app = 0;
         read_title(tid, sizeof(tid), &app);
+        /* A game can read as "no game" for a moment (e.g. while the system shows
+         * an overlay). Keep the previous title for up to 3 s so the profile and
+         * the on-foot / vehicle mode are not reset by a blip. */
+        if (!tid[0] && last[0] && !first) {
+            if (++empty_reads <= 3) {
+                if (empty_reads == 1) KLOG("title read empty (app_id=0x%x): keeping %s for now\n", (unsigned)app, last);
+                snprintf(tid, sizeof(tid), "%s", last);
+            }
+        } else empty_reads = 0;
 #if KBM_DIAG_ONLY
         if ((tick % 2) == 0) focus_probe(app);
 #endif
@@ -800,6 +820,7 @@ static void *watch_thread(void *unused) {
         int changed = first || strcmp(tid, last) != 0;
         if (changed) {
             g_overlay = 0;                              /* new game (or closed): leave the menu state */
+            if (g_engine.layer != KBM_LAYER_FOOT) KLOG("MODE -> on foot (title changed to %s)\n", tid[0] ? tid : "none");
             kbm_set_layer(&g_engine, KBM_LAYER_FOOT);   /* new game: start on foot */
             kbm_reset_motion(&g_engine);                /* don't carry mouse motion across profiles */
             apply_profile_locked(tid);
@@ -919,6 +940,7 @@ int kbm_bridge_start(kbm_inject_cb inject, kbm_notify_cb notify) {
     g_api.capture_start = capture_start; g_api.capture_cancel = capture_cancel; g_api.stop = api_stop;
     g_api.set_autostart = api_set_autostart;
     g_api.set_pointer = api_set_pointer;
+    g_api.set_layer = api_set_layer;
     /* Single instance: the settings port doubles as a lock. If it is taken,
      * another bridge (e.g. autostarted by etaHEN) already owns the receiver. */
     if (kbm_http_start(KBM_HTTP_PORT, &g_api) != 0) {

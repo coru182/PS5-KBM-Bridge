@@ -249,6 +249,12 @@ int kbm_api_command(KbmApi *api, const char *path, const KbmQuery *q, char *out,
         if (dp && kbm_valid_profile_id(dp)) snprintf(c->default_profile, sizeof(c->default_profile), "%s", dp);
         api->config_changed(api->user);
         code = reply(out, n, 1, NULL, NULL, NULL);
+    } else if (!strcmp(path, "/api/layer")) {
+        int l = 0;
+        get_int(q, "l", &l);
+        if (!api->rt->has_layers) { code = reply(out, n, 0, "this profile has no vehicle mode", NULL, NULL); goto done; }
+        if (api->set_layer) api->set_layer(api->user, l ? 1 : 0);
+        code = reply(out, n, 1, NULL, NULL, NULL);
     } else if (!strcmp(path, "/api/pointer")) {
         int on = 0;
         get_int(q, "on", &on);

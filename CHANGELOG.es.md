@@ -2,6 +2,13 @@
 
 [English](CHANGELOG.md) · **Español**
 
+## v0.10.4: modo a pie / vehículo más estable
+
+- Botones **A pie / En vehículo** en "Juego actual" (F11) para corregir el modo desde la página.
+- Un parpadeo de un segundo en la detección del juego ya no devuelve el perfil y el modo a "a pie" (se mantiene el juego anterior hasta 3 s).
+- F (y B) cambian de modo aunque haya quedado activo el cursor del navegador (modo puntero).
+- Cada cambio de modo queda en el log con su motivo (`MODE -> vehicle (mode key)`, `(web UI)`, `(title changed ...)`), para diagnosticar cualquier desincronización.
+
 ## v0.10.3: la tecla PS cambia al perfil del menú
 
 - Durante un juego, la tecla Windows (botón PS) ahora cambia al perfil **Menú de la PS5** (WASD/flechas/mouse mueven la selección, Enter selecciona, Esc vuelve), y al apretarla otra vez vuelve al perfil del juego. En GTA se conserva el modo a pie / vehículo. Cerrar o cambiar de juego también sale del perfil del menú.

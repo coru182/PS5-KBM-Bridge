@@ -2,6 +2,13 @@
 
 **English** · [Español](CHANGELOG.es.md)
 
+## v0.10.4: steadier on-foot / vehicle mode
+
+- **On foot / In vehicle buttons** under "Current game" (F11) to fix the mode from the page.
+- A one-second blip in the game detection no longer resets the profile and the mode to "on foot" (the previous title is kept for up to 3 s).
+- F (and B) switch the mode even if the browser cursor (pointer mode) was left on.
+- Every mode change is logged with its cause (`MODE -> vehicle (mode key)`, `(web UI)`, `(title changed ...)`), to diagnose any future desync.
+
 ## v0.10.3: PS key switches to the menu profile
 
 - During a game, the Windows key (PS button) now switches to the **PS5 menu** profile (WASD/arrows/mouse move the selection, Enter selects, Esc goes back), and pressing it again switches back to the game's profile. GTA's on-foot/vehicle mode is kept. Closing or changing the game also leaves the menu profile.

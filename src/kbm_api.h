@@ -62,6 +62,7 @@ typedef struct {
     /* create/remove the etaHEN .auto_start marker. 0 ok, -1 + msg. lock NOT held */
     int  (*set_autostart)(void *user, int on, char *msg, size_t n);
     void (*set_pointer)(void *user, int on);             /* lock held */
+    void (*set_layer)(void *user, int layer);            /* lock held: 0 on foot, 1 vehicle */
 } KbmApi;
 
 /* Full state: {"runtime":{...},"config":{...},"keys":[...]}. Takes the lock.

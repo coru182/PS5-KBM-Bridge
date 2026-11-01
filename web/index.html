@@ -37,7 +37,7 @@ button.danger{border-color:#5a2a2a;color:#ffb3b3}
 button.small{padding:5px 9px;font-size:13px}
 select.small{padding:5px 6px;font-size:13px;max-width:96px}
 .targets{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.targets button.on{background:var(--acc2);border-color:var(--acc2)}
+.targets button.on,#game .row button.on{background:var(--acc2);border-color:var(--acc2)}
 .targets button.native.on{background:#8a5a12;border-color:#8a5a12}
 .tabs-label{color:var(--dim);font-size:13px;margin:0 0 6px}
 .gname{font-size:20px;font-weight:650;margin:0 0 6px;overflow-wrap:anywhere}
@@ -223,7 +223,7 @@ es: {
   src_overlay:"Menú de la PS5 encima del juego: perfil del menú. Tecla Windows (botón PS) otra vez para volver al perfil del juego",
   conf3:"Teclas verificadas con fuentes", conf2:"Algunas teclas inferidas: revisalas en el juego", conf1:"Sin verificar", conf0:"Plantilla genérica",
   native_badge:"Teclado/mouse nativo en PS5", edit_other:"Editar otro perfil…", close_list:"Cerrar lista",
-  k_mode:"Modo", v_foot:"A pie", v_vehicle:"En vehículo", lay_2:"Siempre", lay_0:"A pie", lay_1:"En vehículo",
+  k_mode:"Modo", v_foot:"A pie", v_vehicle:"En vehículo", mode_help:"(F lo cambia al subir/bajar; B o estos botones lo corrigen)", lay_2:"Siempre", lay_0:"A pie", lay_1:"En vehículo",
   layers_help:"Este perfil tiene teclas distintas a pie y en vehículo. F (subir/bajar) cambia de modo; si se desincroniza, apretá B.",
   g_inuse:"En uso ahora", g_templates:"Plantillas", g_games:"Juegos (A–Z)", legend:"★ = perfil por defecto para juegos que no reconozco · • = modificado por vos",
   notes:"Notas de la investigación de teclas (en inglés)",
@@ -276,7 +276,7 @@ en: {
   src_overlay:"PS5 menu over the game: menu profile. Press the Windows key (PS button) again to go back to the game's profile",
   conf3:"Keys verified against sources", conf2:"Some keys inferred: check them in game", conf1:"Unverified", conf0:"Generic template",
   native_badge:"Native keyboard/mouse on PS5", edit_other:"Edit another profile…", close_list:"Close list",
-  k_mode:"Mode", v_foot:"On foot", v_vehicle:"In vehicle", lay_2:"Always", lay_0:"On foot", lay_1:"In vehicle",
+  k_mode:"Mode", v_foot:"On foot", v_vehicle:"In vehicle", mode_help:"(F switches it when you get in/out; B or these buttons fix it)", lay_2:"Always", lay_0:"On foot", lay_1:"In vehicle",
   layers_help:"This profile has different keys on foot and in vehicles. F (enter/exit) switches mode; if it gets out of sync, press B.",
   g_inuse:"In use now", g_templates:"Templates", g_games:"Games (A–Z)", legend:"★ = default profile for games I don't recognise · • = changed by you",
   notes:"Key research notes",
@@ -402,14 +402,18 @@ function renderRuntime(){
     row += `<button data-other="1">${esc(showOther ? t("t_hide") : t("t_other"))}</button>`;
     const other = showOther ? `<div class="plist"><h3>${esc(t("t_games_az"))}</h3><div class="targets">${games.map(p => btn(p.id, pnameOf(p))).join("")}</div></div>` : "";
     const sug = r.native_suggested ? `<p class="note">${t("sug_native")}</p>` : "";
+    const modeRow = r.has_layers && !r.overlay ? `<div class="row" style="margin-top:8px"><span class="muted">${esc(t("k_mode"))}:</span>
+        ${[[0, t("v_foot")], [1, t("v_vehicle")]].map(([v, txt]) => `<button class="small ${r.layer === v ? "on" : ""}" data-layer="${v}">${r.layer === v ? "✓ " : ""}${esc(txt)}</button>`).join("")}
+        <span class="muted">${esc(t("mode_help"))}</span></div>` : "";
     const html = `<div class="gname">${esc(r.title_name || t("unknown_game"))}</div>
       <div class="row"><span class="chip">${esc(r.title)}</span><span class="muted">${esc(r.title_source ? t("src_" + r.title_source) : "")}</span></div>
-      ${sug}
+      ${sug}${modeRow}
       <div class="targets">${row}</div>${other}
       <p class="muted">${esc(t("game_help"))}</p>`;
     if (setHTML(g, html)) {
       g.querySelectorAll("[data-target]").forEach(b => b.onclick = () => call("/api/title", {tid: S.runtime.title, target: b.dataset.target}));
       g.querySelector("[data-other]").onclick = () => { showOther = !showOther; renderRuntime(); };
+      g.querySelectorAll("[data-layer]").forEach(b => b.onclick = () => call("/api/layer", {l: b.dataset.layer}));
     }
   }
   const ug = $("btnUseGame");
