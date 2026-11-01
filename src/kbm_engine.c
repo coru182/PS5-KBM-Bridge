@@ -49,6 +49,7 @@ static void press_edge(KbmEngine *e, uint8_t code, int now_down) {
     }
     if (!was && !e->pointer_mode && e->map.has_layers && (layer_table(e)[code] & KBM_OUT_MODE_TOGGLE))
         e->layer = e->layer == KBM_LAYER_VEHICLE ? KBM_LAYER_FOOT : KBM_LAYER_VEHICLE;
+    if (!was && !e->pointer_mode && (layer_table(e)[code] & KBM_BTN_PS)) ++e->ps_presses;
 }
 
 void kbm_calib_start(KbmEngine *e, uint64_t t_ns) {

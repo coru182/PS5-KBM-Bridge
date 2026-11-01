@@ -85,6 +85,7 @@ typedef struct {
      * camera starts to move. calib_result: -1 running/none, >=0 measured value,
      * -2 cancelled (Esc), -3 nothing pressed before the end of the ramp. */
     int calib_active, calib_result, calib_value;
+    unsigned ps_presses;     /* new presses of a key mapped to the PS button (not in pointer mode) */
     uint64_t calib_start;
     int capture_armed;
     int captured;            /* -1 none, else code */

@@ -2,6 +2,12 @@
 
 [English](CHANGELOG.md) · **Español**
 
+## v0.10.3: la tecla PS cambia al perfil del menú
+
+- Durante un juego, la tecla Windows (botón PS) ahora cambia al perfil **Menú de la PS5** (WASD/flechas/mouse mueven la selección, Enter selecciona, Esc vuelve), y al apretarla otra vez vuelve al perfil del juego. En GTA se conserva el modo a pie / vehículo. Cerrar o cambiar de juego también sale del perfil del menú.
+- El bridge todavía no puede ver cuando volvés al juego de otra forma (por ejemplo, eligiendo la tarjeta del juego con Enter). Si pasa, apretá la tecla Windows dos veces.
+- El ELF de diagnóstico ahora anota en el log lo que devuelven dos funciones de foco de la PS5 que no están documentadas (líneas `FOCUS ...`), para detectar la vuelta al juego con exactitud en una versión futura. El ELF del bridge no las usa.
+
 ## v0.10.2: GTA Trilogy con las teclas de PC de la Definitive Edition
 
 - El perfil de GTA Trilogy ahora usa las **teclas por defecto de la versión de PC de la Definitive Edition** (sacadas de una lista de controles de GTA III DE): Shift correr, Espacio saltar, Ctrl sigilo, Tab rueda de armas; en el auto W/S acelerar/frenar, Espacio freno de mano, Q/E mirar a los costados, H bocina, Tab/rueda del mouse radio, R misión secundaria, Z o clic de la rueda mirar atrás. Antes usaba las teclas de la PC original de los 2000 (Espacio correr, Shift saltar).

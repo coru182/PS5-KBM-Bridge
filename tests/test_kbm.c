@@ -387,6 +387,16 @@ static void test_ps_menu(void) {
     kbm_frame(&e, t + 900 * MS, &f); assert(f.buttons == 0);        /* idle: leftover dropped */
     uint8_t click[4] = {1, 0, 0, 0}; kbm_mouse(&e, 0, click, 4, t + 901 * MS);
     kbm_frame(&e, t + 902 * MS, &f); assert(f.buttons & KBM_BTN_CROSS);   /* left click selects */
+    /* PS key presses are counted (the bridge switches game <-> menu profile on them) */
+    {
+        KbmEngine g; kbm_init(&g); load_profile(&g, &c, "gta5");
+        kb(&g, 0x08, 0, 0); kb(&g, 0, 0, 0);                 /* left Windows (modifier bit 3) */
+        assert(g.ps_presses == 1);
+        kb(&g, 0x08, 0, 0); kbm_frame(&g, 1, &f); assert(f.buttons & KBM_BTN_PS); kb(&g, 0, 0, 0);
+        assert(g.ps_presses == 2);
+        g.pointer_mode = 1; kb(&g, 0x08, 0, 0); kb(&g, 0, 0, 0);
+        assert(g.ps_presses == 2);                           /* browser (pointer mode): not counted */
+    }
     /* a game profile keeps the mouse on the camera */
     kbm_config_resolve(&c, "PPSA04289", &r);
     assert(!strcmp(r.p->id, "re2r"));

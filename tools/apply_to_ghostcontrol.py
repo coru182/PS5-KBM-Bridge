@@ -56,7 +56,7 @@ static void kbm_forward(const ScePadData *pad) { inject_pad(0, pad); }
     b = main.find('    /* Keep-alive */', a)
     if a < 0 or b < 0 or b <= a or 'controller_manager_thread' not in main[a:b]:
         raise ValueError("gc_main.c: controller manager anchor changed")
-    replacement = '''    /* KBM v0.10.2. The DualSense is created only after the Logitech receiver has
+    replacement = '''    /* KBM v0.10.3. The DualSense is created only after the Logitech receiver has
      * produced BOTH keyboard and mouse input (automatically, or F8 if
      * auto-activation is off in the settings). -DKBM_DIAG_ONLY=1 never creates
      * one and exits after 5 minutes. Ghostcontrol's controller manager stays off. */
@@ -64,10 +64,10 @@ static void kbm_forward(const ScePadData *pad) { inject_pad(0, pad); }
 #define KBM_DIAG_ONLY 0
 #endif
 #if KBM_DIAG_ONLY
-#define KBM_TAG "KBM v0.10.2 DIAG"
+#define KBM_TAG "KBM v0.10.3 DIAG"
 #define KBM_DIAG_TICKS 1500      /* 5 min @ 200 ms */
 #else
-#define KBM_TAG "KBM v0.10.2"
+#define KBM_TAG "KBM v0.10.3"
 #define KBM_DIAG_TICKS 0
 #endif
 /* Optional idle exit (web UI: General). Default 0 = never: when etaHEN

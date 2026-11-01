@@ -44,7 +44,7 @@
 #ifndef KBM_DIAG_ONLY
 #define KBM_DIAG_ONLY 0
 #endif
-#define KBM_VERSION "0.10.2"
+#define KBM_VERSION "0.10.3"
 
 extern void ghostpad_status_log(const char *fmt, ...);
 #define KLOG(...) ghostpad_status_log("[KBM] " __VA_ARGS__)
@@ -59,6 +59,33 @@ extern int sceSystemServiceLaunchWebBrowser(const char *uri, void *reserved);
  * the result is logged at startup (not assumed to work on every firmware). */
 extern int sceSystemServiceParamGetInt(int param_id, int *value);
 #define KBM_SYS_PARAM_LANG 1
+
+#if KBM_DIAG_ONLY
+/* Diagnostics only: which app has focus (game vs. PS5 menu)? The signatures
+ * are not documented, so both get two zeroed 1 KiB buffers (works whether the
+ * output pointer is the 1st or 2nd argument) and the raw bytes are logged.
+ * Not linked into the bridge ELF. */
+extern int sceSystemServiceGetAppFocusedAppStatus(void *a, void *b);
+extern int sceLncUtilGetAppFocusedAppStatus(void *a, void *b);
+static void focus_probe(int big_app) {
+    static unsigned char last[2][96];
+    static int last_rc[2] = {0x7fffffff, 0x7fffffff};
+    static unsigned char b1[1024] __attribute__((aligned(16))), b2[1024] __attribute__((aligned(16)));
+    for (int k = 0; k < 2; ++k) {
+        memset(b1, 0, sizeof(b1)); memset(b2, 0, sizeof(b2));
+        int rc = k == 0 ? sceSystemServiceGetAppFocusedAppStatus(b1, b2) : sceLncUtilGetAppFocusedAppStatus(b1, b2);
+        unsigned char cur[96];
+        memcpy(cur, b1, 48); memcpy(cur + 48, b2, 48);
+        if (rc == last_rc[k] && !memcmp(cur, last[k], sizeof(cur))) continue;
+        last_rc[k] = rc; memcpy(last[k], cur, sizeof(cur));
+        char hex[2][100];
+        for (int h = 0; h < 2; ++h) {
+            for (int i = 0; i < 48; ++i) snprintf(hex[h] + i * 2, 3, "%02x", cur[h * 48 + i]);
+        }
+        KLOG("FOCUS %s rc=0x%x big_app=0x%x a=%s b=%s\n", k == 0 ? "SystemService" : "LncUtil", (unsigned)rc, (unsigned)big_app, hex[0], hex[1]);
+    }
+}
+#endif
 #define KBM_SETTINGS_URL "http://127.0.0.1:8099/"
 
 /* Home-screen launcher app (launcher/, ShadowMountPlus title). The bridge closes
@@ -140,8 +167,21 @@ static void refresh_status_locked(void) {
 }
 
 /* ---------------------------------------------------------------- config */
+/* PS key during a game: the PS5 menu is on screen while the game stays open.
+ * g_overlay switches to the menu profile until the PS key is pressed again
+ * or the running title changes. */
+static int g_overlay = 0, g_overlay_saved_layer = KBM_LAYER_FOOT;
+static unsigned g_ps_seen = 0;
+
 static void apply_profile_locked(const char *title) {
     kbm_runtime_set_title(&g_rt, &g_cfg, title);
+    if (g_overlay && title && title[0] && kbm_config_profile_c(&g_cfg, "ps_menu")) {
+        snprintf(g_rt.profile, sizeof(g_rt.profile), "ps_menu");
+        snprintf(g_rt.title_source, sizeof(g_rt.title_source), "overlay");
+        g_rt.has_layers = 0;
+        g_rt.mouse_dpad = 1;
+    }
+    g_rt.overlay = g_overlay && title && title[0];
     const KbmProfile *p = kbm_config_profile_c(&g_cfg, g_rt.profile);
     if (!p) p = &g_cfg.p[0];
     KbmMapping m;
@@ -391,6 +431,18 @@ static int on_report(void *user, int kind, const uint8_t *buf, uint32_t len, uin
     pthread_mutex_lock(&g_lock);
     ok = kind == KBM_KIND_KEYBOARD ? kbm_keyboard(&g_engine, 0, buf, len)
                                    : kbm_mouse(&g_engine, 0, buf, len, t_ns);
+    if (g_engine.ps_presses != g_ps_seen) {          /* PS key: game <-> PS5 menu */
+        g_ps_seen = g_engine.ps_presses;
+        if (g_rt.title[0]) {
+            if (!g_overlay) { g_overlay_saved_layer = g_engine.layer; g_overlay = 1; }
+            else g_overlay = 0;
+            kbm_reset_motion(&g_engine);
+            apply_profile_locked(g_rt.title);
+            if (!g_overlay) kbm_set_layer(&g_engine, g_overlay_saved_layer);
+            g_rt.layer = g_engine.layer;
+            KLOG("PS key during %s: %s profile\n", g_rt.title, g_overlay ? "PS5 menu" : "game");
+        }
+    }
     if (ok && g_injection_enabled && g_pending_evt_ns == 0) g_pending_evt_ns = t_ns;
     if (ok && g_engine.captured >= 0) {
         captured = g_engine.captured;
@@ -687,6 +739,9 @@ static void *watch_thread(void *unused) {
         char tid[12];
         int app = 0;
         read_title(tid, sizeof(tid), &app);
+#if KBM_DIAG_ONLY
+        if ((tick % 2) == 0) focus_probe(app);
+#endif
         uint64_t now = mono_ns();
         if (!strcmp(tid, KBM_LAUNCHER_TID)) {
             /* our launcher is in the foreground: let its notification show, then close it */
@@ -744,6 +799,7 @@ static void *watch_thread(void *unused) {
         }
         int changed = first || strcmp(tid, last) != 0;
         if (changed) {
+            g_overlay = 0;                              /* new game (or closed): leave the menu state */
             kbm_set_layer(&g_engine, KBM_LAYER_FOOT);   /* new game: start on foot */
             kbm_reset_motion(&g_engine);                /* don't carry mouse motion across profiles */
             apply_profile_locked(tid);

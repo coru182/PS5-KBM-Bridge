@@ -2,6 +2,12 @@
 
 **English** · [Español](CHANGELOG.es.md)
 
+## v0.10.3: PS key switches to the menu profile
+
+- During a game, the Windows key (PS button) now switches to the **PS5 menu** profile (WASD/arrows/mouse move the selection, Enter selects, Esc goes back), and pressing it again switches back to the game's profile. GTA's on-foot/vehicle mode is kept. Closing or changing the game also leaves the menu profile.
+- The bridge can't yet see when you go back to the game another way (for example, choosing the game's card with Enter). If that happens, press the Windows key twice.
+- The diagnostics ELF now logs what two undocumented PS5 focus functions return (`FOCUS ...` lines), to detect the return to the game exactly in a future version. The bridge ELF doesn't use them.
+
 ## v0.10.2: GTA Trilogy with the Definitive Edition PC keys
 
 - The GTA Trilogy profile now uses the **Definitive Edition PC defaults** (found in a GTA III DE control list): Shift sprint, Space jump, Ctrl stealth, Tab weapon wheel; in a car W/S accelerate/brake, Space handbrake, Q/E look left/right, H horn, Tab/mouse wheel radio, R sub-mission, Z or middle click look behind. Before, it used the original 2000s PC keys (Space sprint, Shift jump).

@@ -72,7 +72,7 @@ static void rt_json(KbmJson *j, const KbmRuntime *r) {
     kbm_json_fmt(j, ",\"vda\":%d,\"receiver\":%d,\"title\":", r->vda, r->receiver); kbm_json_str(j, r->title);
     kbm_json_raw(j, ",\"title_name\":"); kbm_json_str(j, r->title_name);
     kbm_json_raw(j, ",\"title_source\":"); kbm_json_str(j, r->title_source);
-    kbm_json_fmt(j, ",\"native_suggested\":%d,\"layer\":%d,\"has_layers\":%d,\"mouse_dpad\":%d", r->native_suggested, r->layer, r->has_layers, r->mouse_dpad);
+    kbm_json_fmt(j, ",\"native_suggested\":%d,\"layer\":%d,\"has_layers\":%d,\"mouse_dpad\":%d,\"overlay\":%d", r->native_suggested, r->layer, r->has_layers, r->mouse_dpad, r->overlay);
     kbm_json_raw(j, ",\"profile\":"); kbm_json_str(j, r->profile);
     kbm_json_raw(j, ",\"auto_profile\":"); kbm_json_str(j, r->auto_profile);
     kbm_json_fmt(j, ",\"hz\":%d,\"kb_reports_5s\":%u,\"mouse_reports_5s\":%u,\"e2i_p50_us\":%u,\"e2i_p95_us\":%u,"
