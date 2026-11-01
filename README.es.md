@@ -46,13 +46,13 @@ Teclado y mouse en cualquier juego de PS5, sin adaptadores ni PC. Un payload par
 
 ## Descargar
 
-Los ZIP listos para usar (los dos ELF, el ícono del home, el autoarranque de etaHEN e instrucciones) están en la página de [Releases](https://github.com/coru182/ps5-kbm-bridge/releases). O compilalo vos:
+Los ZIP listos para usar (los dos ELF, el ícono del home, el autoarranque de etaHEN e instrucciones) están en la página de [Releases](https://github.com/coru182/PS5-KBM-Bridge/releases). O compilalo vos:
 
 ## Compilar
 
 ```bash
-git clone https://github.com/coru182/ps5-kbm-bridge.git
-cd ps5-kbm-bridge
+git clone https://github.com/coru182/PS5-KBM-Bridge.git
+cd PS5-KBM-Bridge
 export PS5_PAYLOAD_SDK=/opt/ps5-payload-sdk
 ./build_wsl.sh
 ```

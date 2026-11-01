@@ -46,13 +46,13 @@ Keyboard and mouse in any PS5 game, with no adapter and no PC. A payload for jai
 
 ## Download
 
-Ready-to-use ZIPs (both ELFs, the home screen icon, etaHEN autostart and install notes) are on the [Releases](https://github.com/coru182/ps5-kbm-bridge/releases) page. Or build it yourself:
+Ready-to-use ZIPs (both ELFs, the home screen icon, etaHEN autostart and install notes) are on the [Releases](https://github.com/coru182/PS5-KBM-Bridge/releases) page. Or build it yourself:
 
 ## Build
 
 ```bash
-git clone https://github.com/coru182/ps5-kbm-bridge.git
-cd ps5-kbm-bridge
+git clone https://github.com/coru182/PS5-KBM-Bridge.git
+cd PS5-KBM-Bridge
 export PS5_PAYLOAD_SDK=/opt/ps5-payload-sdk
 ./build_wsl.sh
 ```

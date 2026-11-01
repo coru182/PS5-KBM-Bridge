@@ -1,6 +1,6 @@
 PS5 KBM Bridge v{VERSION}
 =========================
-https://github.com/coru182/ps5-kbm-bridge  ·  GPL-3.0-or-later
+https://github.com/coru182/PS5-KBM-Bridge  ·  GPL-3.0-or-later
 Built on Ghostcontrol by StonedModder (srbraboo). See CREDITS.md in the repo.
 
 ESPAÑOL
