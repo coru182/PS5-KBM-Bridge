@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "out"
 ver = sys.argv[1]
-tag = ver.replace(".", "").zfill(3)
+tag = ver.replace(".", "")          # 0.12 -> 012, 0.10.4 -> 0104 (same as the ELF names)
 name = f"PS5-KBM-Bridge-v{ver}"
 files = [f"ps5-kbm-bridge-v{tag}.elf", f"ps5-kbm-diag-v{tag}.elf",
          "etaHEN/payloads/ps5-kbm-bridge.elf", "etaHEN/payloads/ps5-kbm-bridge.elf.auto_start"]
