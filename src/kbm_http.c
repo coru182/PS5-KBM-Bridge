@@ -25,6 +25,7 @@ static KbmApi *g_api;
 static char g_body[48 * 1024];   /* only the server thread touches these */
 static char g_req[4096];
 static char g_post[32 * 1024 + 1];
+static char g_diag[96 * 1024];
 #define KBM_POST_MAX (sizeof(g_post) - 1)
 
 static void send_all(int fd, const char *p, size_t n) {
@@ -107,6 +108,9 @@ static void handle(int fd) {
         int n = kbm_api_state_json(g_api, kbm_query_get(&q, "edit"), g_body, sizeof(g_body));
         if (n < 0) respond(fd, 500, "text/plain", "state too large", 15);
         else respond(fd, 200, "application/json", g_body, (size_t)n);
+    } else if (!strcmp(target, "/api/diag")) {
+        int n = kbm_api_diag(g_api, g_diag, sizeof(g_diag));
+        respond(fd, 200, "text/plain; charset=utf-8", g_diag, n > 0 ? (size_t)n : 0);
     } else if (!strncmp(target, "/api/", 5)) {
         KbmQuery q;
         kbm_query_parse(qs, &q);

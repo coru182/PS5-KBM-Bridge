@@ -41,11 +41,12 @@
 #include <dev/usb/usb.h>
 #include <dev/usb/usb_endian.h>
 #include <dev/usb/usb_ioctl.h>
+#include <ps5/kernel.h>
 
 #ifndef KBM_DIAG_ONLY
 #define KBM_DIAG_ONLY 0
 #endif
-#define KBM_VERSION "0.12"
+#define KBM_VERSION "0.13"
 
 extern void ghostpad_status_log(const char *fmt, ...);
 #define KLOG(...) ghostpad_status_log("[KBM] " __VA_ARGS__)
@@ -163,6 +164,16 @@ static volatile uint64_t g_mouse_activity = 0;
 static volatile uint64_t g_last_input_ns = 0;
 static volatile uint32_t g_win_kb = 0, g_win_mouse = 0;
 static uint64_t g_start_ns = 0;
+/* Retake hardening (v0.13). After handing the devices to the PS5 its drivers
+ * need a few seconds to re-enumerate and attach; taking them back in the
+ * middle of that can leave an interface half-owned (keyboard OK, mouse dead). */
+#define KBM_RETAKE_SETTLE_NS 5000000000ull
+static volatile uint64_t g_released_ns = 0;     /* last USB_DEVICEENUMERATE */
+static volatile int g_retake_req = 0;           /* F8 / web UI: drop and take the devices again (no release) */
+static volatile uint32_t g_kb_since_take = 0, g_mouse_since_take = 0;
+static volatile uint64_t g_take_ns = 0;
+static int g_mouse_hint_done = 0;
+static int g_take_count = 0;
 
 static uint64_t mono_ns(void) {
     struct timespec ts;
@@ -303,6 +314,48 @@ static void api_set_layer(void *u, int layer) {   /* lock held */
     KLOG("MODE -> %s (web UI)\n", layer_name(g_engine.layer));
 }
 static void api_stop(void *u) { (void)u; g_stop_requested = 1; KLOG("stop requested from web UI\n"); }
+#define KBM_LOG_PATH "/data/ghostpad/gc_status.log"
+/* Diagnostics report, system part: firmware, devices held, tail of the log. */
+static int api_diag_extra(void *u, char *buf, size_t n) {
+    (void)u;
+    size_t len = 0;
+    #define APP(...) do { if (len < n) { int _w = snprintf(buf + len, n - len, __VA_ARGS__); if (_w > 0) len += (size_t)_w < n - len ? (size_t)_w : n - len - 1; } } while (0)
+    uint32_t fw = kernel_get_fw_version();
+    APP("--- system ---\nfirmware: 0x%08x (%x.%02x)\nuptime_s: %llu\nfocus_api: %d\nsystem_language: %d\ntakes: %d\nreleased_s_ago: %llu\n",
+        (unsigned)fw, (unsigned)(fw >> 24), (unsigned)((fw >> 16) & 0xff), (unsigned long long)((mono_ns() - g_start_ns) / 1000000000ull),
+        g_focus_ok, g_sys_lang, g_take_count,
+        g_released_ns ? (unsigned long long)((mono_ns() - g_released_ns) / 1000000000ull) : 0ull);
+    pthread_mutex_lock(&g_lock);
+    for (int i = 0; i < MAX_WORKERS; ++i) {
+        const KbmWorker *w = &g_workers[i];
+        if (w->active) APP("device %d: %s %04x:%04x%s%s\n", i, w->path, w->vid, w->pid,
+                           w->layout.keyboard_ep >= 0 ? " keyboard" : "", w->layout.mouse_ep >= 0 ? " mouse" : "");
+    }
+    pthread_mutex_unlock(&g_lock);
+    APP("reports since last take: keyboard=%u mouse=%u\n", (unsigned)g_kb_since_take, (unsigned)g_mouse_since_take);
+    int fd = open(KBM_LOG_PATH, O_RDONLY);
+    if (fd >= 0) {
+        off_t size = lseek(fd, 0, SEEK_END);
+        size_t want = 24 * 1024;
+        if (len + want + 64 > n) want = n > len + 64 ? n - len - 64 : 0;
+        off_t from = size > (off_t)want ? size - (off_t)want : 0;
+        APP("\n--- %s (last %u KB of %lld) ---\n", KBM_LOG_PATH, (unsigned)(want / 1024), (long long)size);
+        if (want && lseek(fd, from, SEEK_SET) >= 0) {
+            ssize_t r = read(fd, buf + len, want < n - len - 1 ? want : n - len - 1);
+            if (r > 0) {
+                size_t start = 0;
+                if (from > 0) { while (start < (size_t)r && buf[len + start] != '\n') ++start; if (start < (size_t)r) ++start; }
+                memmove(buf + len, buf + len + start, (size_t)r - start);
+                len += (size_t)r - start;
+                buf[len] = 0;
+            }
+        }
+        close(fd);
+    } else APP("\n(no %s)\n", KBM_LOG_PATH);
+    #undef APP
+    return (int)len;
+}
+static void api_retake(void *u) { (void)u; if (!g_retake_req) { g_retake_req = 1; KLOG("reconnect keyboard and mouse requested from web UI\n"); } }
 
 static int file_exists(const char *p) { struct stat st; return stat(p, &st) == 0; }
 static void refresh_autostart(void) {
@@ -467,7 +520,40 @@ static int get_protocol(int fd, int iface) {
     if (ioctl(fd, USB_DO_REQUEST, &req) != 0) return -1;
     return v;
 }
-static int g_take_count = 0;
+/* SET_PROTOCOL(boot) and check it stuck (a PS5 driver that was still attaching
+ * may have switched the interface back to report protocol). 0 ok. */
+static int ensure_boot_protocol(int fd, int iface, const char *what) {
+    for (int attempt = 1; attempt <= 4; ++attempt) {
+        if (set_boot_protocol(fd, iface) != 0) { KLOG("SET_PROTOCOL %s try %d errno=%d\n", what, attempt, errno); sleep_ns(100000000ull); continue; }
+        int p = get_protocol(fd, iface);
+        if (p == 0 || p == -1) {          /* -1: device doesn't answer GET_PROTOCOL; trust the SET */
+            if (attempt > 1) KLOG("SET_PROTOCOL %s: boot after %d tries\n", what, attempt);
+            return 0;
+        }
+        KLOG("SET_PROTOCOL %s try %d: device still reports protocol %d\n", what, attempt, p);
+        sleep_ns(100000000ull);
+    }
+    return -1;
+}
+
+/* Did a PS5 driver grab one of our interfaces again? Detach it and restore boot protocol. */
+static int reclaim_ifaces(int fd, const HidBootLayout *l, const char *path) {
+    int n = 0;
+    int ifs[2] = { l->keyboard_iface, l->mouse_iface != l->keyboard_iface ? l->mouse_iface : -1 };
+    for (int k = 0; k < 2; ++k) {
+        int iface = ifs[k];
+        if (iface < 0) continue;
+        int q = iface;
+        if (ioctl(fd, USB_IFACE_DRIVER_ACTIVE, &q) != 0) continue;   /* no driver: still ours */
+        q = iface;
+        int rc = ioctl(fd, USB_IFACE_DRIVER_DETACH, &q);
+        int prc = ensure_boot_protocol(fd, iface, iface == l->mouse_iface ? "mouse" : "kb");
+        KLOG("RECLAIM %s iface=%d: a PS5 driver had attached again; detach rc=%d, boot protocol %s\n",
+             path, iface, rc, prc == 0 ? "ok" : "FAILED");
+        ++n;
+    }
+    return n;
+}
 
 /* ---------------------------------------------------------------- report sink */
 typedef struct {
@@ -519,6 +605,7 @@ static int on_report(void *user, int kind, const uint8_t *buf, uint32_t len, uin
 
     if (kind == KBM_KIND_KEYBOARD) {
         ++g_win_kb;
+        ++g_kb_since_take;
         int slots = 0, f8 = 0, f9 = 0, f10 = 0, f11 = 0, f12 = 0;
         for (int j = 2; j < 8; ++j) {
             if (buf[j]) ++slots;
@@ -535,6 +622,10 @@ static int on_report(void *user, int kind, const uint8_t *buf, uint32_t len, uin
         if (f8 && !c->f8_was && !KBM_DIAG_ONLY && !g_activation_requested && g_mouse_activity) {
             g_activation_requested = 1;
             KLOG("F8 pressed: virtual controller activation requested\n");
+        } else if (f8 && !c->f8_was && (g_activation_requested || KBM_DIAG_ONLY) && !g_retake_req) {
+            g_retake_req = 1;   /* mouse or keyboard stuck? take both again */
+            KLOG("F8 pressed: reconnecting keyboard and mouse\n");
+            NOTIFY("%s", kbm_tr("KBM: reconectando teclado y mouse...", "KBM: reconnecting keyboard and mouse..."));
         }
         if (f10 && !c->f10_was && KBM_DIAG_ONLY && !g_diag_release_until) {
             g_diag_release_until = mono_ns() + 20000000000ull;
@@ -568,6 +659,7 @@ static int on_report(void *user, int kind, const uint8_t *buf, uint32_t len, uin
         c->f8_was = f8; c->f9_was = f9; c->f10_was = f10; c->f11_was = f11; c->f12_was = f12;
     } else {
         ++g_win_mouse;
+        ++g_mouse_since_take;
         active = buf[0] != 0 || buf[1] != 0 || buf[2] != 0;
         if (active && g_mouse_activity++ == 0) KLOG("mouse activity confirmed\n");
         if (c->mouse_logged < 5) { ++c->mouse_logged; KLOG("mouse sample #%u (take %d) len=%u bytes=%02x %02x %02x %02x\n", c->mouse_logged, g_take_count, (unsigned)len, buf[0], buf[1], buf[2], len > 3 ? buf[3] : 0); }
@@ -637,8 +729,8 @@ static void *device_thread(void *arg) {
     }
     if (kbm_usbfs_init(u, fd, sys_ioctl, on_report, &ctx) != 0) { KLOG("FS_INIT errno=%d\n", errno); goto done; }
     have_fs = 1;
-    if (l->keyboard_iface >= 0 && set_boot_protocol(fd, l->keyboard_iface) != 0) { KLOG("SET_PROTOCOL kb errno=%d\n", errno); goto done; }
-    if (l->mouse_iface >= 0 && set_boot_protocol(fd, l->mouse_iface) != 0) { KLOG("SET_PROTOCOL mouse errno=%d\n", errno); goto done; }
+    if (l->keyboard_iface >= 0 && ensure_boot_protocol(fd, l->keyboard_iface, "kb") != 0) { KLOG("keyboard won't stay in boot protocol\n"); goto done; }
+    if (l->mouse_iface >= 0 && ensure_boot_protocol(fd, l->mouse_iface, "mouse") != 0) { KLOG("mouse won't stay in boot protocol\n"); goto done; }
     {
         int a = l->keyboard_iface, b = l->mouse_iface;
         int kd = a >= 0 && ioctl(fd, USB_IFACE_DRIVER_ACTIVE, &a) == 0;
@@ -663,9 +755,13 @@ static void *device_thread(void *arg) {
     g_rt.receiver = 1;
     refresh_status_locked();
     pthread_mutex_unlock(&g_lock);
+    g_take_ns = mono_ns();
+    g_kb_since_take = g_mouse_since_take = 0;
+    g_mouse_hint_done = 0;
 
-    uint64_t next_stats = mono_ns() + 5000000000ull;
-    while (g_running && !g_stop_requested && g_want_capture && !g_diag_release_until) {
+    uint64_t next_stats = mono_ns() + 5000000000ull, next_reclaim = mono_ns() + 2000000000ull;
+    int reclaims = 0;
+    while (g_running && !g_stop_requested && g_want_capture && !g_diag_release_until && !g_retake_req) {
         int p = 0;
         if (!sleep_mode) {
             struct pollfd pfd = { fd, POLLIN | POLLRDNORM | POLLOUT | POLLWRNORM, 0 };
@@ -679,6 +775,11 @@ static void *device_thread(void *arg) {
         if (p > 0 && rc == 0 && ++spurious > 5000 && !sleep_mode) {
             sleep_mode = 1;
             KLOG("poll() spurious wakeups: falling back to 1 ms sleep\n");
+        }
+        if (now >= next_reclaim && reclaims < 10) {   /* cheap: two ioctls every 5 s */
+            reclaims += reclaim_ifaces(fd, l, w->path);
+            if (reclaims >= 10) KLOG("RECLAIM %s: 10 times this take, not checking any more\n", w->path);
+            next_reclaim = now + 5000000000ull;
         }
         if (now >= next_stats) {
             int long_window = (now - g_start_ns) > 120000000000ull;
@@ -701,6 +802,7 @@ done:
     if (fd >= 0 && release) {
         int dummy = 0;
         int rc = ioctl(fd, USB_DEVICEENUMERATE, &dummy);
+        g_released_ns = mono_ns();
         KLOG("RELEASE: USB_DEVICEENUMERATE on %s rc=%d errno=%d (PS5 should re-attach its keyboard/mouse drivers)\n",
              w->path, rc, rc < 0 ? errno : 0);
     }
@@ -732,9 +834,32 @@ static void *scanner_thread(void *unused) {
                 NOTIFY("%s", kbm_tr("KBM diag: retomando teclado/mouse", "KBM diag: taking keyboard/mouse back"));
             }
         }
+        if (g_retake_req) {                      /* F8 / web UI: wait until every worker let go */
+            pthread_mutex_lock(&g_lock);
+            int busy = workers_busy_locked();
+            pthread_mutex_unlock(&g_lock);
+            if (busy) { sleep_ns(100000000ull); continue; }
+            g_retake_req = 0;
+            KLOG("reconnect: devices dropped, taking them again\n");
+            sleep_ns(300000000ull);
+        }
+        /* mouse silent while the keyboard is busy: tell the player how to fix it (once per take) */
+        if (!g_mouse_hint_done && g_take_ns && now - g_take_ns > 20000000000ull && g_kb_since_take >= 40 && g_mouse_since_take == 0) {
+            pthread_mutex_lock(&g_lock);
+            int mouse_held = 0;
+            for (int i = 0; i < MAX_WORKERS; ++i) mouse_held |= g_workers[i].active && g_workers[i].layout.mouse_ep >= 0;
+            pthread_mutex_unlock(&g_lock);
+            if (mouse_held) {
+                g_mouse_hint_done = 1;
+                KLOG("mouse silent since take %d (%u keyboard reports, 0 mouse reports)\n", g_take_count, (unsigned)g_kb_since_take);
+                NOTIFY("%s", kbm_tr("KBM: el mouse no manda nada. Si no responde, apreta F8 para reconectar",
+                                    "KBM: no mouse input. If it isn't responding, press F8 to reconnect"));
+            }
+        }
         /* which roles are already covered, which devices are already in use */
         pthread_mutex_lock(&g_lock);
         int can = g_want_capture && !g_diag_release_until;
+        if (g_released_ns && now - g_released_ns < KBM_RETAKE_SETTLE_NS) can = 0;   /* let the PS5 finish re-attaching first */
         int have_kb = 0, have_mouse = 0, free_slot = -1;
         char used[MAX_WORKERS][32];
         for (int i = 0; i < MAX_WORKERS; ++i) {
@@ -1036,6 +1161,8 @@ int kbm_bridge_start(kbm_inject_cb inject, kbm_notify_cb notify) {
     g_api.set_pointer = api_set_pointer;
     g_api.set_layer = api_set_layer;
     g_api.profiles_dir = KBM_PROFILES_DIR;
+    g_api.retake = api_retake;
+    g_api.diag_extra = api_diag_extra;
     /* Single instance: the settings port doubles as a lock. If it is taken,
      * another bridge (e.g. autostarted by etaHEN) already owns the receiver. */
     if (kbm_http_start(KBM_HTTP_PORT, &g_api) != 0) {
@@ -1055,6 +1182,7 @@ int kbm_bridge_start(kbm_inject_cb inject, kbm_notify_cb notify) {
     pthread_detach(b);
     if (pthread_create(&c, NULL, watch_thread, NULL) != 0) { g_running = 0; return -4; }
     pthread_detach(c);
+    KLOG("firmware 0x%08x\n", (unsigned)kernel_get_fw_version());
     KLOG("v" KBM_VERSION "%s started: profile=%s hz=%d auto_activate=%d native_switch=%d idle_exit_min=%d autostart_elf=%d\n",
          KBM_DIAG_ONLY ? " DIAG" : "", g_rt.profile, g_rt.hz, g_cfg.auto_activate, g_cfg.native_switch,
          g_cfg.idle_exit_min, file_exists(KBM_AUTOSTART_ELF));

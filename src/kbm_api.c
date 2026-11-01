@@ -157,6 +157,11 @@ int kbm_api_command(KbmApi *api, const char *path, const KbmQuery *q, char *out,
             return reply(out, n, 0, msg[0] ? msg : "autostart not available", NULL, NULL);
         return reply(out, n, 1, NULL, NULL, NULL);
     }
+    if (!strcmp(path, "/api/retake")) {
+        if (!api->retake) return reply(out, n, 0, "not available", NULL, NULL);
+        api->retake(api->user);
+        return reply(out, n, 1, "reconnecting", NULL, NULL);
+    }
     if (!strcmp(path, "/api/stop")) {
         api->stop(api->user);
         return reply(out, n, 1, "stopping", NULL, NULL);
@@ -301,4 +306,36 @@ int kbm_api_import(KbmApi *api, const char *body, size_t len, char *out, size_t 
     api->unlock(api->user);
     if (!saved) return reply(out, n, 1, "applied, but could not save the file (lost on restart)", "id", id);
     return reply(out, n, 1, NULL, "id", id);
+}
+
+int kbm_api_diag(KbmApi *api, char *buf, size_t n) {
+    KbmJson j; kbm_json_init(&j, buf, n);
+    api->lock(api->user);
+    kbm_json_fmt(&j, "=== PS5 KBM Bridge diagnostics ===\nversion: %s%s\n"
+                 "This report has no keystrokes. It has your settings, game Title IDs and the bridge log: look it over before posting it.\n\n--- runtime ---\n",
+                 api->rt->version ? api->rt->version : "?", api->rt->diag ? " (diagnostics ELF)" : "");
+    rt_json(&j, api->rt);
+    kbm_json_raw(&j, "\n\n--- config.ini ---\n");
+    if (!j.overflow) {
+        int w = kbm_config_write(api->cfg, j.buf + j.len, j.n - j.len);
+        if (w < 0) kbm_json_raw(&j, "(too large)\n"); else j.len += (size_t)w;
+    }
+    kbm_json_raw(&j, "\n--- custom profiles ---\n");
+    int nc = 0;
+    for (int i = 0; i < api->cfg->n_profiles; ++i) {
+        const KbmProfile *p = &api->cfg->p[i];
+        if (!p->custom) continue;
+        ++nc;
+        kbm_json_fmt(&j, "%s (%s, %d actions)", p->id, p->builtin >= 0 ? "replaces built-in" : "new", p->n);
+        for (int t = 0; t < p->n_tids; ++t) kbm_json_fmt(&j, " %s", p->tids[t]);
+        kbm_json_raw(&j, "\n");
+    }
+    if (!nc) kbm_json_raw(&j, "(none)\n");
+    api->unlock(api->user);
+    if (api->diag_extra && !j.overflow) {
+        kbm_json_raw(&j, "\n");
+        int w = api->diag_extra(api->user, j.buf + j.len, j.n - j.len);
+        if (w > 0 && (size_t)w < j.n - j.len) { j.len += (size_t)w; j.buf[j.len] = 0; }
+    }
+    return (int)j.len;
 }

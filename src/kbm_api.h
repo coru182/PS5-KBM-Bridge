@@ -65,6 +65,9 @@ typedef struct {
     void (*set_pointer)(void *user, int on);             /* lock held */
     void (*set_layer)(void *user, int layer);            /* lock held: 0 on foot, 1 vehicle */
     const char *profiles_dir;   /* custom profile files; NULL = import/delete not saved to disk */
+    void (*retake)(void *user);                         /* drop and take keyboard/mouse again. lock NOT held */
+    /* system part of the diagnostics report (firmware, devices, log tail). lock NOT held; returns length */
+    int  (*diag_extra)(void *user, char *buf, size_t n);
 } KbmApi;
 
 /* Full state: {"runtime":{...},"config":{...},"keys":[...]}. Takes the lock.
@@ -77,6 +80,9 @@ int kbm_api_command(KbmApi *api, const char *path, const KbmQuery *q, char *out,
 /* POST /api/import: body = a profile JSON (export format). Saves it to
  * profiles_dir and applies it. Reply {"ok":true,"id":...} or an error. */
 int kbm_api_import(KbmApi *api, const char *body, size_t len, char *out, size_t n);
+
+/* GET /api/diag: plain-text report to attach to a bug report (no keystrokes). Returns length. */
+int kbm_api_diag(KbmApi *api, char *buf, size_t n);
 
 /* Assign key code to profile/action/slot. Removes the same key from other
  * actions of that profile (writes that action's id into moved_from). 0 ok, -1 err. */

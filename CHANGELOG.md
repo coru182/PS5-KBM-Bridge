@@ -2,6 +2,20 @@
 
 **English** · [Español](CHANGELOG.es.md)
 
+## v0.13: steadier reconnection, diagnostics, automatic releases
+
+- **Reconnect keyboard and mouse:** **F8** (once the controller is active) or a button on the settings page lets go of the keyboard and mouse and takes them again, without handing them to the PS5. For when one of them stops responding.
+- **Steadier retake after a "native" game** (the bug where the mouse once stayed unresponsive). Likely cause: the bridge took the devices back while the PS5 was still attaching its own drivers. Now:
+  - it waits 5 s after handing them over before taking them back;
+  - after switching them to boot protocol it checks that they really are, and retries;
+  - every 5 s it checks whether a PS5 driver grabbed one of its interfaces again, and takes it back (`RECLAIM` in the log);
+  - if the keyboard is busy but the mouse sends nothing for 20 s, a notification suggests F8.
+
+  The cause isn't confirmed on the console yet; if it happens again, the diagnostics below will say why.
+- **Export diagnostics** (new "Something not working?" section): one text file with the version, firmware, devices, settings, custom profiles and the end of the log, to attach to a GitHub issue. No keystrokes. The log now also records the firmware version at start.
+- **GitHub issue templates** for problems and game profiles.
+- **Automatic releases:** GitHub Actions runs the tests on every change, and builds and publishes a release (ELFs, icon, ZIP, changelog) from a version tag. The version now comes only from `KBM_VERSION` in `src/kbm_bridge.c`.
+
 ## v0.12: any keyboard and mouse, your own profiles, bikes and aircraft
 
 - **Any USB keyboard and mouse.** The bridge no longer looks only for the Logitech `046d:c534` receiver: it takes any USB device that speaks the HID boot protocol (practically every keyboard and mouse), either one receiver with both or two separate devices (keyboard on one port, mouse on another). Sony devices are left alone. The log says what it found (`matched USB vvvv:pppp at ...: keyboard mouse`). **Not tested on the console yet with two devices: try the diagnostics ELF first.**

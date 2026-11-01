@@ -32,7 +32,7 @@ Keyboard and mouse in any PS5 game, with no adapter and no PC. A payload for jai
 | Key | What it does |
 |---|---|
 | Windows | PS button |
-| F8 | Start the controller by hand (if you turned off automatic start) |
+| F8 | Start the controller by hand (if you turned off automatic start); once it's active, reconnect the keyboard and mouse |
 | F9 | Mouse as cursor / as camera |
 | F10 | In game: measure the game's right-stick dead zone (diagnostics ELF: keyboard/mouse release test) |
 | F11 | Open the settings in the PS5 browser |
@@ -64,14 +64,16 @@ The script does everything:
 3. Clones Ghostcontrol and applies the patch.
 4. Builds both ELFs.
 5. Builds the icon app. The first time it downloads its dependencies to `~/.cache/ps5-kbm/`.
-6. Packs `out/release/PS5-KBM-Bridge-v0.12.zip` for a GitHub Release.
+6. Packs `out/release/PS5-KBM-Bridge-vX.Y.zip` for a GitHub Release.
+
+The version comes from `KBM_VERSION` in `src/kbm_bridge.c`. Releases are built and published by GitHub Actions: push a tag like `v0.13`, or run **Actions → Release → Run workflow** with the tag.
 
 Output in `out/`:
 
 | File | Purpose |
 |---|---|
-| `ps5-kbm-bridge-v012.elf` | The bridge |
-| `ps5-kbm-diag-v012.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
+| `ps5-kbm-bridge-v013.elf` | The bridge |
+| `ps5-kbm-diag-v013.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
 | `homebrew/PPSA51258/` | Home screen icon (ShadowMountPlus) |
 | `etaHEN/payloads/` | Automatic start, only if you use etaHEN |
 
@@ -80,11 +82,13 @@ Output in `out/`:
 ## Install and use
 
 1. Copy `out/homebrew/PPSA51258/` to `/data/homebrew/PPSA51258/` on the PS5 over FTP (for example with ps5upload). Reboot and load your payloads; ShadowMountPlus adds the **PS5 KBM Bridge** icon to the home screen.
-   - Without ShadowMountPlus: send `ps5-kbm-bridge-v012.elf` to elfldr (port 9021).
+   - Without ShadowMountPlus: send `ps5-kbm-bridge-v013.elf` to elfldr (port 9021).
 2. Plug in the keyboard and mouse (or their receiver) and open the icon. The settings page opens. Move the mouse and press a key: the virtual DualSense appears.
 3. Open a game. The notification says which game it recognised and which profile it applied. To change something mid-game: **F11**. Go back with the PS button (or the Windows key).
 
 Settings are saved in `/data/ps5-kbm/config.ini` (only what you changed). The diagnostics log is `/data/ghostpad/gc_status.log`.
+
+**If something stops responding:** F8 (or "Reconnect keyboard and mouse" on the page) takes the keyboard and mouse again. To report a problem, use **Export diagnostics** on the settings page and attach it to a [GitHub issue](https://github.com/coru182/PS5-KBM-Bridge/issues/new/choose).
 
 **First time on a new console:** try the diagnostics ELF first.
 1. Move the mouse and press keys.
@@ -139,7 +143,7 @@ Profiles from other players are welcome (issues or pull requests), ideally with 
 | Automatic profile choice and title database (v0.8) | PC tests. **Not tested on console** |
 | PS5 system language (v0.9) | Read with `sceSystemServiceParamGetInt` and logged (`system language: ...`). **Not tested on console**; if it fails, the page uses the browser language and notifications are in English. Can be set under General |
 | Per-game profile keys | Checked against their sources, **not tested in play**. "Medium" confidence profiles have inferred parts |
-| Handing the keyboard/mouse to the PS5 and taking them back ("native" games) | Handing it back works. **Taking it back once left the mouse unresponsive: under investigation** |
+| Handing the keyboard/mouse to the PS5 and taking them back ("native" games) | Handing it back works. Taking them back once left the mouse unresponsive; v0.13 waits for the PS5 drivers, checks the protocol, reclaims the interfaces and F8 reconnects. **Not tested on console yet** |
 | Game ↔ PS5 menu switch from the PS5 focus (v0.11) | Focus call verified with the diagnostics ELF on 11.60 (`FOCUS` log lines); the automatic switch itself not yet tested on console |
 | Any USB keyboard/mouse, two separate devices (v0.12) | Builds; PC tests of the logic. **Not tested on console**: try the diagnostics ELF first |
 | Custom profiles: export / import / delete (v0.12) | PC tests (engine, real HTTP server, page in Chromium). Saving to `/data/ps5-kbm/profiles/` not tested on console |

@@ -1,0 +1,37 @@
+# PC tests on every push and pull request: engine, config, custom profiles,
+# simulated USB, the real HTTP API and the settings page in Chromium.
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Generate profiles, title database and page
+        run: |
+          python3 tools/gen_builtin.py
+          python3 tools/embed_web.py
+      - name: Engine, config, USB
+        run: make -C tests clean test
+      - name: HTTP API
+        run: |
+          make -C tests host_server
+          python3 tests/test_http.py
+      - name: Ghostcontrol patch anchors
+        run: python3 tools/test_patch.py
+      - name: Settings page in Chromium
+        run: |
+          npm install --no-save --prefix tests playwright@1.47.2
+          npx --prefix tests playwright install --with-deps chromium
+          NODE_PATH=tests/node_modules node tests/test_ui.js tests

@@ -1,0 +1,24 @@
+name: Game profile / Perfil de un juego
+description: A new profile, or wrong keys in one / Un perfil nuevo, o teclas mal en uno
+labels: [profile]
+body:
+  - type: input
+    id: game
+    attributes:
+      label: Game and Title ID / Juego y Title ID
+      placeholder: Stellar Blade (PPSA13198)
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What's wrong or missing / Qué está mal o qué falta
+      description: Action, PC key, PS5 button, and where you checked it / Acción, tecla de PC, botón de PS5 y dónde lo verificaste
+    validations:
+      required: true
+  - type: textarea
+    id: json
+    attributes:
+      label: Profile JSON (optional) / JSON del perfil (opcional)
+      description: Export it from the settings page after fixing it / Exportalo desde la página de ajustes después de corregirlo
+      render: json

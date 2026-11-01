@@ -1,0 +1,48 @@
+name: Bug report / Reportar un problema
+description: Something doesn't work / Algo no anda
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before reporting: try **Reconnect keyboard and mouse** (F8) on the settings page.
+        Antes de reportar: probá **Reconectar teclado y mouse** (F8) en la página de ajustes.
+  - type: input
+    id: version
+    attributes:
+      label: Bridge version / Versión del bridge
+      placeholder: v0.13
+    validations:
+      required: true
+  - type: input
+    id: firmware
+    attributes:
+      label: PS5 firmware and payloads / Firmware de la PS5 y payloads
+      placeholder: 11.60 · elfldr, kstuff, ShadowMountPlus
+    validations:
+      required: true
+  - type: input
+    id: devices
+    attributes:
+      label: Keyboard and mouse / Teclado y mouse
+      description: Model, or the `matched USB vvvv:pppp` line from the log / Modelo, o la línea `matched USB vvvv:pppp` del log
+      placeholder: Logitech MK270 (046d:c534), one receiver
+  - type: input
+    id: game
+    attributes:
+      label: Game / Juego
+      placeholder: GTA V (PPSA03420)
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect? / ¿Qué pasó y qué esperabas?
+    validations:
+      required: true
+  - type: textarea
+    id: diag
+    attributes:
+      label: Diagnostics / Diagnóstico
+      description: |
+        Settings page → "Something not working?" → **Export diagnostics**. Paste it or attach the .txt. It has no keystrokes; look it over before posting.
+        Página de ajustes → "¿Algo no anda?" → **Exportar diagnóstico**. Pegalo o adjuntá el .txt. No tiene teclas apretadas; revisalo antes de publicarlo.
+      render: text

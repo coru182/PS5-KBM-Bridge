@@ -2,6 +2,20 @@
 
 [English](CHANGELOG.md) · **Español**
 
+## v0.13: reconexión más firme, diagnóstico, releases automáticos
+
+- **Reconectar teclado y mouse:** **F8** (con el mando ya activo) o un botón en la página de ajustes suelta el teclado y el mouse y los vuelve a tomar, sin devolvérselos a la PS5. Para cuando uno de los dos deja de responder.
+- **Retomar más firme después de un juego "nativo"** (el bug en que una vez el mouse quedó sin responder). Causa probable: el bridge los retomaba mientras la PS5 todavía estaba conectando sus propios drivers. Ahora:
+  - espera 5 s después de devolverlos antes de retomarlos;
+  - después de pasarlos a protocolo boot verifica que de verdad lo estén, y reintenta;
+  - cada 5 s revisa si un driver de la PS5 volvió a agarrar alguna de sus interfaces, y la recupera (`RECLAIM` en el log);
+  - si el teclado se usa pero el mouse no manda nada durante 20 s, una notificación sugiere F8.
+
+  La causa todavía no está confirmada en la consola; si vuelve a pasar, el diagnóstico de abajo va a decir por qué.
+- **Exportar diagnóstico** (sección nueva "¿Algo no anda?"): un archivo de texto con la versión, el firmware, los dispositivos, los ajustes, los perfiles propios y el final del log, para adjuntar a un reporte en GitHub. Sin teclas apretadas. El log ahora también anota el firmware al arrancar.
+- **Plantillas de reporte en GitHub** para problemas y perfiles de juegos.
+- **Releases automáticos:** GitHub Actions corre las pruebas en cada cambio, y compila y publica un release (ELF, ícono, ZIP, changelog) a partir de un tag de versión. La versión ahora sale solo de `KBM_VERSION` en `src/kbm_bridge.c`.
+
 ## v0.12: cualquier teclado y mouse, perfiles propios, bicis y aviones
 
 - **Cualquier teclado y mouse USB.** El bridge ya no busca solo el receptor Logitech `046d:c534`: toma cualquier dispositivo USB que hable el protocolo HID boot (prácticamente todos los teclados y mouse), sea un receptor con los dos o dos dispositivos separados (teclado en un puerto, mouse en otro). Los dispositivos de Sony no se tocan. El log dice qué encontró (`matched USB vvvv:pppp at ...: keyboard mouse`). **Todavía no se probó en la consola con dos dispositivos: probá primero el ELF de diagnóstico.**

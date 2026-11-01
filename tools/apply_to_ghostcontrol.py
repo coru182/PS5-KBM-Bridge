@@ -7,6 +7,7 @@ The upstream repository (and third-party source) remain under GPL-3.0-or-later.
 from pathlib import Path
 import argparse
 import shutil
+import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,6 +25,13 @@ def replace_once(text: str, old: str, new: str, filename: str) -> str:
         raise ValueError(f"{filename}: expected 1 anchor, found {n}. "
                          "Upstream may have changed; no files have been modified.")
     return text.replace(old, new, 1)
+
+
+def kbm_version() -> str:
+    m = re.search(r'#define KBM_VERSION "([^"]+)"', (SRC / "kbm_bridge.c").read_text(encoding="utf-8"))
+    if not m:
+        raise ValueError("kbm_bridge.c: KBM_VERSION not found")
+    return m.group(1)
 
 
 def patched_ghost_main(main: str) -> str:
@@ -56,7 +64,7 @@ static void kbm_forward(const ScePadData *pad) { inject_pad(0, pad); }
     b = main.find('    /* Keep-alive */', a)
     if a < 0 or b < 0 or b <= a or 'controller_manager_thread' not in main[a:b]:
         raise ValueError("gc_main.c: controller manager anchor changed")
-    replacement = '''    /* KBM v0.12. The DualSense is created only after the USB keyboard and mouse have
+    replacement = '''    /* KBM v@VERSION@. The DualSense is created only after the USB keyboard and mouse have
      * produced BOTH keyboard and mouse input (automatically, or F8 if
      * auto-activation is off in the settings). -DKBM_DIAG_ONLY=1 never creates
      * one and exits after 5 minutes. Ghostcontrol's controller manager stays off. */
@@ -64,10 +72,10 @@ static void kbm_forward(const ScePadData *pad) { inject_pad(0, pad); }
 #define KBM_DIAG_ONLY 0
 #endif
 #if KBM_DIAG_ONLY
-#define KBM_TAG "KBM v0.12 DIAG"
+#define KBM_TAG "KBM v@VERSION@ DIAG"
 #define KBM_DIAG_TICKS 1500      /* 5 min @ 200 ms */
 #else
-#define KBM_TAG "KBM v0.12"
+#define KBM_TAG "KBM v@VERSION@"
 #define KBM_DIAG_TICKS 0
 #endif
 /* Optional idle exit (web UI: General). Default 0 = never: when etaHEN
@@ -129,6 +137,7 @@ static void kbm_forward(const ScePadData *pad) { inject_pad(0, pad); }
     return 0;
 
 '''
+    replacement = replacement.replace('@VERSION@', kbm_version())
     return main[:a] + replacement + main[b:]
 
 

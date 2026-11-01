@@ -1,0 +1,73 @@
+# Push a tag like v0.13 -> build both ELFs with the PS5 payload SDK, the home
+# screen icon (if its dependencies build), the release ZIP, and publish the
+# GitHub Release with the changelog entry for that version (English + Spanish).
+# The tag must match KBM_VERSION in src/kbm_bridge.c.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Version tag, e.g. v0.13 (created on main if it doesn't exist yet)
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  SDK_URL: https://github.com/ps5-payload-dev/sdk/releases/download/v0.42/ps5-payload-sdk.zip
+  SDK_SHA256: 8cfbc7cd5811e719eb4f0c47eea668d3dc7b40bc8ab11c4a5031d40c23ec02da
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Which tag
+        id: tag
+        run: echo "tag=${{ github.event.inputs.tag || github.ref_name }}" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check out the tag (or stay on main for a new one)
+        run: |
+          git checkout "${{ steps.tag.outputs.tag }}" 2>/dev/null || echo "tag ${{ steps.tag.outputs.tag }} doesn't exist yet, building main ($(git rev-parse --short HEAD))"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Tag matches the source version
+        run: |
+          ver="$(sed -n 's/^#define KBM_VERSION "\(.*\)"/\1/p' src/kbm_bridge.c)"
+          test "v$ver" = "${{ steps.tag.outputs.tag }}" || { echo "tag ${{ steps.tag.outputs.tag }} but KBM_VERSION is $ver"; exit 1; }
+          grep -q "^## v$ver" CHANGELOG.md || { echo "CHANGELOG.md has no v$ver entry"; exit 1; }
+      - name: Install the PS5 payload SDK (pinned)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq clang-18 lld-18 llvm-18 ninja-build wget unzip
+          wget -q "$SDK_URL" -O /tmp/sdk.zip
+          echo "$SDK_SHA256  /tmp/sdk.zip" | sha256sum --check --strict
+          sudo unzip -q /tmp/sdk.zip -d /opt
+      - name: Playwright for the page test
+        run: |
+          npm install --no-save playwright@1.47.2
+          npx playwright install --with-deps chromium
+      - name: Build (tests, ELFs, icon, release ZIP)
+        env:
+          PS5_PAYLOAD_SDK: /opt/ps5-payload-sdk
+          NODE_PATH: ${{ github.workspace }}/node_modules
+        run: |
+          ./build_wsl.sh || { echo "::warning::full build failed, retrying without the home screen icon"; KBM_SKIP_LAUNCHER=1 ./build_wsl.sh; }
+      - name: Publish the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ steps.tag.outputs.tag }}"
+          python3 tools/release_notes.py out/notes "$tag"
+          files=(out/release/*.zip out/ps5-kbm-bridge-*.elf out/ps5-kbm-diag-*.elf)
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release edit "$tag" --title "$(head -n1 out/notes/$tag.md)" --notes-file "out/notes/$tag.md"
+            gh release upload "$tag" --clobber "${files[@]}"
+          else
+            gh release create "$tag" --target "$(git rev-parse HEAD)" --title "$(head -n1 out/notes/$tag.md)" --notes-file "out/notes/$tag.md" "${files[@]}"
+          fi

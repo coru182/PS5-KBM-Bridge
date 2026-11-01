@@ -113,6 +113,11 @@ const PORT = 18111, OUT = process.argv[2] || '.';
         await page.click('#btnDelCustom'); await page.waitForTimeout(600);
         if ((await st()).config.profiles.some(q => q.id === 'gta5_mine')) throw new Error('delete');
         if (await page.$eval('#pcur', e => e.textContent.includes('mío'))) throw new Error('deleted profile still selected');
+        // diagnostics + reconnect
+        await page.click('#btnDiag'); await page.waitForTimeout(400);
+        if (!(await page.$eval('#diagText', e => e.value.startsWith('=== PS5 KBM Bridge diagnostics ===')))) throw new Error('diagnostics');
+        await page.click('#retakeBtn'); await page.waitForTimeout(400);
+        if (!(await page.$eval('#toast', e => e.textContent.includes('Reconectando')))) throw new Error('reconnect toast');
         await page.screenshot({ path: `${OUT}/ui_desktop_after.png`, fullPage: true });
       }
       await page.close();
@@ -138,6 +143,6 @@ const PORT = 18111, OUT = process.argv[2] || '.';
       await page.close();
     }
     if (errors.length) throw new Error(errors.join('\n'));
-    console.log('PASS: web UI (render, no overflow at 390px, game name + auto profile, grouped profile list, slider, key pick, capture, game/template/other buttons, title rule, auto native, ES/EN switch, autostart, idle, ADS, pointer, export/import/delete profile, no JS errors)');
+    console.log('PASS: web UI (render, no overflow at 390px, game name + auto profile, grouped profile list, slider, key pick, capture, game/template/other buttons, title rule, auto native, ES/EN switch, autostart, idle, ADS, pointer, export/import/delete profile, diagnostics, reconnect, no JS errors)');
   } finally { await browser.close(); srv.kill(); }
 })().catch(e => { console.error('FAIL:', e.message); process.exit(1); });

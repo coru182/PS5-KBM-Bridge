@@ -179,6 +179,11 @@ try:
     assert g["custom"] == 0 and g["sens"] != 31 and sorted(os.listdir(pdir)) == ["my_game.json"]
     assert api("/api/bind?profile=my_game&action=jump&slot=1&key=J")[1]["ok"]
 
+    assert api("/api/retake")[1]["ok"]
+    s, h, raw = get("/api/diag")
+    rep = raw.decode()
+    assert s == 200 and h["Content-Type"].startswith("text/plain") and rep.startswith("=== PS5 KBM Bridge diagnostics ===")
+    assert "--- config.ini ---" in rep and "[global]" in rep and "my_game (new, 6 actions) PPSA04289" in rep and "firmware: host test" in rep
     # robustness: garbage requests must not kill the server
     import socket
     for junk in [b"\x00\xff\xfe\r\n\r\n", b"GET\r\n\r\n", b"POST / HTTP/1.1\r\n\r\n", b"GET /api/bind?" + b"a=" * 3000 + b" HTTP/1.0\r\n\r\n"]:
@@ -190,6 +195,7 @@ try:
 
     assert api("/api/stop")[1]["ok"]
     srv.wait(timeout=5)
+    assert "retakes=1" in srv.stdout.read()
     # restart: the custom profile file is loaded again
     srv = subprocess.Popen([os.path.join(here, "host_server"), str(PORT), "-", "PPSA04289"], stdout=subprocess.PIPE, text=True, env=env)
     assert "custom profiles loaded: 1" in srv.stdout.readline()
