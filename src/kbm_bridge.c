@@ -44,7 +44,7 @@
 #ifndef KBM_DIAG_ONLY
 #define KBM_DIAG_ONLY 0
 #endif
-#define KBM_VERSION "0.10.4"
+#define KBM_VERSION "0.11"
 
 extern void ghostpad_status_log(const char *fmt, ...);
 #define KLOG(...) ghostpad_status_log("[KBM] " __VA_ARGS__)
@@ -60,12 +60,25 @@ extern int sceSystemServiceLaunchWebBrowser(const char *uri, void *reserved);
 extern int sceSystemServiceParamGetInt(int param_id, int *value);
 #define KBM_SYS_PARAM_LANG 1
 
+/* Which app has focus. Verified with the diagnostics ELF on FW 11.60: the
+ * output buffer is the 1st argument and its first int32 is the focused app id
+ * (the game's id while playing, the system UI's id on the PS5 menu). The 2nd
+ * argument gets a spare zeroed buffer in case another firmware uses it. */
+extern int sceSystemServiceGetAppFocusedAppStatus(void *a, void *b);
+static int focused_app_id(int *out) {
+    static unsigned char b1[1024] __attribute__((aligned(16))), b2[1024] __attribute__((aligned(16)));
+    memset(b1, 0, sizeof(b1)); memset(b2, 0, sizeof(b2));
+    int rc = sceSystemServiceGetAppFocusedAppStatus(b1, b2);
+    int32_t id; memcpy(&id, b1, sizeof(id));
+    *out = id;
+    return rc;
+}
+
 #if KBM_DIAG_ONLY
 /* Diagnostics only: which app has focus (game vs. PS5 menu)? The signatures
  * are not documented, so both get two zeroed 1 KiB buffers (works whether the
  * output pointer is the 1st or 2nd argument) and the raw bytes are logged.
  * Not linked into the bridge ELF. */
-extern int sceSystemServiceGetAppFocusedAppStatus(void *a, void *b);
 extern int sceLncUtilGetAppFocusedAppStatus(void *a, void *b);
 static void focus_probe(int big_app) {
     static unsigned char last[2][96];
@@ -172,6 +185,7 @@ static void refresh_status_locked(void) {
  * or the running title changes. */
 static int g_overlay = 0, g_overlay_saved_layer = KBM_LAYER_FOOT;
 static unsigned g_ps_seen = 0;
+static int g_focus_ok = -1;   /* focus API: -1 not tried, 0 failed (PS-key fallback), 1 works */
 
 static void apply_profile_locked(const char *title) {
     kbm_runtime_set_title(&g_rt, &g_cfg, title);
@@ -192,6 +206,18 @@ static void apply_profile_locked(const char *title) {
     g_rt.has_layers = m.has_layers;
     g_rt.layer = g_engine.layer;
     g_rt.hz = kbm_config_effective_hz(&g_cfg);
+}
+
+/* lock held */
+static void set_overlay_locked(int on, const char *why) {
+    if (on == g_overlay) return;
+    if (on) g_overlay_saved_layer = g_engine.layer;
+    g_overlay = on;
+    kbm_reset_motion(&g_engine);
+    apply_profile_locked(g_rt.title);
+    if (!on) kbm_set_layer(&g_engine, g_overlay_saved_layer);
+    g_rt.layer = g_engine.layer;
+    KLOG("%s: %s profile (%s)\n", g_rt.title, on ? "PS5 menu" : "game", why);
 }
 
 static void config_changed(void *u) {   /* lock held */
@@ -442,17 +468,9 @@ static int on_report(void *user, int kind, const uint8_t *buf, uint32_t len, uin
         g_rt.layer = g_engine.layer;
         KLOG("MODE -> %s (mode key%s)\n", g_engine.layer ? "vehicle" : "on foot", g_engine.pointer_mode ? ", pointer mode on" : "");
     }
-    if (g_engine.ps_presses != g_ps_seen) {          /* PS key: game <-> PS5 menu */
+    if (g_engine.ps_presses != g_ps_seen) {          /* PS key: game <-> PS5 menu (only if focus can't be read) */
         g_ps_seen = g_engine.ps_presses;
-        if (g_rt.title[0]) {
-            if (!g_overlay) { g_overlay_saved_layer = g_engine.layer; g_overlay = 1; }
-            else g_overlay = 0;
-            kbm_reset_motion(&g_engine);
-            apply_profile_locked(g_rt.title);
-            if (!g_overlay) kbm_set_layer(&g_engine, g_overlay_saved_layer);
-            g_rt.layer = g_engine.layer;
-            KLOG("PS key during %s: %s profile\n", g_rt.title, g_overlay ? "PS5 menu" : "game");
-        }
+        if (g_rt.title[0] && g_focus_ok != 1) set_overlay_locked(!g_overlay, "PS key");
     }
     if (ok && g_injection_enabled && g_pending_evt_ns == 0) g_pending_evt_ns = t_ns;
     if (ok && g_engine.captured >= 0) {
@@ -903,8 +921,28 @@ static void *watch_thread(void *unused) {
         snprintf(last, sizeof(last), "%s", tid);
         first = 0;
         ++tick;
-        for (int i = 0; i < 10 && !g_open_settings_req && g_running && !g_stop_requested; ++i)
+        for (int i = 0; i < 10 && !g_open_settings_req && g_running && !g_stop_requested; ++i) {
             sleep_ns(100000000ull);   /* 1 s, but react to F11 within ~0.1 s */
+            /* game or PS5 menu on screen? (every 200 ms while a game is running) */
+            if ((i & 1) || !tid[0] || app <= 0 || g_focus_ok == 0 || KBM_DIAG_ONLY) continue;
+            int fa = 0, rc = focused_app_id(&fa);
+            if (rc != 0) {
+                g_focus_ok = 0;
+                KLOG("focus: sceSystemServiceGetAppFocusedAppStatus rc=0x%x -> using the PS key to switch to the menu profile\n", (unsigned)rc);
+                continue;
+            }
+            if (g_focus_ok != 1) { g_focus_ok = 1; KLOG("focus: detection works (focused=0x%x game=0x%x)\n", (unsigned)fa, (unsigned)app); }
+            pthread_mutex_lock(&g_lock);
+            g_rt.focus_auto = 1;
+            if (fa != app) {
+                if (!g_overlay) KLOG("focus: 0x%x (not the game)\n", (unsigned)fa);
+                set_overlay_locked(1, "PS5 menu has focus");
+            } else {
+                set_overlay_locked(0, "game has focus");
+                if (g_engine.pointer_mode) set_pointer_locked(0, "game has focus again");
+            }
+            pthread_mutex_unlock(&g_lock);
+        }
     }
     if (g_cfg_dirty) save_config();
     return NULL;

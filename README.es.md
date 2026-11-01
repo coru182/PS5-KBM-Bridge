@@ -64,8 +64,8 @@ Resultado en `out/`:
 
 | Archivo | Para qué |
 |---|---|
-| `ps5-kbm-bridge-v0104.elf` | El bridge |
-| `ps5-kbm-diag-v0104.elf` | Diagnóstico: solo lee y mide, **nunca** crea el mando virtual, se cierra a los 5 min |
+| `ps5-kbm-bridge-v011.elf` | El bridge |
+| `ps5-kbm-diag-v011.elf` | Diagnóstico: solo lee y mide, **nunca** crea el mando virtual, se cierra a los 5 min |
 | `homebrew/PPSA51258/` | Ícono para el home (ShadowMountPlus) |
 | `etaHEN/payloads/` | Arranque automático, solo si usás etaHEN |
 
@@ -74,7 +74,7 @@ Resultado en `out/`:
 ## Instalar y usar
 
 1. Copiá `out/homebrew/PPSA51258/` a `/data/homebrew/PPSA51258/` en la PS5 por FTP (por ejemplo con ps5upload). Reiniciá y cargá tus payloads; ShadowMountPlus agrega el ícono **PS5 KBM Bridge** al home.
-   - Sin ShadowMountPlus: mandá `ps5-kbm-bridge-v0104.elf` a elfldr (puerto 9021).
+   - Sin ShadowMountPlus: mandá `ps5-kbm-bridge-v011.elf` a elfldr (puerto 9021).
 2. Conectá el receptor y abrí el ícono. Se abre la página de ajustes. Mové el mouse y tocá una tecla: aparece el DualSense virtual.
 3. Abrí un juego. La notificación dice qué juego reconoció y qué perfil aplicó. Para cambiar algo en medio del juego: **F11**. Volvés con el botón PS (o la tecla Windows).
 
@@ -131,6 +131,7 @@ Perfiles de otros jugadores son bienvenidos (issues o pull requests), mejor con 
 | Idioma de la PS5 (v0.9) | Se lee con `sceSystemServiceParamGetInt` y queda en el log (`system language: ...`). **Sin probar en consola**; si falla, la página usa el idioma del navegador y las notificaciones salen en inglés. Se puede fijar en General |
 | Teclas de los perfiles por juego | Validadas contra sus fuentes, **no probadas jugando**. Las de confianza "media" tienen partes deducidas |
 | Devolver el receptor a la PS5 y retomarlo (juegos "nativos") | Devolverlo funciona. **Al retomarlo hubo un caso en que el mouse dejó de responder: está en revisión** |
+| Cambio juego ↔ menú de la PS5 según el foco (v0.11) | La función de foco se verificó con el ELF de diagnóstico en 11.60 (líneas `FOCUS` del log); el cambio automático en sí todavía no se probó en consola |
 | Arranque automático con etaHEN | Sin probar |
 
 **Seguridad:** la página en el puerto 8099 no tiene contraseña. Cualquiera en tu red local puede cambiar ajustes o detener el bridge. Bien para una red de casa, no para una red pública.

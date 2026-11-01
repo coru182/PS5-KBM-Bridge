@@ -29,7 +29,8 @@ typedef struct {
     int has_layers;         /* active profile has on-foot / vehicle layers */
     int layer;              /* current layer: 0 on foot, 1 vehicle */
     int mouse_dpad;         /* active profile: mouse moves the D-pad (PS5 menu) */
-    int overlay;            /* PS key pressed during a game: menu profile until pressed again */
+    int overlay;            /* PS5 menu on screen during a game: menu profile */
+    int focus_auto;         /* game/menu switch follows the PS5 focus (else the PS key) */
     char profile[KBM_ID_LEN];
     char auto_profile[KBM_ID_LEN];  /* what "Automático" picks for this title */
     int hz;                 /* effective inject rate */

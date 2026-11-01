@@ -2,6 +2,14 @@
 
 **English** · [Español](CHANGELOG.es.md)
 
+## v0.11: game ↔ PS5 menu switch is automatic
+
+- The bridge now asks the PS5 which app has focus (`sceSystemServiceGetAppFocusedAppStatus`, checked with the diagnostics ELF on firmware 11.60: the first value is the focused app id). Every 200 ms while a game is running:
+  - **the PS5 menu, Control Center or the browser is on screen → "PS5 menu" profile**;
+  - **the game is on screen again → the game's profile** (GTA's on-foot / vehicle mode is kept), however you got back (PS key, the game's card, Circle…).
+- Going back to the game also turns off the browser cursor (pointer mode) if it was left on.
+- If that call fails on another firmware, the bridge logs it and falls back to the v0.10.3 behaviour (the Windows key switches).
+
 ## v0.10.4: steadier on-foot / vehicle mode
 
 - **On foot / In vehicle buttons** under "Current game" (F11) to fix the mode from the page.

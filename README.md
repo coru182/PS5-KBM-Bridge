@@ -64,8 +64,8 @@ Output in `out/`:
 
 | File | Purpose |
 |---|---|
-| `ps5-kbm-bridge-v0104.elf` | The bridge |
-| `ps5-kbm-diag-v0104.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
+| `ps5-kbm-bridge-v011.elf` | The bridge |
+| `ps5-kbm-diag-v011.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
 | `homebrew/PPSA51258/` | Home screen icon (ShadowMountPlus) |
 | `etaHEN/payloads/` | Automatic start, only if you use etaHEN |
 
@@ -74,7 +74,7 @@ Output in `out/`:
 ## Install and use
 
 1. Copy `out/homebrew/PPSA51258/` to `/data/homebrew/PPSA51258/` on the PS5 over FTP (for example with ps5upload). Reboot and load your payloads; ShadowMountPlus adds the **PS5 KBM Bridge** icon to the home screen.
-   - Without ShadowMountPlus: send `ps5-kbm-bridge-v0104.elf` to elfldr (port 9021).
+   - Without ShadowMountPlus: send `ps5-kbm-bridge-v011.elf` to elfldr (port 9021).
 2. Plug in the receiver and open the icon. The settings page opens. Move the mouse and press a key: the virtual DualSense appears.
 3. Open a game. The notification says which game it recognised and which profile it applied. To change something mid-game: **F11**. Go back with the PS button (or the Windows key).
 
@@ -131,6 +131,7 @@ Profiles from other players are welcome (issues or pull requests), ideally with 
 | PS5 system language (v0.9) | Read with `sceSystemServiceParamGetInt` and logged (`system language: ...`). **Not tested on console**; if it fails, the page uses the browser language and notifications are in English. Can be set under General |
 | Per-game profile keys | Checked against their sources, **not tested in play**. "Medium" confidence profiles have inferred parts |
 | Handing the receiver to the PS5 and taking it back ("native" games) | Handing it back works. **Taking it back once left the mouse unresponsive: under investigation** |
+| Game ↔ PS5 menu switch from the PS5 focus (v0.11) | Focus call verified with the diagnostics ELF on 11.60 (`FOCUS` log lines); the automatic switch itself not yet tested on console |
 | Automatic start with etaHEN | Not tested |
 
 **Security:** the page on port 8099 has no password. Anyone on your local network can change settings or stop the bridge. Fine for a home network, not for a public one.

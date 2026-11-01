@@ -2,6 +2,14 @@
 
 [English](CHANGELOG.md) · **Español**
 
+## v0.11: el cambio entre juego y menú de la PS5 es automático
+
+- El bridge ahora le pregunta a la PS5 qué app tiene el foco (`sceSystemServiceGetAppFocusedAppStatus`, verificado con el ELF de diagnóstico en el firmware 11.60: el primer valor es el id de la app con foco). Cada 200 ms mientras hay un juego abierto:
+  - **en pantalla está el menú de la PS5, el Centro de control o el navegador → perfil "Menú de la PS5"**;
+  - **vuelve el juego a la pantalla → perfil del juego** (en GTA se conserva el modo a pie / vehículo), sin importar cómo volviste (tecla PS, la tarjeta del juego, Círculo…).
+- Al volver al juego también se apaga el cursor del navegador (modo puntero) si había quedado prendido.
+- Si esa función falla en otro firmware, el bridge lo anota en el log y vuelve al comportamiento de v0.10.3 (la tecla Windows cambia).
+
 ## v0.10.4: modo a pie / vehículo más estable
 
 - Botones **A pie / En vehículo** en "Juego actual" (F11) para corregir el modo desde la página.

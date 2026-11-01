@@ -221,6 +221,7 @@ es: {
   src_default:"Juego no reconocido: usa el perfil por defecto ★", src_rule:"Elegido por vos para este juego", src_native:"Nativo: el juego recibe el teclado y el mouse",
   src_auto_native:"Nativo automático (la base de datos dice que el juego soporta teclado/mouse)",
   src_overlay:"Menú de la PS5 encima del juego: perfil del menú. Tecla Windows (botón PS) otra vez para volver al perfil del juego",
+  src_overlay_auto:"Menú de la PS5 encima del juego: perfil del menú. Vuelve solo al perfil del juego cuando el juego está otra vez en pantalla",
   conf3:"Teclas verificadas con fuentes", conf2:"Algunas teclas inferidas: revisalas en el juego", conf1:"Sin verificar", conf0:"Plantilla genérica",
   native_badge:"Teclado/mouse nativo en PS5", edit_other:"Editar otro perfil…", close_list:"Cerrar lista",
   k_mode:"Modo", v_foot:"A pie", v_vehicle:"En vehículo", mode_help:"(F lo cambia al subir/bajar; B o estos botones lo corrigen)", lay_2:"Siempre", lay_0:"A pie", lay_1:"En vehículo",
@@ -274,6 +275,7 @@ en: {
   src_default:"Unrecognised game: using the default profile ★", src_rule:"Chosen by you for this game", src_native:"Native: the game gets the keyboard and mouse",
   src_auto_native:"Automatic native (the database says this game supports keyboard/mouse)",
   src_overlay:"PS5 menu over the game: menu profile. Press the Windows key (PS button) again to go back to the game's profile",
+  src_overlay_auto:"PS5 menu over the game: menu profile. It goes back to the game's profile by itself when the game is on screen again",
   conf3:"Keys verified against sources", conf2:"Some keys inferred: check them in game", conf1:"Unverified", conf0:"Generic template",
   native_badge:"Native keyboard/mouse on PS5", edit_other:"Edit another profile…", close_list:"Close list",
   k_mode:"Mode", v_foot:"On foot", v_vehicle:"In vehicle", mode_help:"(F switches it when you get in/out; B or these buttons fix it)", lay_2:"Always", lay_0:"On foot", lay_1:"In vehicle",
@@ -406,7 +408,7 @@ function renderRuntime(){
         ${[[0, t("v_foot")], [1, t("v_vehicle")]].map(([v, txt]) => `<button class="small ${r.layer === v ? "on" : ""}" data-layer="${v}">${r.layer === v ? "✓ " : ""}${esc(txt)}</button>`).join("")}
         <span class="muted">${esc(t("mode_help"))}</span></div>` : "";
     const html = `<div class="gname">${esc(r.title_name || t("unknown_game"))}</div>
-      <div class="row"><span class="chip">${esc(r.title)}</span><span class="muted">${esc(r.title_source ? t("src_" + r.title_source) : "")}</span></div>
+      <div class="row"><span class="chip">${esc(r.title)}</span><span class="muted">${esc(r.title_source ? t("src_" + r.title_source + (r.title_source === "overlay" && r.focus_auto ? "_auto" : "")) : "")}</span></div>
       ${sug}${modeRow}
       <div class="targets">${row}</div>${other}
       <p class="muted">${esc(t("game_help"))}</p>`;
