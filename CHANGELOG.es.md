@@ -2,6 +2,12 @@
 
 [English](CHANGELOG.md) · **Español**
 
+## v0.10.2: GTA Trilogy con las teclas de PC de la Definitive Edition
+
+- El perfil de GTA Trilogy ahora usa las **teclas por defecto de la versión de PC de la Definitive Edition** (sacadas de una lista de controles de GTA III DE): Shift correr, Espacio saltar, Ctrl sigilo, Tab rueda de armas; en el auto W/S acelerar/frenar, Espacio freno de mano, Q/E mirar a los costados, H bocina, Tab/rueda del mouse radio, R misión secundaria, Z o clic de la rueda mirar atrás. Antes usaba las teclas de la PC original de los 2000 (Espacio correr, Shift saltar).
+- El perfil automático es para el esquema de control **Moderno** del juego (el que viene por defecto). Perfil nuevo para elegir a mano: **"GTA Trilogy DE (esquema Clásico)"**, para quien juegue con el esquema Clásico (acelerar = ✕, frenar = □).
+- La página muestra qué esquema de control del juego espera cada perfil.
+
 ## v0.10.1: GTA V se maneja como en PC
 
 - **GTA V** ahora tiene las capas de teclas a pie / en vehículo (como el perfil de GTA Trilogy), con las teclas de vehículo de PC: W/S acelerar/frenar, Espacio freno de mano, clic derecho apunta desde el vehículo (L1), clic izquierdo dispara (L1+R1), E bocina, H luces, Q rueda de radios, `.` siguiente radio, R cámara cinemática. **F** cambia de modo al subir o bajar; **B** lo cambia a mano.

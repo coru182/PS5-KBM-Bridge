@@ -2,6 +2,12 @@
 
 **English** · [Español](CHANGELOG.es.md)
 
+## v0.10.2: GTA Trilogy with the Definitive Edition PC keys
+
+- The GTA Trilogy profile now uses the **Definitive Edition PC defaults** (found in a GTA III DE control list): Shift sprint, Space jump, Ctrl stealth, Tab weapon wheel; in a car W/S accelerate/brake, Space handbrake, Q/E look left/right, H horn, Tab/mouse wheel radio, R sub-mission, Z or middle click look behind. Before, it used the original 2000s PC keys (Space sprint, Shift jump).
+- The automatic profile is for the game's **Modern** control scheme (the default). New selectable profile **"GTA Trilogy DE (Classic scheme)"** for players using the Classic scheme (accelerate = ✕, brake = □).
+- The page shows which in-game control scheme each profile expects.
+
 ## v0.10.1: GTA V drives like on PC
 
 - **GTA V** now has the on-foot / vehicle key layers (like the GTA Trilogy profile), with the PC vehicle keys: W/S accelerate/brake, Space handbrake, right click aims from the vehicle (L1), left click fires (L1+R1), E horn, H headlights, Q radio wheel, `.` next station, R cinematic camera. **F** switches mode when you get in or out; **B** switches it by hand.

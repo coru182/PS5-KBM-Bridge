@@ -158,7 +158,7 @@ def load_profile(path, kind):
     return {"id": pid, "name": name, "kind": kind, "mouse": mouse, "template": d.get("template", "generic"), "conf": conf,
             "ads": max(25, min(400, ads)), "native": bool(d.get("native_kbm_ps5") is True), "actions": out,
             "notes": (d.get("notes") or "")[:700], "sources": d.get("sources") or [],
-            "tips": (d.get("tips") or {}).get("es", ""), "tips_en": (d.get("tips") or {}).get("en", "")}
+            "manual": bool(d.get("manual")), "tips": (d.get("tips") or {}).get("es", ""), "tips_en": (d.get("tips") or {}).get("en", "")}
 
 
 def load_titles():
@@ -352,7 +352,7 @@ extern const char KBM_CONCEPT_NAMES[];
             md += ["", f"## {t['unv_h']}", "", t["unv_i"], ""] + [f"- `{f.stem}`" for f in unv]
         (ROOT / "data" / t["file"]).write_text("\n".join(md) + "\n", encoding="utf-8")
     print("\n".join(rep[:2]))
-    missing = [p["id"] for p in profiles if not any(pr == index[p["id"]] for _, pr, _ in concepts)]
+    missing = [p["id"] for p in profiles if not p["manual"] and not any(pr == index[p["id"]] for _, pr, _ in concepts)]
     if missing:
         print(f"gen_builtin: WARNING profiles with no matching title: {missing}")
 

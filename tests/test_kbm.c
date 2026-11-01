@@ -298,15 +298,21 @@ static void test_vehicle_layers(void) {
     KbmFrame f;
     kb(&e, 0, W, 0); kbm_frame(&e, 1, &f);                 /* on foot: W walks */
     assert(f.ly < 128 && !(f.buttons & KBM_BTN_R2));
+    kb(&e, 0x02, 0, 0); kbm_frame(&e, 2, &f);
+    assert(f.buttons & KBM_BTN_CROSS);                     /* Shift = sprint (DE PC keys) */
     kb(&e, 0, SPACE, 0); kbm_frame(&e, 2, &f);
-    assert(f.buttons & KBM_BTN_CROSS);                     /* sprint */
+    assert(f.buttons & KBM_BTN_SQUARE);                    /* Space = jump */
     kb(&e, 0, F, 0); kbm_frame(&e, 3, &f);                 /* enter vehicle */
     assert((f.buttons & KBM_BTN_TRIANGLE) && e.layer == KBM_LAYER_VEHICLE);
     kb(&e, 0, 0, 0);
     kb(&e, 0, W, A); kbm_frame(&e, 4, &f);                 /* car: W accelerates, A still steers */
     assert((f.buttons & KBM_BTN_R2) && f.r2 == 255 && f.ly == 128 && f.lx < 128);
     kb(&e, 0, SPACE, 0); kbm_frame(&e, 5, &f);
-    assert((f.buttons & KBM_BTN_R1) && !(f.buttons & KBM_BTN_CROSS));   /* handbrake, not sprint */
+    assert(f.buttons == KBM_BTN_R1);                       /* handbrake, not jump */
+    kb(&e, 0, 0x16, 0); kbm_frame(&e, 5, &f);
+    assert(f.buttons == KBM_BTN_L2 && f.ly == 128);        /* S brakes (no weapon wheel, no stick) */
+    kb(&e, 0, 0x2b, 0); kbm_frame(&e, 5, &f);
+    assert(f.buttons == KBM_BTN_RIGHT);                    /* Tab = radio in the car */
     kb(&e, 0, 0, 0);
     uint8_t m2[4] = {2, 0, 0, 0}; kbm_mouse(&e, 0, m2, 4, 6); kbm_frame(&e, 6, &f);
     assert(!(f.buttons & KBM_BTN_L2));                     /* right click does nothing in the car */
@@ -317,6 +323,14 @@ static void test_vehicle_layers(void) {
     kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_FOOT);
     e.pointer_mode = 1; kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_FOOT);
     e.pointer_mode = 0;
+    /* Classic scheme variant: same keys, classic buttons */
+    {
+        KbmEngine k; kbm_init(&k); load_profile(&k, &c, "gta_trilogy_classic");
+        kb(&k, 0, F, 0); kb(&k, 0, 0, 0); assert(k.layer == KBM_LAYER_VEHICLE);
+        kb(&k, 0, W, 0); kbm_frame(&k, 9, &f); assert(f.buttons == KBM_BTN_CROSS);   /* accelerate = Cross */
+        kb(&k, 0, 0x16, 0); kbm_frame(&k, 9, &f); assert(f.buttons == KBM_BTN_SQUARE); /* brake = Square */
+        kb(&k, 0, 0, 0);
+    }
     /* GTA V: same idea, PC-style driving */
     {
         KbmEngine v; kbm_init(&v); load_profile(&v, &c, "gta5");

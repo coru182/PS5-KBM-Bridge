@@ -6,7 +6,8 @@
   "Genérico (todos los botones)": "Generic (all buttons)",
   "Plantilla: Acción en tercera persona con armas": "Template: Third-person shooter",
   "Plantilla: Shooter en primera persona": "Template: First-person shooter",
-  "Menú de la PS5": "PS5 menu"
+  "Menú de la PS5": "PS5 menu",
+  "GTA Trilogy DE (esquema Clásico)": "GTA Trilogy DE (Classic scheme)"
  },
  "labels": {
   "Abajo": "Down",
@@ -457,6 +458,7 @@
   "R1 (pestaña siguiente)": "R1 (next tab)",
   "R2": "R2",
   "R3 (stick der.)": "R3 (right stick)",
+  "Radio": "Radio",
   "Radio (mantener: rueda de radios)": "Radio (hold: radio wheel)",
   "Radio de bolsillo": "Pocket radio",
   "Rebobinar": "Rewind",
@@ -554,6 +556,7 @@
   "Zoom (investigar)": "Zoom (investigate)",
   "Zoom / lupa": "Zoom / magnifier",
   "Zoom de mira": "Scope zoom",
+  "Zoom del mapa / pandilla: quedarse": "Map zoom / gang: hold position",
   "Zoom mira +": "Scope zoom +",
   "Zoom mira -": "Scope zoom -",
   "Órdenes a Ashley": "Commands to Ashley"

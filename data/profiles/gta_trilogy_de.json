@@ -3,47 +3,300 @@
  "name": "GTA: The Trilogy – Definitive Edition",
  "template": "tps",
  "native_kbm_ps5": false,
- "native_kbm_note": "The PS5 version only accepts a keyboard in menus/text (tcrf.net, 'Touch Features And Keyboard Support'); gameplay needs a controller.",
+ "native_kbm_note": "The PS5 version only accepts a keyboard in menus/text (tcrf.net); gameplay needs a controller.",
  "ads_pct": 100,
  "confidence": "medium",
- "notes": "One profile for GTA III, Vice City and San Andreas DE (same Modern control scheme on PS5). PS5 buttons: Modern scheme (gamerguides, gtabase). PC keys: original PC defaults (grandtheftwiki, gtabase) plus DE changes seen in sources (Tab = weapon wheel). No full DE PC key list was found, so some keys may differ. Two key layers: on foot and car. F (enter/exit) switches layer; B switches it by hand if they get out of sync. Bikes and aircraft use different buttons and are not covered.",
+ "notes": "One profile for GTA III, Vice City and San Andreas DE. PC keys: Definitive Edition PC defaults (magicgameworld GTA III DE list: Shift sprint, Space jump, Ctrl stealth, Tab weapon/radio wheel, W/S drive, Space handbrake, Q/E look, H horn, R sub-mission, Z look behind). SA-only keys (T gang follow, Y/N answers, Ctrl nitro) are not in that list. Two layers: F switches on foot / vehicle, B fixes it. Bikes (pedal = Cross) and aircraft use other buttons.",
+ "tips": {
+  "es": "Este perfil es para el esquema de control Moderno del juego (Opciones → Controles → Esquema de control: Moderno, que es el que viene por defecto). Si usás el esquema Clásico, elegí «GTA Trilogy DE (esquema Clásico)» en Juego actual → Otro juego…",
+  "en": "This profile is for the game's Modern control scheme (Options → Controls → Control scheme: Modern, the default). If you use the Classic scheme, pick \"GTA Trilogy DE (Classic scheme)\" under Current game → Other game…"
+ },
  "sources": [
+  "https://www.magicgameworld.com/gta-3-definitive-edition-controls-guide-pc-xbox/",
   "https://gamerguides.com/grand-theft-auto-san-andreas-the-definitive-edition/guide/game-basics/introduction/ps4-ps5-controls",
   "https://www.gtabase.com/gta-san-andreas/guides/gta-san-andreas-controls-for-pc-xbox-ps4-definitive-edition?lang=en",
-  "https://www.grandtheftwiki.com/Controls_for_GTA_San_Andreas",
-  "https://progameguides.com/gta/how-to-change-weapons-in-grand-theft-auto-san-andreas-remastered/",
-  "https://steamcommunity.com/app/1546990/discussions/0/3761103414971791382",
   "https://tcrf.net/Grand_Theft_Auto:_San_Andreas_-_The_Definitive_Edition"
  ],
  "actions": [
-  {"id": "enter_exit", "label": "Subir / bajar del vehículo", "ps5": "TRIANGLE+MODE_TOGGLE", "pc": ["F", "ENTER"], "layer": "both"},
-  {"id": "mode", "label": "Cambiar modo a pie / vehículo", "ps5": "MODE_TOGGLE", "pc": ["B", ""], "layer": "both"},
-  {"id": "pause", "label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", "P"], "layer": "both"},
-  {"id": "camera", "label": "Cambiar cámara", "ps5": "TOUCHPAD", "pc": ["V", ""], "layer": "both"},
-  {"id": "look_back", "label": "Mirar atrás", "ps5": "R3", "pc": ["MOUSE3", ""], "layer": "both"},
-
-  {"id": "sprint", "label": "Correr (mantener) / esprintar", "ps5": "CROSS", "pc": ["SPACE", ""]},
-  {"id": "jump", "label": "Saltar / Trepar", "ps5": "SQUARE", "pc": ["LSHIFT", ""]},
-  {"id": "crouch", "label": "Agacharse", "ps5": "L3", "pc": ["C", ""]},
-  {"id": "attack", "label": "Atacar / Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
-  {"id": "aim", "label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
-  {"id": "wheel", "label": "Rueda de armas (mantener)", "ps5": "L1", "pc": ["TAB", ""]},
-  {"id": "next_weapon", "label": "Arma siguiente", "ps5": "L1", "pc": ["E", "WHEEL_DOWN"]},
-  {"id": "swap_phone", "label": "Cambiar arma / teléfono / centrar cámara", "ps5": "R1", "pc": ["Q", "WHEEL_UP"]},
-  {"id": "gang_follow", "label": "Pandilla: seguirme", "ps5": "DPAD_UP", "pc": ["G", ""]},
-  {"id": "gang_hold", "label": "Pandilla: quedarse", "ps5": "DPAD_DOWN", "pc": ["H", ""]},
-  {"id": "yes", "label": "Respuesta positiva", "ps5": "DPAD_RIGHT", "pc": ["Y", ""]},
-  {"id": "no_stats", "label": "Respuesta negativa / estadísticas (mantener)", "ps5": "DPAD_LEFT", "pc": ["N", ""]},
-
-  {"id": "accelerate", "label": "Acelerar", "ps5": "R2", "pc": ["W", "UP"], "layer": "vehicle"},
-  {"id": "brake", "label": "Frenar / Reversa", "ps5": "L2", "pc": ["S", "DOWN"], "layer": "vehicle"},
-  {"id": "handbrake", "label": "Freno de mano", "ps5": "R1", "pc": ["SPACE", ""], "layer": "vehicle"},
-  {"id": "car_fire", "label": "Disparar desde el vehículo", "ps5": "L1", "pc": ["MOUSE1", ""], "layer": "vehicle"},
-  {"id": "nitro", "label": "Nitro", "ps5": "CROSS", "pc": ["LCTRL", ""], "layer": "vehicle"},
-  {"id": "look_left", "label": "Mirar a la izquierda", "ps5": "SQUARE", "pc": ["Q", ""], "layer": "vehicle"},
-  {"id": "look_right", "label": "Mirar a la derecha", "ps5": "CIRCLE", "pc": ["E", ""], "layer": "vehicle"},
-  {"id": "horn", "label": "Bocina / sirena", "ps5": "L3", "pc": ["H", ""], "layer": "vehicle"},
-  {"id": "radio", "label": "Radio (mantener: rueda de radios)", "ps5": "DPAD_RIGHT", "pc": ["R", "WHEEL_DOWN"], "layer": "vehicle"},
-  {"id": "submission", "label": "Misión secundaria del vehículo", "ps5": "DPAD_UP", "pc": ["2", ""], "layer": "vehicle"}
+  {
+   "id": "enter_exit",
+   "label": "Subir / bajar del vehículo",
+   "ps5": "TRIANGLE+MODE_TOGGLE",
+   "pc": [
+    "F",
+    "ENTER"
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "mode",
+   "label": "Cambiar modo a pie / vehículo",
+   "ps5": "MODE_TOGGLE",
+   "pc": [
+    "B",
+    ""
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "pause",
+   "label": "Pausa",
+   "ps5": "OPTIONS",
+   "pc": [
+    "ESC",
+    "P"
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "camera",
+   "label": "Cambiar cámara",
+   "ps5": "TOUCHPAD",
+   "pc": [
+    "V",
+    ""
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "look_back",
+   "label": "Mirar atrás",
+   "ps5": "R3",
+   "pc": [
+    "Z",
+    "MOUSE3"
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "sprint",
+   "label": "Correr (mantener) / esprintar",
+   "ps5": "CROSS",
+   "pc": [
+    "LSHIFT",
+    ""
+   ],
+   "layer": "foot"
+  },
+  {
+   "id": "jump",
+   "label": "Saltar / Trepar",
+   "ps5": "SQUARE",
+   "pc": [
+    "SPACE",
+    ""
+   ],
+   "layer": "foot"
+  },
+  {
+   "id": "crouch",
+   "label": "Agacharse / Sigilo",
+   "ps5": "L3",
+   "pc": [
+    "LCTRL",
+    "C"
+   ],
+   "layer": "foot"
+  },
+  {
+   "id": "attack",
+   "label": "Atacar / Disparar",
+   "ps5": "R2",
+   "pc": [
+    "MOUSE1",
+    ""
+   ],
+   "layer": "foot"
+  },
+  {
+   "id": "aim",
+   "label": "Apuntar",
+   "ps5": "L2",
+   "pc": [
+    "MOUSE2",
+    ""
+   ],
+   "layer": "foot"
+  },
+  {
+   "id": "wheel",
+   "label": "Rueda de armas (mantener)",
+   "ps5": "L1",
+   "pc": [
+    "TAB",
+    ""
+   ],
+   "layer": "foot"
+  },
+  {
+   "id": "next_weapon",
+   "label": "Arma siguiente",
+   "ps5": "L1",
+   "pc": [
+    "WHEEL_DOWN",
+    "WHEEL_UP"
+   ],
+   "layer": "foot"
+  },
+  {
+   "id": "swap_phone",
+   "label": "Cambiar arma / teléfono / centrar cámara",
+   "ps5": "R1",
+   "pc": [
+    "Q",
+    ""
+   ],
+   "layer": "foot"
+  },
+  {
+   "id": "map_zoom",
+   "label": "Zoom del mapa / pandilla: quedarse",
+   "ps5": "DPAD_DOWN",
+   "pc": [
+    "G",
+    ""
+   ],
+   "layer": "foot"
+  },
+  {
+   "id": "gang_follow",
+   "label": "Pandilla: seguirme",
+   "ps5": "DPAD_UP",
+   "pc": [
+    "T",
+    ""
+   ],
+   "layer": "foot"
+  },
+  {
+   "id": "yes",
+   "label": "Respuesta positiva",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "Y",
+    ""
+   ],
+   "layer": "foot"
+  },
+  {
+   "id": "no_stats",
+   "label": "Respuesta negativa / estadísticas (mantener)",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "N",
+    ""
+   ],
+   "layer": "foot"
+  },
+  {
+   "id": "accelerate",
+   "label": "Acelerar",
+   "ps5": "R2",
+   "pc": [
+    "W",
+    "UP"
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "brake",
+   "label": "Frenar / Reversa",
+   "ps5": "L2",
+   "pc": [
+    "S",
+    "DOWN"
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "handbrake",
+   "label": "Freno de mano",
+   "ps5": "R1",
+   "pc": [
+    "SPACE",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "car_fire",
+   "label": "Disparar desde el vehículo",
+   "ps5": "L1",
+   "pc": [
+    "MOUSE1",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "nitro",
+   "label": "Nitro",
+   "ps5": "CROSS",
+   "pc": [
+    "LCTRL",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "look_left",
+   "label": "Mirar a la izquierda",
+   "ps5": "SQUARE",
+   "pc": [
+    "Q",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "look_right",
+   "label": "Mirar a la derecha",
+   "ps5": "CIRCLE",
+   "pc": [
+    "E",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "horn",
+   "label": "Bocina / sirena",
+   "ps5": "L3",
+   "pc": [
+    "H",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "radio",
+   "label": "Radio (mantener: rueda de radios)",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "TAB",
+    "WHEEL_DOWN"
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "radio_prev",
+   "label": "Radio",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "WHEEL_UP",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "submission",
+   "label": "Misión secundaria del vehículo",
+   "ps5": "DPAD_UP",
+   "pc": [
+    "R",
+    "2"
+   ],
+   "layer": "vehicle"
+  }
  ]
 }
