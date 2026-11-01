@@ -33,7 +33,7 @@ Keyboard and mouse in any PS5 game, with no adapter and no PC. A payload for jai
 | Windows | PS button |
 | F8 | Start the controller by hand (if you turned off automatic start) |
 | F9 | Mouse as cursor / as camera |
-| F10 | Diagnostics ELF only: test handing the receiver back to the PS5 |
+| F10 | In game: measure the game's right-stick dead zone (diagnostics ELF: receiver release test) |
 | F11 | Open the settings in the PS5 browser |
 | F12 | Stop the bridge |
 
@@ -64,8 +64,8 @@ Output in `out/`:
 
 | File | Purpose |
 |---|---|
-| `ps5-kbm-bridge-v092.elf` | The bridge |
-| `ps5-kbm-diag-v092.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
+| `ps5-kbm-bridge-v010.elf` | The bridge |
+| `ps5-kbm-diag-v010.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
 | `homebrew/PPSA51258/` | Home screen icon (ShadowMountPlus) |
 | `etaHEN/payloads/` | Automatic start, only if you use etaHEN |
 
@@ -74,7 +74,7 @@ Output in `out/`:
 ## Install and use
 
 1. Copy `out/homebrew/PPSA51258/` to `/data/homebrew/PPSA51258/` on the PS5 over FTP (for example with ps5upload). Reboot and load your payloads; ShadowMountPlus adds the **PS5 KBM Bridge** icon to the home screen.
-   - Without ShadowMountPlus: send `ps5-kbm-bridge-v092.elf` to elfldr (port 9021).
+   - Without ShadowMountPlus: send `ps5-kbm-bridge-v010.elf` to elfldr (port 9021).
 2. Plug in the receiver and open the icon. The settings page opens. Move the mouse and press a key: the virtual DualSense appears.
 3. Open a game. The notification says which game it recognised and which profile it applied. To change something mid-game: **F11**. Go back with the PS button (or the Windows key).
 

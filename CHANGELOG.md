@@ -2,6 +2,16 @@
 
 **English** · [Español](CHANGELOG.es.md)
 
+## v0.10: closer to native in every game
+
+Games handle the right stick differently: some ignore small deflections (dead zone) and speed the camera up gradually (acceleration). That's why RE2 Remake felt native and RE Requiem or GTA V felt heavy with the same bridge settings.
+
+- **Dead-zone finder (F10, in game):** the camera turns slowly to the right; click as soon as it starts moving. The value (minus ~240 ms of reaction time) is saved as the active profile's dead zone. Esc cancels. F10 is now a reserved key.
+- **Radial dead-zone compensation:** small mouse movements jump straight over the game's dead zone while keeping their direction (before, each axis was compensated separately, which could add vertical drift).
+- **Small-movement boost** (0–100 %, per profile): raises small stick values for games with a smooth/exponential response curve.
+- **In-game settings tips** on the page: RE Requiem (right stick dead zone 5–7, camera acceleration max, Linear curve) and GTA V (aim/look dead zone minimum, aim/look acceleration maximum), plus a general guide for every profile.
+- Profiles with dead zone 0 and boost 0 (the default, e.g. RE2 Remake) behave exactly as before.
+
 ## v0.9.2: PS5 menu profile
 
 - New **"PS5 menu" profile**, used automatically while no game is running (home screen, library, store, settings):

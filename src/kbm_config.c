@@ -28,6 +28,7 @@ static void profile_from_builtin(KbmProfile *p, int bi) {
     KbmMapping m; kbm_mapping_defaults(&m);
     p->sens = m.sens; p->yratio = m.yratio; p->smooth_ms = m.smooth_ms;
     p->deadzone = m.deadzone; p->invert_y = m.invert_y;
+    p->curve = m.curve;
     p->ads_pct = d->ads_pct;
     p->builtin = bi;
     p->n = d->n < KBM_MAX_ACTIONS ? d->n : KBM_MAX_ACTIONS;
@@ -68,7 +69,7 @@ int kbm_profile_reset(KbmConfig *c, const char *id) {
 int kbm_profile_modified(const KbmProfile *p) {
     KbmProfile d;
     profile_from_builtin(&d, p->builtin);
-    if (p->sens != d.sens || p->yratio != d.yratio || p->smooth_ms != d.smooth_ms || p->deadzone != d.deadzone ||
+    if (p->sens != d.sens || p->yratio != d.yratio || p->smooth_ms != d.smooth_ms || p->deadzone != d.deadzone || p->curve != d.curve ||
         p->invert_y != d.invert_y || p->ads_pct != d.ads_pct || p->n != d.n) return 1;
     for (int i = 0; i < p->n; ++i)
         if (p->a[i].key[0] != d.a[i].key[0] || p->a[i].key[1] != d.a[i].key[1]) return 1;
@@ -216,6 +217,7 @@ void kbm_profile_clamp(KbmProfile *p) {
     p->yratio = clampi(p->yratio, 25, 400);
     p->smooth_ms = clampi(p->smooth_ms, 4, 60);
     p->deadzone = clampi(p->deadzone, 0, 90);
+    p->curve = clampi(p->curve, 0, 100);
     p->invert_y = p->invert_y ? 1 : 0;
     p->ads_pct = clampi(p->ads_pct, 25, 400);
 }
@@ -226,6 +228,7 @@ void kbm_profile_to_mapping(const KbmProfile *p, KbmMapping *m) {
     kbm_mapping_defaults(m);
     m->sens = p->sens; m->yratio = p->yratio; m->smooth_ms = p->smooth_ms;
     m->deadzone = p->deadzone; m->invert_y = p->invert_y;
+    m->curve = p->curve;
     m->ads_pct = p->ads_pct;
     m->mouse_dpad = KBM_BUILTIN[p->builtin].mouse_dpad;
     static uint64_t spec[2][256], both[256];
@@ -340,6 +343,7 @@ int kbm_config_parse(KbmConfig *c, const char *text) {
             else if (!strcmp(k, "yratio")) prof->yratio = iv;
             else if (!strcmp(k, "smooth_ms")) prof->smooth_ms = iv;
             else if (!strcmp(k, "deadzone")) prof->deadzone = iv;
+            else if (!strcmp(k, "curve")) prof->curve = iv;
             else if (!strcmp(k, "invert_y")) prof->invert_y = iv;
             else if (!strcmp(k, "ads_pct")) prof->ads_pct = iv;
             else if (!strncmp(k, "key.", 4)) {
@@ -379,8 +383,8 @@ int kbm_config_write(const KbmConfig *c, char *buf, size_t n) {
     for (int i = 0; i < c->n_profiles; ++i) {
         const KbmProfile *p = &c->p[i];
         if (!kbm_profile_modified(p)) continue;
-        outf(&o, "\n[profile.%s]\nsens=%d\nyratio=%d\nsmooth_ms=%d\ndeadzone=%d\ninvert_y=%d\nads_pct=%d\n",
-             p->id, p->sens, p->yratio, p->smooth_ms, p->deadzone, p->invert_y, p->ads_pct);
+        outf(&o, "\n[profile.%s]\nsens=%d\nyratio=%d\nsmooth_ms=%d\ndeadzone=%d\ncurve=%d\ninvert_y=%d\nads_pct=%d\n",
+             p->id, p->sens, p->yratio, p->smooth_ms, p->deadzone, p->curve, p->invert_y, p->ads_pct);
         for (int a = 0; a < p->n; ++a)
             outf(&o, "key.%s=%s,%s\n", p->a[a].id, kn(p->a[a].key[0]), kn(p->a[a].key[1]));
     }
@@ -423,9 +427,11 @@ static void profile_detail(KbmJson *j, const KbmProfile *p) {
     kbm_json_raw(j, ",\"kind\":"); kbm_json_str(j, kind_name(p->builtin));
     kbm_json_raw(j, ",\"tmpl\":"); kbm_json_str(j, b->tmpl);
     kbm_json_raw(j, ",\"notes\":"); kbm_json_str(j, b->notes);
+    kbm_json_raw(j, ",\"tips\":"); kbm_json_str(j, b->tips);
+    kbm_json_raw(j, ",\"tips_en\":"); kbm_json_str(j, b->tips_en);
     kbm_json_fmt(j, ",\"conf\":%d,\"native\":%d,\"mod\":%d,\"layers\":%d", b->confidence, b->native, kbm_profile_modified(p), kbm_profile_has_layers(p));
-    kbm_json_fmt(j, ",\"sens\":%d,\"yratio\":%d,\"smooth_ms\":%d,\"deadzone\":%d,\"invert_y\":%d,\"ads_pct\":%d,\"actions\":[",
-                 p->sens, p->yratio, p->smooth_ms, p->deadzone, p->invert_y, p->ads_pct);
+    kbm_json_fmt(j, ",\"sens\":%d,\"yratio\":%d,\"smooth_ms\":%d,\"deadzone\":%d,\"curve\":%d,\"invert_y\":%d,\"ads_pct\":%d,\"actions\":[",
+                 p->sens, p->yratio, p->smooth_ms, p->deadzone, p->curve, p->invert_y, p->ads_pct);
     for (int a = 0; a < p->n; ++a) {
         char d[96];
         if (a) jput(j, ',');

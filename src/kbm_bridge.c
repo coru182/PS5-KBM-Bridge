@@ -44,7 +44,7 @@
 #ifndef KBM_DIAG_ONLY
 #define KBM_DIAG_ONLY 0
 #endif
-#define KBM_VERSION "0.9.2"
+#define KBM_VERSION "0.10"
 
 extern void ghostpad_status_log(const char *fmt, ...);
 #define KLOG(...) ghostpad_status_log("[KBM] " __VA_ARGS__)
@@ -440,6 +440,21 @@ static int on_report(void *user, int kind, const uint8_t *buf, uint32_t len, uin
             KLOG("F10 (diag): RELEASE TEST — handing receiver to the PS5 for 20 s\n");
             NOTIFY("%s", kbm_tr("KBM diag: teclado/mouse devueltos a la PS5 por 20 s", "KBM diag: keyboard/mouse handed back to the PS5 for 20 s"));
         }
+        if (f10 && !c->f10_was && !KBM_DIAG_ONLY) {
+            int started = 0;
+            pthread_mutex_lock(&g_lock);
+            if (g_rt.vda && !g_engine.calib_active) {
+                set_pointer_locked(0, "dead-zone finder");
+                kbm_calib_start(&g_engine, mono_ns());
+                started = 1;
+            }
+            pthread_mutex_unlock(&g_lock);
+            if (started) {
+                KLOG("F10: dead-zone finder started\n");
+                NOTIFY("%s", kbm_tr("KBM: midiendo la zona muerta. La camara va a girar despacio: hace clic apenas empiece a moverse (Esc cancela)",
+                                    "KBM: measuring the dead zone. The camera will turn slowly: click as soon as it starts moving (Esc cancels)"));
+            }
+        }
         if (f9 && !c->f9_was && !KBM_DIAG_ONLY) {
             pthread_mutex_lock(&g_lock);
             set_pointer_locked(!g_engine.pointer_mode, "F9");
@@ -708,6 +723,20 @@ static void *watch_thread(void *unused) {
             }
         }
         pthread_mutex_lock(&g_lock);
+        int calib = -1, calib_dz = 0;
+        char calib_prof[64] = "";
+        if (g_engine.calib_result != -1) {           /* dead-zone finder finished */
+            calib = g_engine.calib_result;
+            g_engine.calib_result = -1;
+            KbmProfile *cp = kbm_config_profile(&g_cfg, g_rt.profile);
+            if (calib >= 0 && cp) {
+                cp->deadzone = calib;
+                kbm_profile_clamp(cp);
+                calib_dz = cp->deadzone;
+                snprintf(calib_prof, sizeof(calib_prof), "%s", cp->name);
+                config_changed(NULL);
+            }
+        }
         int changed = first || strcmp(tid, last) != 0;
         if (changed) {
             kbm_set_layer(&g_engine, KBM_LAYER_FOOT);   /* new game: start on foot */
@@ -743,6 +772,14 @@ static void *watch_thread(void *unused) {
         }
         int dirty = g_cfg_dirty;
         pthread_mutex_unlock(&g_lock);
+        if (calib >= 0) {
+            KLOG("dead-zone finder: %d -> profile %s deadzone=%d\n", calib, calib_prof, calib_dz);
+            NOTIFY2("KBM: zona muerta = %d (perfil %s). Ajustable en la pagina", "KBM: dead zone = %d (profile %s). Adjustable on the page", calib_dz, calib_prof);
+        } else if (calib == -2 || calib == -3) {
+            KLOG("dead-zone finder: %s\n", calib == -2 ? "cancelled" : "no click before the end of the ramp");
+            NOTIFY("%s", calib == -2 ? kbm_tr("KBM: medicion cancelada", "KBM: measurement cancelled")
+                                     : kbm_tr("KBM: no hubo clic; la zona muerta no cambio", "KBM: no click; dead zone unchanged"));
+        }
 
         if (changed || app != last_app) {
             KLOG("GAME %s (app_id=0x%x) -> profile=%s%s\n", tid[0] ? tid : "none", (unsigned)app, prof,

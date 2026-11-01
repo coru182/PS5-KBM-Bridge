@@ -191,7 +191,7 @@ es: {
   h_status:"Estado", h_game:"Juego actual", h_profile:"Perfil", h_binds:"Asignación de teclas", h_general:"General", h_titles:"Juegos recordados",
   editing:"Perfil que estás editando (no cambia el del juego):",
   btn_default:"Usar como perfil por defecto (juegos que no reconozco)", btn_reset:"Restaurar teclas de fábrica",
-  binds_help:"Tocá <b>Capturar</b> y apretá la tecla o botón del mouse nuevo en el teclado conectado a la PS5. También podés elegirla de la lista. F8, F9, F11 y F12 están reservadas.",
+  binds_help:"Tocá <b>Capturar</b> y apretá la tecla o botón del mouse nuevo en el teclado conectado a la PS5. También podés elegirla de la lista. F8, F9, F10, F11 y F12 están reservadas.",
   th_action:"Acción", th_pad:"Mando", th_key1:"Tecla 1", th_key2:"Tecla 2",
   lang_label:"Idioma / Language:", lang_auto:"Automático (idioma de la PS5)",
   hz_label:"Frecuencia de inyección", hz_auto:"Auto (250 Hz, sirve para 30/60/120 fps)",
@@ -224,7 +224,9 @@ es: {
   layers_help:"Este perfil tiene teclas distintas a pie y en vehículo. F (subir/bajar) cambia de modo; si se desincroniza, apretá B.",
   g_inuse:"En uso ahora", g_templates:"Plantillas", g_games:"Juegos (A–Z)", legend:"★ = perfil por defecto para juegos que no reconozco · • = modificado por vos",
   notes:"Notas de la investigación de teclas (en inglés)",
-  s_sens:"Sensibilidad", s_yratio:"Vertical (% de X)", s_ads:"Sensibilidad al apuntar (ADS)", s_smooth:"Suavizado", s_dz:"Compensar zona muerta", invert:"Invertir eje vertical",
+  s_sens:"Sensibilidad", s_yratio:"Vertical (% de X)", s_ads:"Sensibilidad al apuntar (ADS)", s_smooth:"Suavizado", s_dz:"Zona muerta del juego (F10 la mide)", s_curve:"Impulso a movimientos chicos",
+  feel_h:"¿Se siente pesado o con retraso?", feel_game:"Para este juego: ",
+  feel_gen:"Casi siempre es el juego, no el bridge: ignora los movimientos chicos del stick (zona muerta) y acelera la cámara de a poco. 1) En el juego bajá la zona muerta del stick derecho y subí la aceleración de cámara (o poné la curva en Lineal). 2) Adentro del juego apretá F10: la cámara gira despacio y hacés clic apenas se mueve; eso guarda la zona muerta en este perfil. 3) Si todavía cuesta apuntar fino, subí «Impulso a movimientos chicos».", invert:"Invertir eje vertical",
   capture:"Capturar", pick:"Elegir tecla", none:"(ninguna)",
   as_on:"Activado: etaHEN lo arranca solo cada vez que lo cargás.", as_avail:"El ELF ya está en /data/etaHEN/payloads/. Marcá la casilla para que arranque solo.",
   as_missing:"Para activarlo, copiá ps5-kbm-bridge.elf (sin número de versión) a /data/etaHEN/payloads/ por FTP.",
@@ -240,7 +242,7 @@ en: {
   h_status:"Status", h_game:"Current game", h_profile:"Profile", h_binds:"Key bindings", h_general:"General", h_titles:"Remembered games",
   editing:"Profile you are editing (doesn't change the game's profile):",
   btn_default:"Use as default profile (games I don't recognise)", btn_reset:"Restore factory keys",
-  binds_help:"Tap <b>Capture</b> and press the new key or mouse button on the keyboard connected to the PS5. You can also pick it from the list. F8, F9, F11 and F12 are reserved.",
+  binds_help:"Tap <b>Capture</b> and press the new key or mouse button on the keyboard connected to the PS5. You can also pick it from the list. F8, F9, F10, F11 and F12 are reserved.",
   th_action:"Action", th_pad:"Controller", th_key1:"Key 1", th_key2:"Key 2",
   lang_label:"Idioma / Language:", lang_auto:"Automatic (PS5 language)",
   hz_label:"Injection rate", hz_auto:"Auto (250 Hz, works for 30/60/120 fps)",
@@ -273,7 +275,9 @@ en: {
   layers_help:"This profile has different keys on foot and in vehicles. F (enter/exit) switches mode; if it gets out of sync, press B.",
   g_inuse:"In use now", g_templates:"Templates", g_games:"Games (A–Z)", legend:"★ = default profile for games I don't recognise · • = changed by you",
   notes:"Key research notes",
-  s_sens:"Sensitivity", s_yratio:"Vertical (% of X)", s_ads:"Aiming sensitivity (ADS)", s_smooth:"Smoothing", s_dz:"Dead-zone compensation", invert:"Invert vertical axis",
+  s_sens:"Sensitivity", s_yratio:"Vertical (% of X)", s_ads:"Aiming sensitivity (ADS)", s_smooth:"Smoothing", s_dz:"Game dead zone (F10 measures it)", s_curve:"Small-movement boost",
+  feel_h:"Feels heavy or laggy?", feel_game:"For this game: ",
+  feel_gen:"It's almost always the game, not the bridge: it ignores small stick movements (dead zone) and speeds the camera up gradually. 1) In the game, lower the right stick dead zone and raise camera acceleration (or set the curve to Linear). 2) In the game, press F10: the camera turns slowly and you click as soon as it moves; that saves the dead zone in this profile. 3) If fine aiming is still hard, raise \"Small-movement boost\".", invert:"Invert vertical axis",
   capture:"Capture", pick:"Pick key", none:"(none)",
   as_on:"On: etaHEN starts it every time it loads.", as_avail:"The ELF is already in /data/etaHEN/payloads/. Tick the box to start it automatically.",
   as_missing:"To enable it, copy ps5-kbm-bridge.elf (without the version number) to /data/etaHEN/payloads/ over FTP.",
@@ -430,14 +434,18 @@ function renderConfig(){
       + `<p class="muted">${esc(t("legend"))}</p>` : "";
   $("plist").querySelectorAll("[data-p]").forEach(b => b.onclick = () => { sel = b.dataset.p; showList = false; refresh(true); });
   $("pnotes").innerHTML = p.notes ? `<details><summary>${esc(t("notes"))}</summary><p class="muted">${esc(p.notes)}</p></details>` : "";
-  $("params").innerHTML =
+  const tips = L === "en" ? p.tips_en : p.tips;
+  const feel = p.kind === "menu" ? "" : `<details class="note" style="margin:10px 0"${tips ? " open" : ""}><summary>${esc(t("feel_h"))}</summary>
+      ${tips ? `<p><b>${esc(t("feel_game"))}</b>${esc(tips)}</p>` : ""}<p class="muted">${esc(t("feel_gen"))}</p></details>`;
+  $("params").innerHTML = feel +
     slider("sens",t("s_sens"),1,50,1,p.sens) +
     slider("yratio",t("s_yratio"),25,400,5,p.yratio,"%") +
     slider("ads_pct",t("s_ads"),25,400,5,p.ads_pct,"%") +
     slider("smooth_ms",t("s_smooth"),4,60,1,p.smooth_ms," ms") +
     slider("deadzone",t("s_dz"),0,90,1,p.deadzone) +
+    slider("curve",t("s_curve"),0,100,5,p.curve||0,"%") +
     `<label class="check"><input type="checkbox" id="invert_y" ${p.invert_y?"checked":""}> ${esc(t("invert"))}</label>`;
-  ["sens","yratio","ads_pct","smooth_ms","deadzone"].forEach(k => {
+  ["sens","yratio","ads_pct","smooth_ms","deadzone","curve"].forEach(k => {
     const el = $(k), o = $(k+"_o"), unit = o.textContent.replace(/^[0-9]+/,"");
     el.oninput = () => { o.textContent = el.value + unit; busy = true; };
     el.onchange = () => { busy = false; call("/api/profile", {id:p.id, [k]:el.value}); };

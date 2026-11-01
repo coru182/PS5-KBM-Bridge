@@ -38,6 +38,12 @@ const PORT = 18111, OUT = process.argv[2] || '.';
         await page.waitForTimeout(400);
         if ((await st('requiem')).config.edit.sens !== 21) throw new Error('slider not applied');
         if (!(await page.$eval('#pcur', e => e.textContent.includes('•')))) throw new Error('modified marker');
+        // feel tips for Requiem + curve slider
+        const feel = await page.$eval('#params details', d => d.open && d.textContent);
+        if (!feel || !feel.includes('F10')) throw new Error('requiem feel tips');
+        await page.$eval('#curve', el => { el.value = 35; el.dispatchEvent(new Event('input')); el.dispatchEvent(new Event('change')); });
+        await page.waitForTimeout(400);
+        if ((await st('requiem')).config.edit.curve !== 35) throw new Error('curve slider');
         // pick key from list
         await page.selectOption('select[data-a="reload"][data-s="0"]', 'T');
         await page.waitForTimeout(400);

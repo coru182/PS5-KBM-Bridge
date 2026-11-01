@@ -97,7 +97,11 @@ try:
     assert api("/api/state")[1]["config"]["open_settings_on_launch"] == 1
     assert api("/api/global?open_settings_on_launch=0")[1]["ok"] and api("/api/state")[1]["config"]["open_settings_on_launch"] == 0
     assert api("/api/global?open_settings_on_launch=1")[1]["ok"]
-    assert api("/api/profile?id=requiem&ads_pct=220")[1]["ok"]
+    assert api("/api/profile?id=requiem&ads_pct=220&curve=40&deadzone=24")[1]["ok"]
+    rq = prof("requiem")
+    assert rq["curve"] == 40 and rq["deadzone"] == 24 and "zona muerta" in rq["tips"] and "dead zone" in rq["tips_en"], rq
+    assert api("/api/profile?id=requiem&curve=500")[1]["ok"] and prof("requiem")["curve"] == 100
+    assert api("/api/profile?id=requiem&curve=40")[1]["ok"]
     rq = prof("requiem")
     assert rq["ads_pct"] == 220
     assert prof("re2r")["ads_pct"] == 100
@@ -106,6 +110,7 @@ try:
     assert api("/api/pointer?on=0")[1]["ok"] and api("/api/state")[1]["runtime"]["pointer_mode"] == 0
     assert api("/api/bind?profile=re2r&action=aim&slot=1&key=F9")[1]["ok"] is False
     assert api("/api/bind?profile=re2r&action=aim&slot=1&key=F11")[1]["ok"] is False
+    assert api("/api/bind?profile=re2r&action=aim&slot=1&key=F10")[1]["ok"] is False
     assert api("/api/autostart?on=1")[1]["ok"] and api("/api/state")[1]["runtime"]["autostart_on"] == 1
     assert api("/api/autostart?on=0")[1]["ok"] and api("/api/state")[1]["runtime"]["autostart_on"] == 0
     assert api("/api/reset?profile=re2r")[1]["ok"]
@@ -113,6 +118,7 @@ try:
     assert api("/api/nothing")[0] == 404
 
     ini = open(cfg_out).read()
+    assert "curve=40" in ini and "deadzone=24" in ini
     assert "lang=auto" in ini and "idle_exit_min=0" in ini and "ads_pct=220" in ini and "pointer_sens=50" in ini
     assert "PPSA04289=requiem" in ini and "[profile.re2r]" not in ini and "[profile.requiem]" in ini and "[profile.elden_ring]" not in ini and "key.heal=Q,H" in ini and "inject_hz=120" in ini
 

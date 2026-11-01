@@ -2,6 +2,16 @@
 
 [English](CHANGELOG.md) · **Español**
 
+## v0.10: más cerca de nativo en todos los juegos
+
+Cada juego trata el stick derecho a su manera: algunos ignoran los movimientos chicos (zona muerta) y aceleran la cámara de a poco. Por eso RE2 Remake se sentía nativo y RE Requiem o GTA V pesados con los mismos ajustes del bridge.
+
+- **Medidor de zona muerta (F10, adentro del juego):** la cámara gira despacio a la derecha; hacé clic apenas empiece a moverse. El valor (menos ~240 ms de tiempo de reacción) se guarda como zona muerta del perfil activo. Esc cancela. F10 pasa a ser tecla reservada.
+- **Compensación radial de la zona muerta:** los movimientos chicos del mouse saltan directo por encima de la zona muerta del juego sin cambiar de dirección (antes se compensaba cada eje por separado, lo que podía agregar deriva vertical).
+- **Impulso a movimientos chicos** (0–100 %, por perfil): sube los valores chicos del stick para juegos con curva de respuesta suave/exponencial.
+- **Consejos de ajustes del juego** en la página: RE Requiem (zona muerta del stick derecho 5–7, aceleración de cámara al máximo, curva Lineal) y GTA V (zona muerta de apuntado/vista al mínimo, aceleración de apuntado/vista al máximo), más una guía general para todos los perfiles.
+- Los perfiles con zona muerta 0 e impulso 0 (lo que viene por defecto, por ejemplo RE2 Remake) se comportan exactamente igual que antes.
+
 ## v0.9.2: perfil para el menú de la PS5
 
 - Nuevo **perfil "Menú de la PS5"**, que se usa solo mientras no hay ningún juego abierto (home, biblioteca, tienda, ajustes):

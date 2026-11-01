@@ -187,6 +187,7 @@ int kbm_api_command(KbmApi *api, const char *path, const KbmQuery *q, char *out,
         get_int(q, "yratio", &p->yratio);
         get_int(q, "smooth_ms", &p->smooth_ms);
         get_int(q, "deadzone", &p->deadzone);
+        get_int(q, "curve", &p->curve);
         get_int(q, "invert_y", &p->invert_y);
         get_int(q, "ads_pct", &p->ads_pct);
         kbm_profile_clamp(p);

@@ -23,6 +23,7 @@ void kbm_init(KbmEngine *e) {
     e->keyboard_owner = -1;
     e->mouse_owner = -1;
     e->captured = -1;
+    e->calib_result = -1;
 }
 
 static const uint64_t *layer_table(const KbmEngine *e) {
@@ -33,6 +34,13 @@ static void press_edge(KbmEngine *e, uint8_t code, int now_down) {
     int was = e->down[code];
     e->down[code] = (uint8_t)(now_down ? 1 : 0);
     if (!now_down) { e->suppress[code] = 0; return; }
+    if (!was && e->calib_active) {             /* dead-zone finder: any key/click stops it */
+        e->calib_active = 0;
+        e->suppress[code] = 1;
+        if (code == 0x29) e->calib_result = -2;   /* Esc */
+        else { int v = e->calib_value - KBM_CALIB_REACTION; e->calib_result = v < 0 ? 0 : v; }
+        return;
+    }
     if (!was && e->capture_armed) {
         e->capture_armed = 0;
         e->captured = code;
@@ -41,6 +49,13 @@ static void press_edge(KbmEngine *e, uint8_t code, int now_down) {
     }
     if (!was && !e->pointer_mode && e->map.has_layers && (layer_table(e)[code] & KBM_OUT_MODE_TOGGLE))
         e->layer = e->layer == KBM_LAYER_VEHICLE ? KBM_LAYER_FOOT : KBM_LAYER_VEHICLE;
+}
+
+void kbm_calib_start(KbmEngine *e, uint64_t t_ns) {
+    e->calib_active = 1;
+    e->calib_result = -1;
+    e->calib_value = 0;
+    e->calib_start = t_ns;
 }
 
 void kbm_set_layer(KbmEngine *e, int layer) {
@@ -119,6 +134,38 @@ void kbm_capture_cancel(KbmEngine *e) { e->capture_armed = 0; }
 
 /* stick units (-127..127) from a velocity in counts/ms.
  * sens_pct = sensitivity * 100 (so ADS multipliers keep precision). */
+static long isqrt(long v) {
+    long r = 0, b = 1L << 30;
+    while (b > v) b >>= 2;
+    while (b) {
+        if (v >= r + b) { v -= r + b; r = (r >> 1) + b; } else r >>= 1;
+        b >>= 2;
+    }
+    return r;
+}
+
+/* Right stick from raw (unclamped) stick units. Radial, like a real stick:
+ * the direction is kept, the length is saturated at 127, optionally boosted
+ * for small values (curve) and lifted over the game's dead zone (dz).
+ * dz = 0 and curve = 0 keep the per-axis behaviour of v0.6-v0.9. */
+static void shape_stick(long sx, long sy, int dz, int curve, int *ox, int *oy) {
+    if (!sx && !sy) { *ox = *oy = 0; return; }
+    if (!dz && !curve) {
+        *ox = (int)(sx > 127 ? 127 : sx < -127 ? -127 : sx);
+        *oy = (int)(sy > 127 ? 127 : sy < -127 ? -127 : sy);
+        return;
+    }
+    long mag = isqrt(sx * sx + sy * sy);
+    if (mag < 1) mag = 1;
+    long m = mag > 127 ? 127 : mag;
+    long xn = m * 1024 / 127;                              /* 0..1024 */
+    if (curve) xn += (isqrt(xn * 1024) - xn) * curve / 100; /* blend toward sqrt */
+    long out = dz + xn * (127 - dz) / 1024;
+    if (out > 127) out = 127;
+    *ox = (int)(sx * out / mag);
+    *oy = (int)(sy * out / mag);
+}
+
 static int stick_axis(long v_milli, long sens_pct, int ratio_pct, int deadzone) {
     /* v_milli = counts per ms * 1000. Gain 16 stick units per (count/ms) per
      * sens step: matches v0.6 at 60 Hz (8 units per count per 16.7 ms frame). */
@@ -225,12 +272,23 @@ void kbm_frame(KbmEngine *e, uint64_t t_ns, KbmFrame *o) {
 
     if (e->map.mouse_dpad) { o->rx = 128; o->ry = 128; return; }   /* menus: no camera */
 
+    if (e->calib_active) {                             /* dead-zone finder ramp */
+        uint64_t steps = t_ns > e->calib_start ? (t_ns - e->calib_start) / KBM_CALIB_STEP_NS : 0;
+        if (steps > KBM_CALIB_MAX) { e->calib_active = 0; e->calib_result = -3; steps = 0; }
+        e->calib_value = (int)steps;
+        o->rx = (uint8_t)(128 + e->calib_value);
+        o->ry = 128;
+        return;
+    }
+
     long sens_pct = (long)clampi(e->map.sens, 1, 50) * 100;
     if (o->buttons & KBM_BTN_L2)                       /* aiming (ADS) */
         sens_pct = sens_pct * clampi(e->map.ads_pct, 25, 400) / 100;
     int dz = clampi(e->map.deadzone, 0, 90);
-    int rx = stick_axis(vx, sens_pct, 100, dz);
-    int ry = stick_axis(vy, sens_pct, clampi(e->map.yratio, 25, 400), dz);
+    long stx = vx * sens_pct * 16 / 100000;
+    long sty = vy * sens_pct * 16 / 100000 * clampi(e->map.yratio, 25, 400) / 100;
+    int rx, ry;
+    shape_stick(stx, sty, dz, clampi(e->map.curve, 0, 100), &rx, &ry);
     if (e->map.invert_y) ry = -ry;
     o->rx = (uint8_t)(128 + clampi(rx, -127, 127));
     o->ry = (uint8_t)(128 + clampi(ry, -127, 127));

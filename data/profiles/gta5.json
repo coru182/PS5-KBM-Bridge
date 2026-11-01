@@ -1,40 +1,213 @@
 {
-  "id": "gta5",
-  "name": "Grand Theft Auto V",
-  "template": "tps",
-  "native_kbm_ps5": false,
-  "native_kbm_note": "GTA V de PS5 no soporta teclado/mouse para jugar; las listas de controles de PlayStation solo muestran mando (GTA Wiki).",
-  "ads_pct": 100,
-  "confidence": "medium",
-  "notes": "PC y PlayStation parcialmente de GTA Wiki (Controls for GTA V); el resto son los defaults conocidos de PC (lista de magicgameworld que coincide con GTA V). R en PC recarga y da golpe ligero, igual que Círculo en PS5. Q en PC también es golpe fuerte; se mapea a Cubrirse (R1). Z (ampliar radar) y LALT (rueda de personajes, mantener) comparten la cruceta abajo como en PS5. Las flechas, ENTER y BACKSPACE sirven para manejar el teléfono (cruceta, Cruz y Círculo). M = menú de interacción (solo Online, mantener touchpad). Soltar arma (F9/F10) omitido por teclas reservadas.",
-  "sources": [
-    "https://gta.fandom.com/wiki/Controls_for_GTA_V",
-    "https://www.magicgameworld.com/?p=123765"
-  ],
-  "actions": [
-    {"label": "Correr (mantener) / esprintar", "ps5": "CROSS", "pc": ["LSHIFT", ""]},
-    {"label": "Saltar / trepar / esquivar", "ps5": "SQUARE", "pc": ["SPACE", ""]},
-    {"label": "Modo sigilo", "ps5": "L3", "pc": ["LCTRL", ""]},
-    {"label": "Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
-    {"label": "Apuntar", "ps5": "L2", "pc": ["MOUSE2", ""]},
-    {"label": "Recargar / golpe ligero", "ps5": "CIRCLE", "pc": ["R", ""]},
-    {"label": "Cubrirse", "ps5": "R1", "pc": ["Q", ""]},
-    {"label": "Subir / bajar del vehículo", "ps5": "TRIANGLE", "pc": ["F", ""]},
-    {"label": "Rueda de armas", "ps5": "L1", "pc": ["TAB", ""]},
-    {"label": "Habilidad especial", "ps5": "L3+R3", "pc": ["CAPSLOCK", ""]},
-    {"label": "Cambiar de personaje (mantener)", "ps5": "DPAD_DOWN", "pc": ["LALT", ""]},
-    {"label": "Ampliar radar", "ps5": "DPAD_DOWN", "pc": ["Z", ""]},
-    {"label": "Teléfono / arriba", "ps5": "DPAD_UP", "pc": ["UP", "MOUSE3"]},
-    {"label": "Teléfono: abajo", "ps5": "DPAD_DOWN", "pc": ["DOWN", ""]},
-    {"label": "Teléfono: izquierda", "ps5": "DPAD_LEFT", "pc": ["LEFT", ""]},
-    {"label": "Teléfono: derecha", "ps5": "DPAD_RIGHT", "pc": ["RIGHT", ""]},
-    {"label": "Aceptar (teléfono/menú)", "ps5": "CROSS", "pc": ["ENTER", ""]},
-    {"label": "Atrás (teléfono/menú)", "ps5": "CIRCLE", "pc": ["BACKSPACE", ""]},
-    {"label": "Detonar bomba", "ps5": "DPAD_LEFT", "pc": ["G", ""]},
-    {"label": "Acción contextual / parar taxi", "ps5": "DPAD_RIGHT", "pc": ["E", ""]},
-    {"label": "Mirar atrás", "ps5": "R3", "pc": ["C", ""]},
-    {"label": "Cambiar cámara", "ps5": "TOUCHPAD", "pc": ["V", ""]},
-    {"label": "Menú de interacción (Online)", "ps5": "TOUCHPAD", "pc": ["M", ""]},
-    {"label": "Pausa / mapa", "ps5": "OPTIONS", "pc": ["ESC", "P"]}
-  ]
+ "id": "gta5",
+ "name": "Grand Theft Auto V",
+ "template": "tps",
+ "native_kbm_ps5": false,
+ "native_kbm_note": "GTA V de PS5 no soporta teclado/mouse para jugar; las listas de controles de PlayStation solo muestran mando (GTA Wiki).",
+ "ads_pct": 100,
+ "confidence": "medium",
+ "notes": "PC y PlayStation parcialmente de GTA Wiki (Controls for GTA V); el resto son los defaults conocidos de PC (lista de magicgameworld que coincide con GTA V). R en PC recarga y da golpe ligero, igual que Círculo en PS5. Q en PC también es golpe fuerte; se mapea a Cubrirse (R1). Z (ampliar radar) y LALT (rueda de personajes, mantener) comparten la cruceta abajo como en PS5. Las flechas, ENTER y BACKSPACE sirven para manejar el teléfono (cruceta, Cruz y Círculo). M = menú de interacción (solo Online, mantener touchpad). Soltar arma (F9/F10) omitido por teclas reservadas.",
+ "sources": [
+  "https://gta.fandom.com/wiki/Controls_for_GTA_V",
+  "https://www.magicgameworld.com/?p=123765",
+  "https://wiki.gtaboom.com/wiki/first-person-controls-settings-guide"
+ ],
+ "actions": [
+  {
+   "label": "Correr (mantener) / esprintar",
+   "ps5": "CROSS",
+   "pc": [
+    "LSHIFT",
+    ""
+   ]
+  },
+  {
+   "label": "Saltar / trepar / esquivar",
+   "ps5": "SQUARE",
+   "pc": [
+    "SPACE",
+    ""
+   ]
+  },
+  {
+   "label": "Modo sigilo",
+   "ps5": "L3",
+   "pc": [
+    "LCTRL",
+    ""
+   ]
+  },
+  {
+   "label": "Disparar",
+   "ps5": "R2",
+   "pc": [
+    "MOUSE1",
+    ""
+   ]
+  },
+  {
+   "label": "Apuntar",
+   "ps5": "L2",
+   "pc": [
+    "MOUSE2",
+    ""
+   ]
+  },
+  {
+   "label": "Recargar / golpe ligero",
+   "ps5": "CIRCLE",
+   "pc": [
+    "R",
+    ""
+   ]
+  },
+  {
+   "label": "Cubrirse",
+   "ps5": "R1",
+   "pc": [
+    "Q",
+    ""
+   ]
+  },
+  {
+   "label": "Subir / bajar del vehículo",
+   "ps5": "TRIANGLE",
+   "pc": [
+    "F",
+    ""
+   ]
+  },
+  {
+   "label": "Rueda de armas",
+   "ps5": "L1",
+   "pc": [
+    "TAB",
+    ""
+   ]
+  },
+  {
+   "label": "Habilidad especial",
+   "ps5": "L3+R3",
+   "pc": [
+    "CAPSLOCK",
+    ""
+   ]
+  },
+  {
+   "label": "Cambiar de personaje (mantener)",
+   "ps5": "DPAD_DOWN",
+   "pc": [
+    "LALT",
+    ""
+   ]
+  },
+  {
+   "label": "Ampliar radar",
+   "ps5": "DPAD_DOWN",
+   "pc": [
+    "Z",
+    ""
+   ]
+  },
+  {
+   "label": "Teléfono / arriba",
+   "ps5": "DPAD_UP",
+   "pc": [
+    "UP",
+    "MOUSE3"
+   ]
+  },
+  {
+   "label": "Teléfono: abajo",
+   "ps5": "DPAD_DOWN",
+   "pc": [
+    "DOWN",
+    ""
+   ]
+  },
+  {
+   "label": "Teléfono: izquierda",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "LEFT",
+    ""
+   ]
+  },
+  {
+   "label": "Teléfono: derecha",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "RIGHT",
+    ""
+   ]
+  },
+  {
+   "label": "Aceptar (teléfono/menú)",
+   "ps5": "CROSS",
+   "pc": [
+    "ENTER",
+    ""
+   ]
+  },
+  {
+   "label": "Atrás (teléfono/menú)",
+   "ps5": "CIRCLE",
+   "pc": [
+    "BACKSPACE",
+    ""
+   ]
+  },
+  {
+   "label": "Detonar bomba",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "G",
+    ""
+   ]
+  },
+  {
+   "label": "Acción contextual / parar taxi",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "E",
+    ""
+   ]
+  },
+  {
+   "label": "Mirar atrás",
+   "ps5": "R3",
+   "pc": [
+    "C",
+    ""
+   ]
+  },
+  {
+   "label": "Cambiar cámara",
+   "ps5": "TOUCHPAD",
+   "pc": [
+    "V",
+    ""
+   ]
+  },
+  {
+   "label": "Menú de interacción (Online)",
+   "ps5": "TOUCHPAD",
+   "pc": [
+    "M",
+    ""
+   ]
+  },
+  {
+   "label": "Pausa / mapa",
+   "ps5": "OPTIONS",
+   "pc": [
+    "ESC",
+    "P"
+   ]
+  }
+ ],
+ "tips": {
+  "es": "En el juego (Ajustes → Controles): zona muerta de apuntado/vista en 3.ª y 1.ª persona al mínimo, aceleración de apuntado/vista al máximo y sensibilidad de vista alta. Después apretá F10 adentro del juego para medir la zona muerta.",
+  "en": "In the game (Settings → Controls): third- and first-person aim/look dead zone at minimum, aim/look acceleration at maximum and a high look-around sensitivity. Then press F10 in game to measure the dead zone."
+ }
 }

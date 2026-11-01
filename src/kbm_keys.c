@@ -52,4 +52,4 @@ int kbm_key_from_name(const char *name) {
     return -1;
 }
 
-int kbm_key_reserved(uint8_t code) { return code == KBM_KEY_F8 || code == KBM_KEY_F9 || code == KBM_KEY_F11 || code == KBM_KEY_F12; }
+int kbm_key_reserved(uint8_t code) { return code == KBM_KEY_F8 || code == KBM_KEY_F9 || code == KBM_KEY_F10 || code == KBM_KEY_F11 || code == KBM_KEY_F12; }

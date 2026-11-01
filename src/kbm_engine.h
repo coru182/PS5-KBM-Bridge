@@ -56,7 +56,8 @@ typedef struct {
     int sens;            /* 1..50  */
     int yratio;          /* 25..400 % of X sensitivity */
     int smooth_ms;       /* 4..60 velocity window */
-    int deadzone;        /* 0..90 minimum stick deflection once moving */
+    int deadzone;        /* 0..90 game's right-stick dead zone to jump over (radial) */
+    int curve;           /* 0..100 boost for small movements (0 = linear) */
     int invert_y;
     int wheel_ms;        /* how long a wheel notch "holds" its output */
     int ads_pct;         /* 25..400 % of sens while aiming (any key mapped to L2 held) */
@@ -80,6 +81,11 @@ typedef struct {
     int32_t dpad_ax, dpad_ay;
     uint64_t dpad_last_move, dpad_until, dpad_next;
     uint32_t dpad_mask;
+    /* dead-zone finder: right stick ramps up slowly; the player clicks when the
+     * camera starts to move. calib_result: -1 running/none, >=0 measured value,
+     * -2 cancelled (Esc), -3 nothing pressed before the end of the ramp. */
+    int calib_active, calib_result, calib_value;
+    uint64_t calib_start;
     int capture_armed;
     int captured;            /* -1 none, else code */
 } KbmEngine;
@@ -91,7 +97,11 @@ int  kbm_keyboard(KbmEngine *e, int owner, const uint8_t *report, size_t n);
 int  kbm_mouse(KbmEngine *e, int owner, const uint8_t *report, size_t n, uint64_t t_ns);
 void kbm_disconnect(KbmEngine *e, int owner);
 void kbm_reset_motion(KbmEngine *e);
-void kbm_set_layer(KbmEngine *e, int layer);   /* clamps to foot if the mapping has no layers */
+void kbm_set_layer(KbmEngine *e, int layer);
+void kbm_calib_start(KbmEngine *e, uint64_t t_ns);
+#define KBM_CALIB_STEP_NS   60000000ull   /* one stick unit every 60 ms */
+#define KBM_CALIB_MAX       100           /* ramp end (stick units, 127 = full) */
+#define KBM_CALIB_REACTION  4             /* ~240 ms reaction time, subtracted */   /* clamps to foot if the mapping has no layers */
 void kbm_frame(KbmEngine *e, uint64_t t_ns, KbmFrame *out);
 int  kbm_is_down(const KbmEngine *e, uint8_t code);
 void kbm_capture_arm(KbmEngine *e);

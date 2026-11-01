@@ -24,7 +24,7 @@ BTN = {"L3": 0x2, "R3": 0x4, "OPTIONS": 0x8, "DPAD_UP": 0x10, "DPAD_RIGHT": 0x20
        "CIRCLE": 0x2000, "CROSS": 0x4000, "SQUARE": 0x8000, "PS": 0x10000, "TOUCHPAD": 0x100000,
        "LS_UP": 1 << 32, "LS_DOWN": 1 << 33, "LS_LEFT": 1 << 34, "LS_RIGHT": 1 << 35,
        "MODE_TOGGLE": 1 << 36, "NONE": 0}
-RESERVED = {"F8", "F9", "F11", "F12"}
+RESERVED = {"F8", "F9", "F10", "F11", "F12"}
 
 
 def die(msg):
@@ -157,7 +157,8 @@ def load_profile(path, kind):
         die(f"{path}: mouse must be camera or dpad")
     return {"id": pid, "name": name, "kind": kind, "mouse": mouse, "template": d.get("template", "generic"), "conf": conf,
             "ads": max(25, min(400, ads)), "native": bool(d.get("native_kbm_ps5") is True), "actions": out,
-            "notes": (d.get("notes") or "")[:700], "sources": d.get("sources") or []}
+            "notes": (d.get("notes") or "")[:700], "sources": d.get("sources") or [],
+            "tips": (d.get("tips") or {}).get("es", ""), "tips_en": (d.get("tips") or {}).get("en", "")}
 
 
 def load_titles():
@@ -256,7 +257,7 @@ def main():
 #define KBM_CONCEPT_COUNT {len(concepts)}
 typedef struct {{ const char *id, *label, *label_en; uint64_t out; uint8_t k1, k2, layer; }} KbmBuiltinAction;
 typedef struct {{
-    const char *id, *name, *name_en, *tmpl, *notes;
+    const char *id, *name, *name_en, *tmpl, *notes, *tips, *tips_en;   /* tips: in-game settings for a native feel */
     uint8_t kind;        /* 0 = game profile, 1 = template, 2 = PS5 menu (no game running) */
     uint8_t mouse_dpad;  /* mouse movement -> D-pad steps instead of right stick */
     uint8_t confidence;  /* 3 high, 2 medium, 1 low, 0 n/a */
@@ -285,7 +286,7 @@ extern const char KBM_CONCEPT_NAMES[];
         out.append("};")
     out.append("const KbmBuiltinProfile KBM_BUILTIN[KBM_BUILTIN_COUNT] = {")
     for i, p in enumerate(allp):
-        out.append(f"  {{{c_str(p['id'])}, {c_str(p['name'])}, {c_str(I18N['names'].get(p['name'], p['name']))}, {c_str(p['template'])}, {c_str(p['notes'])}, "
+        out.append(f"  {{{c_str(p['id'])}, {c_str(p['name'])}, {c_str(I18N['names'].get(p['name'], p['name']))}, {c_str(p['template'])}, {c_str(p['notes'])}, {c_str(p['tips'])}, {c_str(p['tips_en'])}, "
                    f"{p['kind']}, {p['mouse']}, {p['conf']}, {int(p['native'])}, {p['ads']}, {len(p['actions'])}, A{i}}},")
     out.append("};")
     blob, offs = bytearray(), []

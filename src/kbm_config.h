@@ -31,6 +31,7 @@ typedef struct {
     char id[KBM_ID_LEN];
     const char *name, *name_en;     /* built-in strings (Spanish / English) */
     int sens, yratio, smooth_ms, deadzone, invert_y;
+    int curve;            /* 0..100 small-movement boost (0 = linear) */
     int ads_pct;          /* sensitivity % while aiming (L2 held) */
     int builtin;          /* index into KBM_BUILTIN */
     int n;

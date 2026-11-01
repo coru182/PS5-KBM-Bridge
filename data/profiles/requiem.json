@@ -6,7 +6,9 @@
  "ads_pct": 150,
  "confidence": "high",
  "notes": "Perfil original de v0.7 (probado por el usuario en RE2R y Requiem).",
- "sources": [],
+ "sources": [
+  "https://www.relyonhorror.com/latest-news/resident-evil-news/best-controller-settings-to-improve-your-aim-in-resident-evil-requiem"
+ ],
  "actions": [
   {
    "id": "run",
@@ -161,5 +163,9 @@
     ""
    ]
   }
- ]
+ ],
+ "tips": {
+  "es": "En el juego (Opciones → Controles): zona muerta del stick derecho en 5–7 (viene en ~25), aceleración de cámara al máximo y curva de sensibilidad Lineal. Después apretá F10 adentro del juego para medir la zona muerta.",
+  "en": "In the game (Options → Controls): right stick dead zone 5–7 (default is about 25), camera acceleration at maximum and sensitivity curve Linear. Then press F10 in game to measure the dead zone."
+ }
 }

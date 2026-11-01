@@ -24,7 +24,7 @@ static void test_keys(void) {
     assert(kbm_key_from_name("mouse2") == KBM_KEY_MOUSE2 && kbm_key_from_name("") == 0);
     assert(kbm_key_from_name("BOGUS") == -1);
     assert(!strcmp(kbm_key_name(0x2c), "SPACE"));
-    assert(kbm_key_reserved(KBM_KEY_F12) && kbm_key_reserved(KBM_KEY_F8) && kbm_key_reserved(KBM_KEY_F9) && kbm_key_reserved(KBM_KEY_F11));
+    assert(kbm_key_reserved(KBM_KEY_F12) && kbm_key_reserved(KBM_KEY_F8) && kbm_key_reserved(KBM_KEY_F9) && kbm_key_reserved(KBM_KEY_F11) && kbm_key_reserved(KBM_KEY_F10));
 }
 
 static void test_re2r_defaults(void) {
@@ -359,6 +359,55 @@ static void test_ps_menu(void) {
     assert(!strcmp(r.p->id, "re2r"));
 }
 
+/* Stick shaping: radial dead-zone jump, small-movement boost, dead-zone finder */
+static void test_stick_shaping(void) {
+    static KbmConfig c;
+    kbm_config_defaults(&c);
+    const uint64_t MS = 1000000ull;
+    KbmFrame f;
+    /* the same slow mouse motion with dz 0 / curve 0, then dz 30 / curve 50 */
+    int out[3];
+    for (int k = 0; k < 3; ++k) {
+        KbmEngine e; kbm_init(&e); load_profile(&e, &c, "requiem");
+        e.map.deadzone = k ? 30 : 0; e.map.curve = k == 2 ? 50 : 0;
+        uint64_t t = 1000 * MS;
+        for (int i = 0; i < 8; ++i) { uint8_t m[4] = {0, 1, 0, 0}; kbm_mouse(&e, 0, m, 4, t + i * 2 * MS); }
+        kbm_frame(&e, t + 16 * MS, &f);
+        out[k] = f.rx - 128;
+        assert(f.ry == 128);                               /* pure X stays pure X (radial) */
+    }
+    printf("slow mouse -> rx: linear=%d deadzone30=%d deadzone30+curve50=%d\n", out[0], out[1], out[2]);
+    assert(out[0] > 0 && out[1] >= 30 + out[0] * 97 / 127 - 1 && out[2] > out[1]);
+    /* diagonal: radial saturation keeps the direction */
+    {
+        KbmEngine e; kbm_init(&e); load_profile(&e, &c, "requiem");
+        e.map.deadzone = 20;
+        uint64_t t = 1000 * MS;
+        for (int i = 0; i < 8; ++i) { uint8_t m[4] = {0, 60, 60, 0}; kbm_mouse(&e, 0, m, 4, t + i * 2 * MS); }
+        kbm_frame(&e, t + 16 * MS, &f);
+        int x = f.rx - 128, y = f.ry - 128;
+        assert(x > 80 && y > 80 && (x - y) < 3 && (y - x) < 3 && x * x + y * y <= 128 * 128);
+    }
+    /* dead-zone finder: ramp on the right stick, click stops it */
+    {
+        KbmEngine e; kbm_init(&e); load_profile(&e, &c, "requiem");
+        uint64_t t = 5000 * MS;
+        kbm_calib_start(&e, t);
+        kbm_frame(&e, t + 600 * MS, &f); assert(f.rx == 128 + 10 && f.ry == 128);
+        uint8_t m[4] = {0, 50, 0, 0}; kbm_mouse(&e, 0, m, 4, t + 1200 * MS);   /* mouse motion ignored */
+        kbm_frame(&e, t + 1500 * MS, &f); assert(f.rx == 128 + 25);
+        uint8_t click[4] = {1, 0, 0, 0}; kbm_mouse(&e, 0, click, 4, t + 1510 * MS);
+        assert(!e.calib_active && e.calib_result == 25 - KBM_CALIB_REACTION);
+        kbm_frame(&e, t + 1520 * MS, &f); assert(!(f.buttons & KBM_BTN_R2));     /* the click didn't fire */
+        uint8_t up[4] = {0, 0, 0, 0}; kbm_mouse(&e, 0, up, 4, t + 1530 * MS);
+        kbm_calib_start(&e, t + 2000 * MS);                                      /* Esc cancels */
+        kb(&e, 0, 0x29, 0); assert(e.calib_result == -2); kb(&e, 0, 0, 0);
+        kbm_calib_start(&e, t + 3000 * MS);                                      /* nothing pressed */
+        kbm_frame(&e, t + 3000 * MS + (KBM_CALIB_MAX + 2) * KBM_CALIB_STEP_NS, &f);
+        assert(!e.calib_active && e.calib_result == -3);
+    }
+}
+
 static void test_usb_descriptor_parser(void) {
     const uint8_t composite[] = {
       9,2,59,0,2,1,0,0x80,50,
@@ -383,7 +432,8 @@ int main(void) {
     test_title_db();
     test_vehicle_layers();
     test_ps_menu();
+    test_stick_shaping();
     test_usb_descriptor_parser();
-    puts("PASS: keys, RE2R/Requiem defaults, combos, wheel, rate-independent mouse, capture, config INI/JSON, title DB + auto profile, vehicle layers, PS5 menu profile, HID parser");
+    puts("PASS: keys, RE2R/Requiem defaults, combos, wheel, rate-independent mouse, capture, config INI/JSON, title DB + auto profile, vehicle layers, PS5 menu profile, stick shaping + dead-zone finder, HID parser");
     return 0;
 }
