@@ -2,6 +2,13 @@
 
 [English](CHANGELOG.md) · **Español**
 
+## v0.9.1: GTA Trilogy y modo vehículo
+
+- **Perfil nuevo: GTA: The Trilogy – Definitive Edition** (GTA III, Vice City y San Andreas, versiones de PS5 y PS4). Los botones de PS5 siguen el esquema Moderno. Las teclas de PC son las de la versión original de PC más los cambios de la Definitive Edition que aparecen en las fuentes (Tab = rueda de armas); no encontré una lista completa de teclas de PC de la Definitive Edition, así que alguna puede diferir.
+- **Modo vehículo:** un perfil ahora puede asignar teclas distintas a pie y en un vehículo. En el perfil de GTA, W acelera (R2) en el auto y camina a pie, Espacio es freno de mano en vez de correr, etc. **F** (subir/bajar) cambia de modo; **B** lo cambia a mano si se desincroniza (por ejemplo, si apretás F sin un auto cerca). La página muestra el modo actual y agrupa las teclas en Siempre / A pie / En vehículo.
+- Bicis y aviones usan otros botones en estos juegos y el perfil no los cubre.
+- Al reasignar una tecla, solo se saca de las acciones que están activas al mismo tiempo (mismo modo).
+
 ## v0.9: español e inglés
 
 - La página de ajustes y las notificaciones de la PS5 están en **español e inglés**. Por defecto siguen el idioma de la PS5 (se lee con `sceSystemServiceParamGetInt`; el resultado queda en el log). Si no se puede leer, la página usa el idioma del navegador y las notificaciones salen en inglés.

@@ -36,6 +36,7 @@ static void profile_from_builtin(KbmProfile *p, int bi) {
         p->a[i].label = d->a[i].label;
         p->a[i].label_en = d->a[i].label_en;
         p->a[i].out = d->a[i].out;
+        p->a[i].layer = d->a[i].layer;
         p->a[i].key[0] = kbm_key_reserved(d->a[i].k1) ? 0 : d->a[i].k1;
         p->a[i].key[1] = kbm_key_reserved(d->a[i].k2) ? 0 : d->a[i].k2;
     }
@@ -213,15 +214,35 @@ void kbm_profile_clamp(KbmProfile *p) {
     p->ads_pct = clampi(p->ads_pct, 25, 400);
 }
 
+/* For each layer: a key bound by an action of that layer uses only those
+ * actions; otherwise it uses the actions marked BOTH (movement, PS, pause...). */
 void kbm_profile_to_mapping(const KbmProfile *p, KbmMapping *m) {
     kbm_mapping_defaults(m);
     m->sens = p->sens; m->yratio = p->yratio; m->smooth_ms = p->smooth_ms;
     m->deadzone = p->deadzone; m->invert_y = p->invert_y;
     m->ads_pct = p->ads_pct;
-    for (int i = 0; i < p->n; ++i)
-        for (int s = 0; s < 2; ++s)
-            if (p->a[i].key[s] && !kbm_key_reserved(p->a[i].key[s]))
-                m->out[p->a[i].key[s]] |= p->a[i].out;
+    static uint64_t spec[2][256], both[256];
+    static uint8_t bound[2][256];
+    memset(spec, 0, sizeof(spec)); memset(both, 0, sizeof(both)); memset(bound, 0, sizeof(bound));
+    for (int i = 0; i < p->n; ++i) {
+        const KbmAction *a = &p->a[i];
+        if (a->layer == KBM_LAYER_VEHICLE) m->has_layers = 1;
+        for (int s = 0; s < 2; ++s) {
+            uint8_t k = a->key[s];
+            if (!k || kbm_key_reserved(k)) continue;
+            if (a->layer == KBM_LAYER_BOTH) both[k] |= a->out;
+            else { int L = a->layer == KBM_LAYER_VEHICLE; spec[L][k] |= a->out; bound[L][k] = 1; }
+        }
+    }
+    for (int k = 0; k < 256; ++k) {
+        m->out[k] = bound[0][k] ? spec[0][k] : both[k];
+        m->out_veh[k] = bound[1][k] ? spec[1][k] : both[k];
+    }
+}
+
+int kbm_profile_has_layers(const KbmProfile *p) {
+    for (int i = 0; i < p->n; ++i) if (p->a[i].layer == KBM_LAYER_VEHICLE) return 1;
+    return 0;
 }
 
 /* ------------------------------------------------------------------ out names */
@@ -231,6 +252,7 @@ static const struct { uint64_t bit; const char *name; } OUTS[] = {
     {KBM_BTN_L1,"L1"},{KBM_BTN_R1,"R1"},{KBM_BTN_L2,"L2"},{KBM_BTN_R2,"R2"},{KBM_BTN_L3,"L3"},{KBM_BTN_R3,"R3"},
     {KBM_BTN_OPTIONS,"OPTIONS"},{KBM_BTN_TOUCH,"TOUCHPAD"},{KBM_BTN_PS,"PS"},
     {KBM_BTN_UP,"DPAD_UP"},{KBM_BTN_DOWN,"DPAD_DOWN"},{KBM_BTN_LEFT,"DPAD_LEFT"},{KBM_BTN_RIGHT,"DPAD_RIGHT"},
+    {KBM_OUT_MODE_TOGGLE,"MODE"},
 };
 const char *kbm_out_describe(uint64_t out, char *buf, size_t n) {
     size_t len = 0;
@@ -392,7 +414,7 @@ static void profile_detail(KbmJson *j, const KbmProfile *p) {
     kbm_json_raw(j, ",\"kind\":"); kbm_json_str(j, kind_name(p->builtin));
     kbm_json_raw(j, ",\"tmpl\":"); kbm_json_str(j, b->tmpl);
     kbm_json_raw(j, ",\"notes\":"); kbm_json_str(j, b->notes);
-    kbm_json_fmt(j, ",\"conf\":%d,\"native\":%d,\"mod\":%d", b->confidence, b->native, kbm_profile_modified(p));
+    kbm_json_fmt(j, ",\"conf\":%d,\"native\":%d,\"mod\":%d,\"layers\":%d", b->confidence, b->native, kbm_profile_modified(p), kbm_profile_has_layers(p));
     kbm_json_fmt(j, ",\"sens\":%d,\"yratio\":%d,\"smooth_ms\":%d,\"deadzone\":%d,\"invert_y\":%d,\"ads_pct\":%d,\"actions\":[",
                  p->sens, p->yratio, p->smooth_ms, p->deadzone, p->invert_y, p->ads_pct);
     for (int a = 0; a < p->n; ++a) {
@@ -401,6 +423,7 @@ static void profile_detail(KbmJson *j, const KbmProfile *p) {
         kbm_json_raw(j, "{\"id\":"); kbm_json_str(j, p->a[a].id);
         kbm_json_raw(j, ",\"label\":"); kbm_json_str(j, p->a[a].label);
         kbm_json_raw(j, ",\"label_en\":"); kbm_json_str(j, p->a[a].label_en);
+        kbm_json_fmt(j, ",\"layer\":%d", p->a[a].layer);
         kbm_json_raw(j, ",\"out\":"); kbm_json_str(j, kbm_out_describe(p->a[a].out, d, sizeof(d)));
         kbm_json_raw(j, ",\"keys\":[");
         kbm_json_str(j, p->a[a].key[0] ? kn(p->a[a].key[0]) : "");

@@ -13,7 +13,7 @@ Keyboard and mouse in any PS5 game, with no adapter and no PC. A payload for jai
 
 - **Virtual DualSense** from the keyboard and mouse wireless receiver, built on Ghostcontrol's virtual DualSense. The mouse drives the right stick by speed, so it feels the same at 30, 60 or 120 fps. Injects at 250 Hz.
 - **Recognises the game** you open by its Title ID. Ships a database of about 24,600 PS5 and PS4 titles, so it knows the game's name.
-- **Per-game profiles:** 42 games use their PC version's default keys, mapped to the button that does the same thing on PS5. About 290 more games use a genre template (shooter, third-person, souls-like, racing). Full list with sources: [`data/PROFILES.md`](data/PROFILES.md).
+- **Per-game profiles:** 43 games (counting the three GTA Trilogy games as one profile) use their PC version's default keys, mapped to the button that does the same thing on PS5. About 290 more games use a genre template (shooter, third-person, souls-like, racing). Full list with sources: [`data/PROFILES.md`](data/PROFILES.md).
 - **Settings page** at `http://PS5-IP:8099`, from your phone, a PC or the PS5's own browser:
   - sensitivity, aiming (ADS) sensitivity and key binding with capture;
   - which profile each game uses, and marking a game as "native".
@@ -21,6 +21,7 @@ Keyboard and mouse in any PS5 game, with no adapter and no PC. A payload for jai
   - a home screen icon (through ShadowMountPlus) opens the settings;
   - **F11** opens them in the middle of a game.
   - On that page the mouse drives the cursor.
+- **On foot and in vehicles:** a profile can use different keys on foot and in a vehicle (GTA Trilogy: W walks, or accelerates in a car). F switches mode when you get in or out; B switches it by hand.
 - **English or Spanish:** the settings page and notifications follow your PS5's language. You can set it by hand under General.
 - **Games with their own keyboard/mouse support** (Fortnite, Call of Duty, Battlefield 6…): it suggests handing the receiver back to the PS5 while you play.
 
@@ -62,8 +63,8 @@ Output in `out/`:
 
 | File | Purpose |
 |---|---|
-| `ps5-kbm-bridge-v09.elf` | The bridge |
-| `ps5-kbm-diag-v09.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
+| `ps5-kbm-bridge-v091.elf` | The bridge |
+| `ps5-kbm-diag-v091.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
 | `homebrew/PPSA51258/` | Home screen icon (ShadowMountPlus) |
 | `etaHEN/payloads/` | Automatic start, only if you use etaHEN |
 
@@ -72,7 +73,7 @@ Output in `out/`:
 ## Install and use
 
 1. Copy `out/homebrew/PPSA51258/` to `/data/homebrew/PPSA51258/` on the PS5 over FTP (for example with ps5upload). Reboot and load your payloads; ShadowMountPlus adds the **PS5 KBM Bridge** icon to the home screen.
-   - Without ShadowMountPlus: send `ps5-kbm-bridge-v09.elf` to elfldr (port 9021).
+   - Without ShadowMountPlus: send `ps5-kbm-bridge-v091.elf` to elfldr (port 9021).
 2. Plug in the receiver and open the icon. The settings page opens. Move the mouse and press a key: the virtual DualSense appears.
 3. Open a game. The notification says which game it recognised and which profile it applied. To change something mid-game: **F11**. Go back with the PS button (or the Windows key).
 
@@ -98,6 +99,7 @@ If the database says the game supports keyboard and mouse on PS5, it suggests "n
 
 1. Create or edit `data/profiles/<id>.json` with the PC default keys and the PS5 button for each action. Use the existing ones as examples.
    - Don't include movement or camera: WASD, arrows, mouse and the Windows key (PS button) are added automatically.
+   - For games with vehicles, add `"layer": "vehicle"` to the in-vehicle actions and `"layer": "both"` to the ones that apply everywhere; give the enter/exit action `"ps5": "TRIANGLE+MODE_TOGGLE"` (see `data/profiles/gta_trilogy_de.json`).
 2. Add the game's name to `data/games.json`. It's a regular expression on the normalised name: lowercase, no accents, no ™.
 3. Add the English text of each new action to `data/i18n/en.json` (action labels in the profiles are written in Spanish).
 4. Run `./build_wsl.sh`. `tools/gen_builtin.py` checks every key, button and translation, and stops if anything is invalid. It also regenerates `data/PROFILES.md` and `data/PROFILES.es.md`.

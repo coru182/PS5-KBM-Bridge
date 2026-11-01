@@ -80,6 +80,14 @@ try:
     rl = [a for a in st["config"]["edit"]["actions"] if a["id"] == "reload"][0]
     assert rl["label"] == "Recargar" and rl["label_en"] == "Reload", rl
     assert [p for p in st["config"]["profiles"] if p["id"] == "generic"][0]["name_en"] == "Generic (all buttons)"
+    # vehicle layers: a key only moves off actions that are active at the same time
+    g = api("/api/state?edit=gta_trilogy_de")[1]["config"]["edit"]
+    assert g["layers"] == 1 and {a["id"]: a["layer"] for a in g["actions"]}["accelerate"] == 1
+    r = api("/api/bind?profile=gta_trilogy_de&action=car_fire&slot=1&key=Q")[1]
+    assert r["ok"] and r.get("moved_from") == "look_left", r
+    k = {a["id"]: a["keys"] for a in api("/api/state?edit=gta_trilogy_de")[1]["config"]["edit"]["actions"]}
+    assert k["car_fire"] == ["MOUSE1", "Q"] and k["look_left"] == ["", ""] and k["swap_phone"][0] == "Q", k
+    assert api("/api/reset?profile=gta_trilogy_de")[1]["ok"]
     assert api("/api/global?lang=bogus")[1]["ok"] and api("/api/state")[1]["config"]["lang"] == "auto"
     assert api("/api/global?inject_hz=120&auto_activate=0&default_profile=generic")[1]["ok"]
     c = api("/api/state")[1]["config"]

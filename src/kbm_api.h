@@ -26,6 +26,8 @@ typedef struct {
     char title_name[96];    /* from the built-in title database, "" = unknown */
     char title_source[16];  /* why this profile: rule|game|template|default|native|auto_native|none */
     int native_suggested;   /* database: this game supports KB+M on PS5 */
+    int has_layers;         /* active profile has on-foot / vehicle layers */
+    int layer;              /* current layer: 0 on foot, 1 vehicle */
     char profile[KBM_ID_LEN];
     char auto_profile[KBM_ID_LEN];  /* what "Automático" picks for this title */
     int hz;                 /* effective inject rate */

@@ -22,7 +22,8 @@ LABEL_MAX = 47            # bytes, KbmAction.label is 48
 BTN = {"L3": 0x2, "R3": 0x4, "OPTIONS": 0x8, "DPAD_UP": 0x10, "DPAD_RIGHT": 0x20, "DPAD_DOWN": 0x40,
        "DPAD_LEFT": 0x80, "L2": 0x100, "R2": 0x200, "L1": 0x400, "R1": 0x800, "TRIANGLE": 0x1000,
        "CIRCLE": 0x2000, "CROSS": 0x4000, "SQUARE": 0x8000, "PS": 0x10000, "TOUCHPAD": 0x100000,
-       "LS_UP": 1 << 32, "LS_DOWN": 1 << 33, "LS_LEFT": 1 << 34, "LS_RIGHT": 1 << 35}
+       "LS_UP": 1 << 32, "LS_DOWN": 1 << 33, "LS_LEFT": 1 << 34, "LS_RIGHT": 1 << 35,
+       "MODE_TOGGLE": 1 << 36, "NONE": 0}
 RESERVED = {"F8", "F9", "F11", "F12"}
 
 
@@ -90,7 +91,13 @@ def key_code(name, where):
     return KEYS[name]
 
 
+LAYERS = {"foot": 0, "vehicle": 1, "both": 2}
+
+
 def load_profile(path, kind):
+    """Actions become (id, label, out_mask, key1, key2, layer).
+    layer: 0 on foot (default), 1 vehicle, 2 both. Movement and the PS button
+    are added automatically as 'both'."""
     d = json.loads(path.read_text(encoding="utf-8"))
     pid = d.get("id") or die(f"{path}: missing id")
     if not re.fullmatch(r"[a-z0-9_]{1,23}", pid):
@@ -104,7 +111,7 @@ def load_profile(path, kind):
         for aid, lab, o, k1, k2 in [("move_up", "Avanzar", "LS_UP", "W", "UP"), ("move_down", "Retroceder", "LS_DOWN", "S", "DOWN"),
                                     ("move_left", "Izquierda", "LS_LEFT", "A", "LEFT"), ("move_right", "Derecha", "LS_RIGHT", "D", "RIGHT")]:
             used.add(aid)
-            out.append((aid, lab, BTN[o], KEYS[k1], KEYS[k2]))
+            out.append((aid, lab, BTN[o], KEYS[k1], KEYS[k2], 2))
     for i, a in enumerate(acts):
         where = f"{path.name} action {i}"
         lab = (a.get("label") or "").strip() or die(f"{where}: empty label")
@@ -118,14 +125,26 @@ def load_profile(path, kind):
             used.add(aid)
         else:
             aid = slug(lab, used)
-        out.append((aid, lab, out_mask(a.get("ps5", ""), where), key_code(pc[0], where), key_code(pc[1], where)))
-    # arrows are a secondary movement key, unless the PC version uses them for something else
-    taken = {k for (aid, _, _, k1, k2) in out if not aid.startswith("move_") for k in (k1, k2) if k}
-    out = [(aid, lab, m, k1, 0 if (aid.startswith("move_") and k2 in taken) else k2) for (aid, lab, m, k1, k2) in out]
+        layer = LAYERS.get(a.get("layer", "foot"))
+        if layer is None:
+            die(f"{where}: layer must be foot, vehicle or both")
+        out.append((aid, lab, out_mask(a.get("ps5", ""), where), key_code(pc[0], where), key_code(pc[1], where), layer))
+    # one key -> one action per layer ('both' counts for each layer)
+    for L in (0, 1):
+        seen = {}
+        for aid, _, _, k1, k2, lay in out:
+            if lay not in (L, 2) or aid.startswith("move_"):
+                continue
+            for k in (k1, k2):
+                if k and seen.setdefault(k, aid) != aid:
+                    die(f"{path}: key 0x{k:02x} used by '{seen[k]}' and '{aid}' in the same layer")
+    # arrows are a secondary movement key, unless the PC version uses them on foot for something else
+    taken = {k for (aid, _, _, k1, k2, lay) in out if not aid.startswith("move_") and lay != 1 for k in (k1, k2) if k}
+    out = [(aid, lab, m, k1, 0 if (aid.startswith("move_") and k2 in taken) else k2, lay) for (aid, lab, m, k1, k2, lay) in out]
     if any(k in taken for k in ((KEYS["LGUI"], KEYS["RGUI"]) + (() if d.get("no_auto_move") else (KEYS["W"], KEYS["A"], KEYS["S"], KEYS["D"])))):
-        die(f"{path}: uses W/A/S/D or the Windows keys (reserved for movement / PS button)")
+        die(f"{path}: uses W/A/S/D on foot or the Windows keys (reserved for movement / PS button)")
     used.add("ps")
-    out.append(("ps", "Botón PS", BTN["PS"], KEYS["LGUI"], KEYS["RGUI"]))
+    out.append(("ps", "Botón PS", BTN["PS"], KEYS["LGUI"], KEYS["RGUI"], 2))
     name = (d.get("name") or pid).strip()
     if len(name.encode("utf-8")) > 63:
         name = name.encode("utf-8")[:63].decode("utf-8", "ignore")
@@ -133,7 +152,7 @@ def load_profile(path, kind):
     ads = int(d.get("ads_pct", 100) or 100)
     return {"id": pid, "name": name, "kind": kind, "template": d.get("template", "generic"), "conf": conf,
             "ads": max(25, min(400, ads)), "native": bool(d.get("native_kbm_ps5") is True), "actions": out,
-            "notes": (d.get("notes") or "")[:300], "sources": d.get("sources") or []}
+            "notes": (d.get("notes") or "")[:700], "sources": d.get("sources") or []}
 
 
 def load_titles():
@@ -230,7 +249,7 @@ def main():
 #define KBM_BUILTIN_COUNT {len(allp)}
 #define KBM_TITLE_COUNT {len(entries)}
 #define KBM_CONCEPT_COUNT {len(concepts)}
-typedef struct {{ const char *id, *label, *label_en; uint64_t out; uint8_t k1, k2; }} KbmBuiltinAction;
+typedef struct {{ const char *id, *label, *label_en; uint64_t out; uint8_t k1, k2, layer; }} KbmBuiltinAction;
 typedef struct {{
     const char *id, *name, *name_en, *tmpl, *notes;
     uint8_t kind;        /* 0 = game profile, 1 = template */
@@ -250,13 +269,13 @@ extern const char KBM_CONCEPT_NAMES[];
     out = ["/* GENERATED by tools/gen_builtin.py — do not edit.",
            " * Title data: andshrew/PlayStation-Titles (MIT), see data/titledb/. */",
            '#include "kbm_builtin_gen.h"', ""]
-    missing = sorted({lab for p in allp for _, lab, _, _, _ in p["actions"] if lab not in I18N["labels"]})
+    missing = sorted({x[1] for p in allp for x in p["actions"] if x[1] not in I18N["labels"]})
     if missing:
         die("no English text in data/i18n/en.json for: " + " | ".join(missing))
     for i, p in enumerate(allp):
         out.append(f"static const KbmBuiltinAction A{i}[] = {{")
-        for aid, lab, m, k1, k2 in p["actions"]:
-            out.append(f"  {{{c_str(aid)}, {c_str(lab)}, {c_str(I18N['labels'][lab])}, 0x{m:x}ull, 0x{k1:02x}, 0x{k2:02x}}},")
+        for aid, lab, m, k1, k2, lay in p["actions"]:
+            out.append(f"  {{{c_str(aid)}, {c_str(lab)}, {c_str(I18N['labels'][lab])}, 0x{m:x}ull, 0x{k1:02x}, 0x{k2:02x}, {lay}}},")
         out.append("};")
     out.append("const KbmBuiltinProfile KBM_BUILTIN[KBM_BUILTIN_COUNT] = {")
     for i, p in enumerate(allp):

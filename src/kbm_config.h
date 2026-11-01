@@ -24,6 +24,7 @@ typedef struct {
     const char *label, *label_en;   /* built-in strings (Spanish / English) */
     uint64_t out;
     uint8_t key[2];
+    uint8_t layer;                  /* KBM_LAYER_FOOT / VEHICLE / BOTH */
 } KbmAction;
 
 typedef struct {
@@ -110,6 +111,7 @@ int  kbm_config_title_is_native(const KbmConfig *c, const char *tid);
 int  kbm_config_effective_hz(const KbmConfig *c);
 void kbm_profile_to_mapping(const KbmProfile *p, KbmMapping *m);
 void kbm_profile_clamp(KbmProfile *p);
+int  kbm_profile_has_layers(const KbmProfile *p);   /* has vehicle-layer actions */
 
 int  kbm_valid_title_id(const char *s);
 int  kbm_valid_profile_id(const char *s);

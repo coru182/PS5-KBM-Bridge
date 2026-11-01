@@ -5,8 +5,8 @@
 Generado por `tools/gen_builtin.py`. Cada perfil traduce las **teclas por defecto de la versión de PC** al botón del
 DualSense que hace lo mismo en la versión de PS5. Movimiento (WASD/flechas) y botón PS (tecla Windows) se agregan solos.
 
-Base de títulos: 24649 Title IDs (9591 juegos) de andshrew/PlayStation-Titles (MIT).
-Juegos con perfil propio: 74 entradas · con plantilla por género: 294 · con teclado/mouse nativo según la investigación: 34.
+Base de títulos: 24668 Title IDs (9595 juegos) de andshrew/PlayStation-Titles (MIT).
+Juegos con perfil propio: 82 entradas · con plantilla por género: 294 · con teclado/mouse nativo según la investigación: 34.
 
 | Perfil | Confianza | Teclado/mouse nativo en PS5 | Acciones | Fuentes |
 |---|---|---|---|---|
@@ -28,6 +28,7 @@ Juegos con perfil propio: 74 entradas · con plantilla por género: 294 · con t
 | God of War (2018) | alta | no | 20 | [1](https://www.shacknews.com/article/128344/god-of-war-pc-keybindings-controls) [2](https://www.magicgameworld.com/god-of-war-pc-keyboard-controls-guide/) [3](https://www.gamenguides.com/god-of-war-pc-keyboard-controls) [4](https://www.gamenguides.com/god-of-war-pc-gamepad-controls) [5](https://game8.co/games/God-of-War-2018/archives/316513) [6](https://www.magicgameworld.com/?p=17523) |
 | God of War Ragnarök | media | no | 21 | [1](https://www.magicgameworld.com/?p=106988) [2](https://shacknews.com/article/133014/controls-buttons-god-of-war-ragnarok) [3](https://steamcommunity.com/app/2322010/discussions/0/4843148117770587948) |
 | Grand Theft Auto V | media | no | 29 | [1](https://gta.fandom.com/wiki/Controls_for_GTA_V) [2](https://www.magicgameworld.com/?p=123765) |
+| GTA: The Trilogy – Definitive Edition | media | no | 32 | [1](https://gamerguides.com/grand-theft-auto-san-andreas-the-definitive-edition/guide/game-basics/introduction/ps4-ps5-controls) [2](https://www.gtabase.com/gta-san-andreas/guides/gta-san-andreas-controls-for-pc-xbox-ps4-definitive-edition?lang=en) [3](https://www.grandtheftwiki.com/Controls_for_GTA_San_Andreas) [4](https://progameguides.com/gta/how-to-change-weapons-in-grand-theft-auto-san-andreas-remastered/) [5](https://steamcommunity.com/app/1546990/discussions/0/3761103414971791382) [6](https://tcrf.net/Grand_Theft_Auto:_San_Andreas_-_The_Definitive_Edition) |
 | Helldivers 2 | media | no | 29 | [1](https://progameguides.com/?p=768058) [2](https://sportskeeda.com/gaming-tech/helldivers-2-best-control-settings-keyboard-ps5-controller) [3](https://www.magicgameworld.com/helldivers-2-playstation-5-controls/) [4](https://www.switchbladegaming.com/helldivers-2/keybinds-guide-4/) [5](https://helldivers.wiki.gg/wiki/Input_Problems) |
 | Hitman World of Assassination | media | no | 28 | [1](https://www.feralinteractive.com/en/manual/hitman/latest/linux/) [2](https://gamertweak.com/ps4-control-guide-hitman-3) [3](https://www.gfinityesports.com/hitman-3/hitman-3-how-to-reload-your-weapon-xbox-ps4-ps5-pc-stadia/) [4](https://www.gamepressure.com/hitman-iii/controls-keybinds/zfe109) [5](https://keyboardista.pages.dev/en/shortcuts/hitman-3-game) |
 | Hogwarts Legacy | media | no | 29 | [1](https://game8.co/games/Hogwarts-Legacy/archives/403918) [2](https://hogwartslegacy.wiki.fextralife.com/Controls) [3](https://www.gamepressure.com/hogwarts-legacy/controls/z31085e) |

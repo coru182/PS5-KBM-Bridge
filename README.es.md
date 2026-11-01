@@ -13,7 +13,7 @@ Teclado y mouse en cualquier juego de PS5, sin adaptadores ni PC. Un payload par
 
 - **DualSense virtual** a partir del receptor inalámbrico del teclado y mouse, sobre el DualSense virtual de Ghostcontrol. El mouse mueve el stick derecho por velocidad: la sensación es la misma a 30, 60 o 120 fps. Inyecta a 250 Hz.
 - **Reconoce el juego** que abrís por su Title ID. Trae una base de unos 24.600 títulos de PS5 y PS4, así que conoce el nombre del juego.
-- **Perfil por juego:** 42 juegos con las teclas por defecto de su versión de PC, traducidas al botón que hace lo mismo en PS5. Unos 290 juegos más usan una plantilla por género (shooter, tercera persona, souls-like, carreras). Lista completa con fuentes: [`data/PROFILES.es.md`](data/PROFILES.es.md).
+- **Perfil por juego:** 43 (los tres GTA de la Trilogy comparten un perfil) con las teclas por defecto de su versión de PC, traducidas al botón que hace lo mismo en PS5. Unos 290 juegos más usan una plantilla por género (shooter, tercera persona, souls-like, carreras). Lista completa con fuentes: [`data/PROFILES.es.md`](data/PROFILES.es.md).
 - **Página de ajustes** en `http://IP-de-la-PS5:8099`, desde el celular, la PC o el propio navegador de la PS5:
   - sensibilidad, sensibilidad al apuntar (ADS) y asignación de teclas con captura;
   - qué perfil usa cada juego, y marcar un juego como "nativo".
@@ -21,6 +21,7 @@ Teclado y mouse en cualquier juego de PS5, sin adaptadores ni PC. Un payload par
   - un ícono en el home (vía ShadowMountPlus) abre los ajustes;
   - **F11** los abre en medio de un juego.
   - En esa página, el mouse maneja el cursor.
+- **A pie y en vehículo:** un perfil puede usar teclas distintas a pie y en un vehículo (GTA Trilogy: W camina, o acelera en el auto). F cambia de modo al subir o bajar; B lo cambia a mano.
 - **En español o en inglés:** la página de ajustes y las notificaciones usan el idioma de tu PS5. Se puede fijar a mano en General.
 - **Juegos con teclado y mouse propios** (Fortnite, Call of Duty, Battlefield 6…): te sugiere devolverle el receptor a la PS5 mientras jugás.
 
@@ -62,8 +63,8 @@ Resultado en `out/`:
 
 | Archivo | Para qué |
 |---|---|
-| `ps5-kbm-bridge-v09.elf` | El bridge |
-| `ps5-kbm-diag-v09.elf` | Diagnóstico: solo lee y mide, **nunca** crea el mando virtual, se cierra a los 5 min |
+| `ps5-kbm-bridge-v091.elf` | El bridge |
+| `ps5-kbm-diag-v091.elf` | Diagnóstico: solo lee y mide, **nunca** crea el mando virtual, se cierra a los 5 min |
 | `homebrew/PPSA51258/` | Ícono para el home (ShadowMountPlus) |
 | `etaHEN/payloads/` | Arranque automático, solo si usás etaHEN |
 
@@ -72,7 +73,7 @@ Resultado en `out/`:
 ## Instalar y usar
 
 1. Copiá `out/homebrew/PPSA51258/` a `/data/homebrew/PPSA51258/` en la PS5 por FTP (por ejemplo con ps5upload). Reiniciá y cargá tus payloads; ShadowMountPlus agrega el ícono **PS5 KBM Bridge** al home.
-   - Sin ShadowMountPlus: mandá `ps5-kbm-bridge-v09.elf` a elfldr (puerto 9021).
+   - Sin ShadowMountPlus: mandá `ps5-kbm-bridge-v091.elf` a elfldr (puerto 9021).
 2. Conectá el receptor y abrí el ícono. Se abre la página de ajustes. Mové el mouse y tocá una tecla: aparece el DualSense virtual.
 3. Abrí un juego. La notificación dice qué juego reconoció y qué perfil aplicó. Para cambiar algo en medio del juego: **F11**. Volvés con el botón PS (o la tecla Windows).
 
@@ -98,6 +99,7 @@ Si la base dice que el juego soporta teclado y mouse en PS5, te lo sugiere. Solo
 
 1. Creá o editá `data/profiles/<id>.json`, con las teclas de PC por defecto y el botón de PS5 de cada acción. Mirá los existentes como ejemplo.
    - No incluyas movimiento ni cámara: WASD, flechas, mouse y la tecla Windows (botón PS) se agregan solos.
+   - Para juegos con vehículos, agregá `"layer": "vehicle"` a las acciones de adentro del vehículo y `"layer": "both"` a las que valen siempre; la acción de subir/bajar lleva `"ps5": "TRIANGLE+MODE_TOGGLE"` (ver `data/profiles/gta_trilogy_de.json`).
 2. Agregá el nombre del juego en `data/games.json`. Es una expresión regular sobre el nombre normalizado: minúsculas, sin acentos ni ™.
 3. Agregá la traducción al inglés de cada acción nueva en `data/i18n/en.json`.
 4. Corré `./build_wsl.sh`. `tools/gen_builtin.py` revisa cada tecla y botón (y que haya traducción), y frena si algo no es válido. También regenera `data/PROFILES.md` y `data/PROFILES.es.md`.

@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later
- * PS5 KBM Bridge v0.7 — configurable keyboard/mouse -> DualSense mapping core.
+ * PS5 KBM Bridge — configurable keyboard/mouse -> DualSense mapping core.
  * Pure C, no PS5 dependencies (host-tested).
  *
  * Mouse -> right stick is VELOCITY based: counts per millisecond measured over
@@ -33,6 +33,13 @@
 #define KBM_OUT_LS_DOWN  (1ull << 33)
 #define KBM_OUT_LS_LEFT  (1ull << 34)
 #define KBM_OUT_LS_RIGHT (1ull << 35)
+/* Switches between the on-foot and vehicle key layers (on key press). */
+#define KBM_OUT_MODE_TOGGLE (1ull << 36)
+
+/* Key layers: a profile may bind a key differently on foot and in a vehicle. */
+#define KBM_LAYER_FOOT    0
+#define KBM_LAYER_VEHICLE 1
+#define KBM_LAYER_BOTH    2   /* action layer only: applies on foot and in vehicles */
 
 #define KBM_MOUSE_RING 64
 
@@ -42,7 +49,9 @@ typedef struct {
 } KbmFrame;
 
 typedef struct {
-    uint64_t out[256];   /* input code -> output mask */
+    uint64_t out[256];   /* input code -> output mask (on foot / only layer) */
+    uint64_t out_veh[256]; /* same, vehicle layer (used when has_layers) */
+    int has_layers;      /* profile defines vehicle actions */
     int sens;            /* 1..50  */
     int yratio;          /* 25..400 % of X sensitivity */
     int smooth_ms;       /* 4..60 velocity window */
@@ -65,6 +74,7 @@ typedef struct {
     /* pointer mode (PS5 browser): mouse -> left stick cursor, LMB = cross,
      * RMB = circle, wheel -> right stick scroll. Keyboard mapping unchanged. */
     int pointer_mode;
+    int layer;               /* KBM_LAYER_FOOT / KBM_LAYER_VEHICLE */
     int capture_armed;
     int captured;            /* -1 none, else code */
 } KbmEngine;
@@ -76,6 +86,7 @@ int  kbm_keyboard(KbmEngine *e, int owner, const uint8_t *report, size_t n);
 int  kbm_mouse(KbmEngine *e, int owner, const uint8_t *report, size_t n, uint64_t t_ns);
 void kbm_disconnect(KbmEngine *e, int owner);
 void kbm_reset_motion(KbmEngine *e);
+void kbm_set_layer(KbmEngine *e, int layer);   /* clamps to foot if the mapping has no layers */
 void kbm_frame(KbmEngine *e, uint64_t t_ns, KbmFrame *out);
 int  kbm_is_down(const KbmEngine *e, uint8_t code);
 void kbm_capture_arm(KbmEngine *e);

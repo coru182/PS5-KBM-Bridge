@@ -51,6 +51,9 @@ int kbm_config_bind(KbmConfig *c, const char *profile, const char *action, int s
         for (int i = 0; i < p->n; ++i) {
             for (int s = 0; s < 2; ++s) {
                 if (&p->a[i] == a && s == slot) continue;
+                /* only actions that can be active at the same time compete for a key */
+                int la = a->layer, lb = p->a[i].layer;
+                if (la != lb && la != KBM_LAYER_BOTH && lb != KBM_LAYER_BOTH) continue;
                 if (p->a[i].key[s] == code) {
                     p->a[i].key[s] = 0;
                     if (moved_from && mf_n && !moved_from[0]) snprintf(moved_from, mf_n, "%s", p->a[i].id);
@@ -68,7 +71,7 @@ static void rt_json(KbmJson *j, const KbmRuntime *r) {
     kbm_json_fmt(j, ",\"vda\":%d,\"receiver\":%d,\"title\":", r->vda, r->receiver); kbm_json_str(j, r->title);
     kbm_json_raw(j, ",\"title_name\":"); kbm_json_str(j, r->title_name);
     kbm_json_raw(j, ",\"title_source\":"); kbm_json_str(j, r->title_source);
-    kbm_json_fmt(j, ",\"native_suggested\":%d", r->native_suggested);
+    kbm_json_fmt(j, ",\"native_suggested\":%d,\"layer\":%d,\"has_layers\":%d", r->native_suggested, r->layer, r->has_layers);
     kbm_json_raw(j, ",\"profile\":"); kbm_json_str(j, r->profile);
     kbm_json_raw(j, ",\"auto_profile\":"); kbm_json_str(j, r->auto_profile);
     kbm_json_fmt(j, ",\"hz\":%d,\"kb_reports_5s\":%u,\"mouse_reports_5s\":%u,\"e2i_p50_us\":%u,\"e2i_p95_us\":%u,"
@@ -93,6 +96,8 @@ void kbm_runtime_set_title(KbmRuntime *rt, const KbmConfig *c, const char *tid) 
     snprintf(rt->profile, sizeof(rt->profile), "%s", r.p->id);
     snprintf(rt->auto_profile, sizeof(rt->auto_profile), "%s", r.auto_p->id);
     rt->lang = kbm_lang_effective(c, rt->sys_lang);
+    rt->has_layers = kbm_profile_has_layers(r.p);
+    if (!rt->has_layers) rt->layer = 0;
 }
 
 int kbm_api_state_json(KbmApi *api, const char *edit, char *buf, size_t n) {

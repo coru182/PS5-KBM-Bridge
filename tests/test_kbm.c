@@ -280,6 +280,48 @@ static void test_title_db(void) {
     printf("title db: %d built-in profiles OK\n", c.n_profiles);
 }
 
+/* GTA Trilogy DE: on-foot and vehicle layers, switched by F (enter/exit) or B */
+static void test_vehicle_layers(void) {
+    static KbmConfig c;
+    kbm_config_defaults(&c);
+    KbmResolved r;
+    kbm_config_resolve(&c, "PPSA03525", &r);               /* San Andreas DE (EU) */
+    assert(!strcmp(r.p->id, "gta_trilogy_de") && !strcmp(r.source, "game"));
+    kbm_config_resolve(&c, "PPSA03531", &r);               /* Vice City DE (EU) */
+    assert(!strcmp(r.p->id, "gta_trilogy_de"));
+    kbm_config_resolve(&c, "CUSA26613", &r);               /* GTA III DE (PS4, EU) */
+    assert(!strcmp(r.p->id, "gta_trilogy_de"));
+    assert(kbm_profile_has_layers(r.p));
+    KbmEngine e; kbm_init(&e); load_profile(&e, &c, "gta_trilogy_de");
+    assert(e.map.has_layers && e.layer == KBM_LAYER_FOOT);
+    const uint8_t W = 0x1a, F = 0x09, B = 0x05, SPACE = 0x2c, A = 0x04;
+    KbmFrame f;
+    kb(&e, 0, W, 0); kbm_frame(&e, 1, &f);                 /* on foot: W walks */
+    assert(f.ly < 128 && !(f.buttons & KBM_BTN_R2));
+    kb(&e, 0, SPACE, 0); kbm_frame(&e, 2, &f);
+    assert(f.buttons & KBM_BTN_CROSS);                     /* sprint */
+    kb(&e, 0, F, 0); kbm_frame(&e, 3, &f);                 /* enter vehicle */
+    assert((f.buttons & KBM_BTN_TRIANGLE) && e.layer == KBM_LAYER_VEHICLE);
+    kb(&e, 0, 0, 0);
+    kb(&e, 0, W, A); kbm_frame(&e, 4, &f);                 /* car: W accelerates, A still steers */
+    assert((f.buttons & KBM_BTN_R2) && f.r2 == 255 && f.ly == 128 && f.lx < 128);
+    kb(&e, 0, SPACE, 0); kbm_frame(&e, 5, &f);
+    assert((f.buttons & KBM_BTN_R1) && !(f.buttons & KBM_BTN_CROSS));   /* handbrake, not sprint */
+    kb(&e, 0, 0, 0);
+    uint8_t m2[4] = {2, 0, 0, 0}; kbm_mouse(&e, 0, m2, 4, 6); kbm_frame(&e, 6, &f);
+    assert(!(f.buttons & KBM_BTN_L2));                     /* right click does nothing in the car */
+    uint8_t m0[4] = {0, 0, 0, 0}; kbm_mouse(&e, 0, m0, 4, 7);
+    kb(&e, 0, F, 0); kb(&e, 0, 0, 0);                      /* exit vehicle */
+    assert(e.layer == KBM_LAYER_FOOT);
+    kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_VEHICLE);   /* manual resync */
+    kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_FOOT);
+    e.pointer_mode = 1; kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_FOOT);
+    e.pointer_mode = 0;
+    /* profiles without vehicle actions never switch */
+    KbmEngine g; kbm_init(&g); load_profile(&g, &c, "re2r");
+    assert(!g.map.has_layers); kbm_set_layer(&g, KBM_LAYER_VEHICLE); assert(g.layer == KBM_LAYER_FOOT);
+}
+
 static void test_usb_descriptor_parser(void) {
     const uint8_t composite[] = {
       9,2,59,0,2,1,0,0x80,50,
@@ -302,7 +344,8 @@ int main(void) {
     test_capture();
     test_config_roundtrip();
     test_title_db();
+    test_vehicle_layers();
     test_usb_descriptor_parser();
-    puts("PASS: keys, RE2R/Requiem defaults, combos, wheel, rate-independent mouse, capture, config INI/JSON, title DB + auto profile, HID parser");
+    puts("PASS: keys, RE2R/Requiem defaults, combos, wheel, rate-independent mouse, capture, config INI/JSON, title DB + auto profile, vehicle layers, HID parser");
     return 0;
 }

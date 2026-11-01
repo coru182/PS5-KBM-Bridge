@@ -25,6 +25,10 @@ void kbm_init(KbmEngine *e) {
     e->captured = -1;
 }
 
+static const uint64_t *layer_table(const KbmEngine *e) {
+    return (e->map.has_layers && e->layer == KBM_LAYER_VEHICLE) ? e->map.out_veh : e->map.out;
+}
+
 static void press_edge(KbmEngine *e, uint8_t code, int now_down) {
     int was = e->down[code];
     e->down[code] = (uint8_t)(now_down ? 1 : 0);
@@ -33,7 +37,14 @@ static void press_edge(KbmEngine *e, uint8_t code, int now_down) {
         e->capture_armed = 0;
         e->captured = code;
         e->suppress[code] = 1;   /* the captured press must not reach the game */
+        return;
     }
+    if (!was && !e->pointer_mode && e->map.has_layers && (layer_table(e)[code] & KBM_OUT_MODE_TOGGLE))
+        e->layer = e->layer == KBM_LAYER_VEHICLE ? KBM_LAYER_FOOT : KBM_LAYER_VEHICLE;
+}
+
+void kbm_set_layer(KbmEngine *e, int layer) {
+    e->layer = (e->map.has_layers && layer == KBM_LAYER_VEHICLE) ? KBM_LAYER_VEHICLE : KBM_LAYER_FOOT;
 }
 
 int kbm_keyboard(KbmEngine *e, int owner, const uint8_t *r, size_t n) {
@@ -119,18 +130,19 @@ static int is_mouse_code(int c) { return c >= KBM_KEY_MOUSE1 && c <= KBM_KEY_WHE
 void kbm_frame(KbmEngine *e, uint64_t t_ns, KbmFrame *o) {
     memset(o, 0, sizeof(*o));
     const int ptr = e->pointer_mode;
+    const uint64_t *tab = layer_table(e);
     uint64_t mask = 0;
     for (int c = 0; c < 256; ++c) {
         if (!e->down[c] || e->suppress[c]) continue;
         if (ptr && is_mouse_code(c)) continue;   /* pointer mode owns the mouse */
-        mask |= e->map.out[c];
+        mask |= tab[c];
     }
     if (ptr) {
         if (e->down[KBM_KEY_MOUSE1] && !e->suppress[KBM_KEY_MOUSE1]) mask |= KBM_BTN_CROSS;   /* click */
         if (e->down[KBM_KEY_MOUSE2] && !e->suppress[KBM_KEY_MOUSE2]) mask |= KBM_BTN_CIRCLE;  /* back  */
     } else {
-        if (e->wheel_up_until > t_ns)   mask |= e->map.out[KBM_KEY_WHEEL_UP];
-        if (e->wheel_down_until > t_ns) mask |= e->map.out[KBM_KEY_WHEEL_DOWN];
+        if (e->wheel_up_until > t_ns)   mask |= tab[KBM_KEY_WHEEL_UP];
+        if (e->wheel_down_until > t_ns) mask |= tab[KBM_KEY_WHEEL_DOWN];
     }
 
     o->buttons = (uint32_t)(mask & 0xffffffffu);

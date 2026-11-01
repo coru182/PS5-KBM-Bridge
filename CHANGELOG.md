@@ -2,6 +2,13 @@
 
 **English** · [Español](CHANGELOG.es.md)
 
+## v0.9.1: GTA Trilogy and vehicle mode
+
+- **New profile: GTA: The Trilogy – Definitive Edition** (GTA III, Vice City and San Andreas, PS5 and PS4 versions). PS5 buttons follow the Modern scheme. PC keys are the original PC defaults plus the Definitive Edition changes found in sources (Tab = weapon wheel); no complete PC key list for the Definitive Edition was found, so some keys may differ.
+- **Vehicle mode:** a profile can now bind keys differently on foot and in a vehicle. In the GTA profile, W accelerates (R2) in a car and walks on foot, Space is handbrake instead of sprint, and so on. **F** (enter/exit vehicle) switches mode; **B** switches it by hand if it gets out of sync (for example, if you press F with no car nearby). The page shows the current mode and groups the keys as Always / On foot / In vehicle.
+- Bikes and aircraft use other buttons in these games and are not covered by the profile.
+- Rebinding a key only removes it from actions that are active at the same time (same mode).
+
 ## v0.9: English and Spanish
 
 - The settings page and the PS5 notifications are in **English and Spanish**. By default they follow the PS5 language (read with `sceSystemServiceParamGetInt`; the result is logged). If it can't be read, the page uses the browser language and notifications are in English.

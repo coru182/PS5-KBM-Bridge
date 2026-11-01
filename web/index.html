@@ -219,6 +219,8 @@ es: {
   src_auto_native:"Nativo automático (la base de datos dice que el juego soporta teclado/mouse)",
   conf3:"Teclas verificadas con fuentes", conf2:"Algunas teclas inferidas: revisalas en el juego", conf1:"Sin verificar", conf0:"Plantilla genérica",
   native_badge:"Teclado/mouse nativo en PS5", edit_other:"Editar otro perfil…", close_list:"Cerrar lista",
+  k_mode:"Modo", v_foot:"A pie", v_vehicle:"En vehículo", lay_2:"Siempre", lay_0:"A pie", lay_1:"En vehículo",
+  layers_help:"Este perfil tiene teclas distintas a pie y en vehículo. F (subir/bajar) cambia de modo; si se desincroniza, apretá B.",
   g_inuse:"En uso ahora", g_templates:"Plantillas", g_games:"Juegos (A–Z)", legend:"★ = perfil por defecto para juegos que no reconozco · • = modificado por vos",
   notes:"Notas de la investigación de teclas (en inglés)",
   s_sens:"Sensibilidad", s_yratio:"Vertical (% de X)", s_ads:"Sensibilidad al apuntar (ADS)", s_smooth:"Suavizado", s_dz:"Compensar zona muerta", invert:"Invertir eje vertical",
@@ -265,6 +267,8 @@ en: {
   src_auto_native:"Automatic native (the database says this game supports keyboard/mouse)",
   conf3:"Keys verified against sources", conf2:"Some keys inferred: check them in game", conf1:"Unverified", conf0:"Generic template",
   native_badge:"Native keyboard/mouse on PS5", edit_other:"Edit another profile…", close_list:"Close list",
+  k_mode:"Mode", v_foot:"On foot", v_vehicle:"In vehicle", lay_2:"Always", lay_0:"On foot", lay_1:"In vehicle",
+  layers_help:"This profile has different keys on foot and in vehicles. F (enter/exit) switches mode; if it gets out of sync, press B.",
   g_inuse:"In use now", g_templates:"Templates", g_games:"Games (A–Z)", legend:"★ = default profile for games I don't recognise · • = changed by you",
   notes:"Key research notes",
   s_sens:"Sensitivity", s_yratio:"Vertical (% of X)", s_ads:"Aiming sensitivity (ADS)", s_smooth:"Smoothing", s_dz:"Dead-zone compensation", invert:"Invert vertical axis",
@@ -293,10 +297,10 @@ const KEYNAMES = {
 const OUTNAMES = {
   es: {CROSS:"✕",CIRCLE:"○",SQUARE:"□",TRIANGLE:"△",L1:"L1",R1:"R1",L2:"L2",R2:"R2",L3:"L3",R3:"R3",
     OPTIONS:"Options",TOUCHPAD:"Touchpad",PS:"Botón PS",DPAD_UP:"Cruceta ↑",DPAD_DOWN:"Cruceta ↓",DPAD_LEFT:"Cruceta ←",
-    DPAD_RIGHT:"Cruceta →",LS_UP:"Stick izq. ↑",LS_DOWN:"Stick izq. ↓",LS_LEFT:"Stick izq. ←",LS_RIGHT:"Stick izq. →"},
+    DPAD_RIGHT:"Cruceta →",LS_UP:"Stick izq. ↑",LS_DOWN:"Stick izq. ↓",LS_LEFT:"Stick izq. ←",LS_RIGHT:"Stick izq. →",MODE:"modo a pie ↔ vehículo"},
   en: {CROSS:"✕",CIRCLE:"○",SQUARE:"□",TRIANGLE:"△",L1:"L1",R1:"R1",L2:"L2",R2:"R2",L3:"L3",R3:"R3",
     OPTIONS:"Options",TOUCHPAD:"Touchpad",PS:"PS button",DPAD_UP:"D-pad ↑",DPAD_DOWN:"D-pad ↓",DPAD_LEFT:"D-pad ←",
-    DPAD_RIGHT:"D-pad →",LS_UP:"Left stick ↑",LS_DOWN:"Left stick ↓",LS_LEFT:"Left stick ←",LS_RIGHT:"Left stick →"}};
+    DPAD_RIGHT:"D-pad →",LS_UP:"Left stick ↑",LS_DOWN:"Left stick ↓",LS_LEFT:"Left stick ←",LS_RIGHT:"Left stick →",MODE:"on foot ↔ vehicle mode"}};
 
 const t = (k, vars) => { let s = (STR[L] && STR[L][k]) || STR.es[k] || k; if (vars) for (const v in vars) s = s.replace("{" + v + "}", vars[v]); return s; };
 const kn = k => k ? (KEYNAMES[L][k] || k) : "—";
@@ -362,6 +366,7 @@ function renderRuntime(){
     [t("k_reports"), r.kb_reports_5s + " / " + r.mouse_reports_5s],
     [t("k_mouse"), r.pointer_mode ? t("v_cursor") : t("v_camera")],
   ];
+  if (r.has_layers) items.splice(3, 0, [t("k_mode"), r.layer ? t("v_vehicle") : t("v_foot")]);
   setHTML($("stats"), items.map(([k,v]) => `<div class="stat"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join(""));
   /* Only rebuild interactive parts when they change: on the PS5 browser a node
    * replaced between press and release (or while a picker is open) loses the click. */
@@ -434,7 +439,17 @@ function renderConfig(){
   $("invert_y").onchange = e => call("/api/profile", {id:p.id, invert_y:e.target.checked?1:0});
 
   const cap = S.runtime.capture;
-  $("binds").innerHTML = p.actions.map(a => `<tr><td>${esc(alabel(a))}</td><td class="out">${esc(on(a.out))}</td>
+  /* profiles with vehicle keys: group rows as Always / On foot / In vehicle */
+  const order = p.layers ? [2, 0, 1] : [null];
+  const rows = [];
+  order.forEach(L => {
+    const list = p.actions.filter(a => L === null || (a.layer || 0) === L);
+    if (!list.length) return;
+    if (L !== null) rows.push({head: t("lay_" + L)});
+    list.forEach(a => rows.push(a));
+  });
+  $("binds").innerHTML = (p.layers ? `<tr><td colspan="4" class="muted">${esc(t("layers_help"))}</td></tr>` : "") + rows.map(a => a.head !== undefined
+    ? `<tr><td colspan="4"><b>${esc(a.head)}</b></td></tr>` : `<tr><td>${esc(alabel(a))}</td><td class="out">${esc(on(a.out))}</td>
     ${[0,1].map(s => {
       const capping = cap.active && cap.profile===p.id && cap.action===a.id && cap.slot===s;
       return `<td><span class="key"><span class="chip ${capping?"cap":a.keys[s]?"":"empty"}">${capping?"…":esc(kn(a.keys[s]))}</span>

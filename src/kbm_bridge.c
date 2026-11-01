@@ -44,7 +44,7 @@
 #ifndef KBM_DIAG_ONLY
 #define KBM_DIAG_ONLY 0
 #endif
-#define KBM_VERSION "0.9"
+#define KBM_VERSION "0.9.1"
 
 extern void ghostpad_status_log(const char *fmt, ...);
 #define KLOG(...) ghostpad_status_log("[KBM] " __VA_ARGS__)
@@ -148,6 +148,9 @@ static void apply_profile_locked(const char *title) {
     kbm_profile_to_mapping(p, &m);
     m.pointer_sens = g_cfg.pointer_sens;
     g_engine.map = m;
+    kbm_set_layer(&g_engine, g_engine.layer);   /* back to on foot if this profile has no layers */
+    g_rt.has_layers = m.has_layers;
+    g_rt.layer = g_engine.layer;
     g_rt.hz = kbm_config_effective_hz(&g_cfg);
 }
 
@@ -707,6 +710,7 @@ static void *watch_thread(void *unused) {
         pthread_mutex_lock(&g_lock);
         int changed = first || strcmp(tid, last) != 0;
         if (changed) {
+            kbm_set_layer(&g_engine, KBM_LAYER_FOOT);   /* new game: start on foot */
             apply_profile_locked(tid);
             if (tid[0]) {
                 set_pointer_locked(0, "game started");
@@ -730,6 +734,7 @@ static void *watch_thread(void *unused) {
             snprintf(g_rt.cap_result, sizeof(g_rt.cap_result), "timeout");
         }
         g_rt.uptime_s = (uint32_t)((now - g_start_ns) / 1000000000ull);
+        g_rt.layer = g_engine.layer;
         g_rt.idle_s = kbm_bridge_idle_seconds();
         if ((tick % 5) == 4) {
             g_rt.kb_reports_5s = g_win_kb; g_rt.mouse_reports_5s = g_win_mouse;
