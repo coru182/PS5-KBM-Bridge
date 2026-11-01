@@ -44,7 +44,7 @@
 #ifndef KBM_DIAG_ONLY
 #define KBM_DIAG_ONLY 0
 #endif
-#define KBM_VERSION "0.8"
+#define KBM_VERSION "0.9"
 
 extern void ghostpad_status_log(const char *fmt, ...);
 #define KLOG(...) ghostpad_status_log("[KBM] " __VA_ARGS__)
@@ -55,6 +55,10 @@ extern int sceSystemServiceGetAppTitleId(int app_id, char *title_id);
 extern int sceSystemServiceKillApp(int app_id, int how, int reason, int core_dump);
 /* as in ps5-payload-sdk samples/browser (UserService is initialised by gc_main) */
 extern int sceSystemServiceLaunchWebBrowser(const char *uri, void *reserved);
+/* PS4/PS5 system parameter 1 = system language. Present in the SDK stubs;
+ * the result is logged at startup (not assumed to work on every firmware). */
+extern int sceSystemServiceParamGetInt(int param_id, int *value);
+#define KBM_SYS_PARAM_LANG 1
 #define KBM_SETTINGS_URL "http://127.0.0.1:8099/"
 
 /* Home-screen launcher app (launcher/, ShadowMountPlus title). The bridge closes
@@ -119,6 +123,11 @@ static void sleep_ns(uint64_t ns) {
 static void lock(void *u) { (void)u; pthread_mutex_lock(&g_lock); }
 static void unlock(void *u) { (void)u; pthread_mutex_unlock(&g_lock); }
 #define NOTIFY(...) do { if (g_notify) g_notify(__VA_ARGS__); } while (0)
+static int g_sys_lang = KBM_LANG_AUTO;          /* detected PS5 system language */
+static int lang_en(void) { return kbm_lang_effective(&g_cfg, g_sys_lang) == KBM_LANG_EN; }
+const char *kbm_tr(const char *es, const char *en) { return lang_en() ? en : es; }
+/* Same arguments for both formats. */
+#define NOTIFY2(es, en, ...) do { if (g_notify) g_notify(lang_en() ? (en) : (es), __VA_ARGS__); } while (0)
 
 static void set_status(const char *s) { snprintf(g_rt.status, sizeof(g_rt.status), "%s", s); }
 static void refresh_status_locked(void) {
@@ -426,7 +435,7 @@ static int on_report(void *user, int kind, const uint8_t *buf, uint32_t len, uin
         if (f10 && !c->f10_was && KBM_DIAG_ONLY && !g_diag_release_until) {
             g_diag_release_until = mono_ns() + 20000000000ull;
             KLOG("F10 (diag): RELEASE TEST — handing receiver to the PS5 for 20 s\n");
-            NOTIFY("KBM diag: teclado/mouse devueltos a la PS5 por 20 s");
+            NOTIFY("%s", kbm_tr("KBM diag: teclado/mouse devueltos a la PS5 por 20 s", "KBM diag: keyboard/mouse handed back to the PS5 for 20 s"));
         }
         if (f9 && !c->f9_was && !KBM_DIAG_ONLY) {
             pthread_mutex_lock(&g_lock);
@@ -591,7 +600,7 @@ static void *scanner_thread(void *unused) {
             if (!busy) {
                 g_diag_release_until = 0;
                 KLOG("F10 (diag): RETAKE — detaching PS5 drivers again\n");
-                NOTIFY("KBM diag: retomando teclado/mouse");
+                NOTIFY("%s", kbm_tr("KBM diag: retomando teclado/mouse", "KBM diag: taking keyboard/mouse back"));
             }
         }
         pthread_mutex_lock(&g_lock);
@@ -681,7 +690,8 @@ static void *watch_thread(void *unused) {
         if (g_open_settings_req) {
             /* F11: no launcher to close; a running game stays suspended behind the browser */
             g_open_settings_req = 0;
-            NOTIFY("KBM: abriendo ajustes. Boton PS (tecla Windows) para volver al juego");
+            NOTIFY("%s", kbm_tr("KBM: abriendo ajustes. Boton PS (tecla Windows) para volver al juego",
+                                "KBM: opening settings. PS button (Windows key) to go back to the game"));
             open_browser_at = now;
         }
         if (open_browser_at && now >= open_browser_at) {
@@ -735,18 +745,18 @@ static void *watch_thread(void *unused) {
         }
         if (changed && !first) {
             if (tid[0] && !native) NOTIFY("KBM: %s -> %s%s", game, pname,
-                                          suggest ? " (tiene teclado/mouse nativo: F11)" : "");
+                                          suggest ? kbm_tr(" (tiene teclado/mouse nativo: F11)", " (supports keyboard/mouse natively: F11)") : "");
         }
         if (KBM_DIAG_ONLY) {
             if (changed && native) KLOG("DIAG: %s is marked native; bridge build would release the receiver here\n", tid);
         } else if (native && g_want_capture) {
             g_want_capture = 0;
             KLOG("native title %s: releasing receiver to the PS5\n", tid);
-            NOTIFY("KBM: %s usa teclado/mouse nativo. Receptor liberado", game);
+            NOTIFY2("KBM: %s usa teclado/mouse nativo. Receptor liberado", "KBM: %s uses native keyboard/mouse. Receiver released", game);
         } else if (!native && !g_want_capture) {
             g_want_capture = 1;
             KLOG("left native title: retaking receiver\n");
-            NOTIFY("KBM: retomando teclado/mouse");
+            NOTIFY("%s", kbm_tr("KBM: retomando teclado/mouse", "KBM: taking keyboard/mouse back"));
         }
         pthread_mutex_lock(&g_lock);
         refresh_status_locked();
@@ -755,8 +765,9 @@ static void *watch_thread(void *unused) {
         if (g_pointer_notify >= 0) {
             int on = g_pointer_notify;
             g_pointer_notify = -1;
-            if (on) NOTIFY("KBM: modo puntero (mouse = cursor). F9 o boton PS para volver");
-            else NOTIFY("KBM: mouse = camara");
+            if (on) NOTIFY("%s", kbm_tr("KBM: modo puntero (mouse = cursor). F9 o boton PS para volver",
+                                        "KBM: pointer mode (mouse = cursor). F9 or PS button to go back"));
+            else NOTIFY("%s", kbm_tr("KBM: mouse = camara", "KBM: mouse = camera"));
         }
         if (dirty) save_config();
         if ((tick % 30) == 0) update_ip();
@@ -783,6 +794,15 @@ int kbm_bridge_start(kbm_inject_cb inject, kbm_notify_cb notify) {
     g_rt.version = KBM_VERSION;
     g_rt.diag = KBM_DIAG_ONLY;
     load_config();
+    {
+        int id = -1;
+        int rc = sceSystemServiceParamGetInt(KBM_SYS_PARAM_LANG, &id);
+        g_sys_lang = rc == 0 ? kbm_lang_from_system(id) : KBM_LANG_AUTO;
+        g_rt.sys_lang = g_sys_lang;
+        KLOG("system language: rc=0x%x id=%d -> %s (setting: %s)\n", (unsigned)rc, id,
+             g_sys_lang == KBM_LANG_ES ? "es" : g_sys_lang == KBM_LANG_EN ? "en" : "unknown, using English",
+             kbm_lang_code(g_cfg.lang));
+    }
     apply_profile_locked("");
     refresh_status_locked();
     g_running = 1;
@@ -797,7 +817,8 @@ int kbm_bridge_start(kbm_inject_cb inject, kbm_notify_cb notify) {
     if (kbm_http_start(KBM_HTTP_PORT, &g_api) != 0) {
         int e = errno;
         KLOG("settings server :%d failed errno=%d: another bridge is probably running; exiting\n", KBM_HTTP_PORT, e);
-        NOTIFY("KBM: ya hay un bridge corriendo (ajustes en http://IP-PS5:8099)");
+        NOTIFY("%s", kbm_tr("KBM: ya hay un bridge corriendo (ajustes en http://IP-PS5:8099)",
+                            "KBM: a bridge is already running (settings at http://PS5-IP:8099)"));
         g_running = 0;
         return -5;
     }

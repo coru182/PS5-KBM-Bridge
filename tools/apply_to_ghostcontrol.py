@@ -56,7 +56,7 @@ static void kbm_forward(const ScePadData *pad) { inject_pad(0, pad); }
     b = main.find('    /* Keep-alive */', a)
     if a < 0 or b < 0 or b <= a or 'controller_manager_thread' not in main[a:b]:
         raise ValueError("gc_main.c: controller manager anchor changed")
-    replacement = '''    /* KBM v0.8. The DualSense is created only after the Logitech receiver has
+    replacement = '''    /* KBM v0.9. The DualSense is created only after the Logitech receiver has
      * produced BOTH keyboard and mouse input (automatically, or F8 if
      * auto-activation is off in the settings). -DKBM_DIAG_ONLY=1 never creates
      * one and exits after 5 minutes. Ghostcontrol's controller manager stays off. */
@@ -64,10 +64,10 @@ static void kbm_forward(const ScePadData *pad) { inject_pad(0, pad); }
 #define KBM_DIAG_ONLY 0
 #endif
 #if KBM_DIAG_ONLY
-#define KBM_TAG "KBM v0.8 DIAG"
+#define KBM_TAG "KBM v0.9 DIAG"
 #define KBM_DIAG_TICKS 1500      /* 5 min @ 200 ms */
 #else
-#define KBM_TAG "KBM v0.8"
+#define KBM_TAG "KBM v0.9"
 #define KBM_DIAG_TICKS 0
 #endif
 /* Optional idle exit (web UI: General). Default 0 = never: when etaHEN
@@ -77,9 +77,11 @@ static void kbm_forward(const ScePadData *pad) { inject_pad(0, pad); }
         return 1;
     }
 #if KBM_DIAG_ONLY
-    notify(KBM_TAG ": mueve el mouse, manten W, F10 prueba liberar. F12 sale (5 min)");
+    notify(kbm_tr(KBM_TAG ": mueve el mouse, manten W, F10 prueba liberar. F12 sale (5 min)",
+                  KBM_TAG ": move the mouse, hold W, F10 = release test. F12 exits (5 min)"));
 #else
-    notify(KBM_TAG ": mueve el mouse y toca una tecla para activar. F12 sale");
+    notify(kbm_tr(KBM_TAG ": mueve el mouse y toca una tecla para activar. F12 sale",
+                  KBM_TAG ": move the mouse and press a key to start. F12 exits"));
 #endif
 
     int vda_created = 0;
@@ -101,7 +103,8 @@ static void kbm_forward(const ScePadData *pad) { inject_pad(0, pad); }
                 kbm_bridge_enable_injection();
                 kbm_bridge_set_vda(1);
                 vda_created = 1;
-                notify(KBM_TAG ": DualSense activo. Ajustes: websrv o http://IP-PS5:8099");
+                notify(kbm_tr(KBM_TAG ": DualSense activo. Ajustes: F11 o http://IP-PS5:8099",
+                                  KBM_TAG ": DualSense active. Settings: F11 or http://PS5-IP:8099"));
             } else {
                 gp_log("KBM: VDA create failed\\n");
                 break;
@@ -122,7 +125,7 @@ static void kbm_forward(const ScePadData *pad) { inject_pad(0, pad); }
         g_slots[0].vdi_ready = 0;
     }
     gp_log("KBM: payload exit\\n");
-    notify(KBM_TAG " detenido");
+    notify(kbm_tr(KBM_TAG " detenido", KBM_TAG " stopped"));
     return 0;
 
 '''

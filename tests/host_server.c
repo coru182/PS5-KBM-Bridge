@@ -66,7 +66,11 @@ int main(int argc, char **argv) {
     cfg_path = (argc > 2 && strcmp(argv[2], "-")) ? argv[2] : NULL;
     kbm_config_defaults(&cfg);
     memset(&rt, 0, sizeof(rt));
-    rt.version = "0.8-host";
+    rt.version = "0.9-host";
+    {   /* simulated PS5 system language: KBM_SYS_LANG=en|es (default es) */
+        const char *sl = getenv("KBM_SYS_LANG");
+        rt.sys_lang = (sl && !strcmp(sl, "en")) ? KBM_LANG_EN : (sl && !strcmp(sl, "none")) ? KBM_LANG_AUTO : KBM_LANG_ES;
+    }
     snprintf(rt.status, sizeof(rt.status), "active");
     rt.vda = 1; rt.receiver = 1;
     snprintf(rt.title, sizeof(rt.title), "%s", argc > 3 ? argv[3] : "PPSA04289");   /* RE2 (2019), EU */

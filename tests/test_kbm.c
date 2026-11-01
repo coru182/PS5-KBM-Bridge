@@ -262,6 +262,21 @@ static void test_title_db(void) {
     assert(kbm_profile_action(kbm_config_profile(&c, "re2r"), "reload")->key[0] == kbm_key_from_name("T"));
     kbm_config_resolve(&c, "PPSA31246", &r);
     assert(!strcmp(r.p->id, "requiem") && !strcmp(r.source, "rule"));
+    /* language: system id mapping, config override, INI, English labels */
+    assert(kbm_lang_from_system(3) == KBM_LANG_ES && kbm_lang_from_system(20) == KBM_LANG_ES);
+    assert(kbm_lang_from_system(1) == KBM_LANG_EN && kbm_lang_from_system(18) == KBM_LANG_EN);
+    assert(kbm_lang_from_system(-1) == KBM_LANG_AUTO);
+    kbm_config_defaults(&c);
+    assert(kbm_lang_effective(&c, KBM_LANG_ES) == KBM_LANG_ES && kbm_lang_effective(&c, KBM_LANG_AUTO) == KBM_LANG_EN);
+    kbm_config_parse(&c, "[global]\nlang=en\n");
+    assert(c.lang == KBM_LANG_EN && kbm_lang_effective(&c, KBM_LANG_ES) == KBM_LANG_EN);
+    assert(kbm_config_write(&c, ini, sizeof(ini)) > 0 && strstr(ini, "lang=en\n"));
+    kbm_config_parse(&c, "[global]\nlang=auto\n");
+    assert(c.lang == KBM_LANG_AUTO);
+    assert(!strcmp(kbm_config_profile(&c, "generic")->name_en, "Generic (all buttons)"));
+    assert(!strcmp(kbm_profile_action(kbm_config_profile(&c, "re2r"), "reload")->label_en, "Reload"));
+    for (int i = 0; i < c.n_profiles; ++i)
+        for (int a = 0; a < c.p[i].n; ++a) assert(c.p[i].a[a].label && c.p[i].a[a].label_en && *c.p[i].a[a].label_en);
     printf("title db: %d built-in profiles OK\n", c.n_profiles);
 }
 

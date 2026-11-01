@@ -91,18 +91,18 @@ int main(int argc, char **argv) {
     int fd = connect_local(BRIDGE_PORT);
     if (fd >= 0) {
         close(fd);
-        notify("PS5 KBM Bridge ya esta corriendo. Abriendo ajustes...");
+        notify("PS5 KBM Bridge: abriendo ajustes / opening settings...");
     } else {
         long n = read_elf();
         if (n < 0) {
-            notify("PS5 KBM Bridge: falta ps5-kbm-bridge.elf dentro de la app");
+            notify("PS5 KBM Bridge: falta / missing ps5-kbm-bridge.elf");
         } else if ((fd = connect_local(ELFLDR_PORT)) < 0) {
-            notify("PS5 KBM Bridge: elfldr no responde (puerto 9021). Carga elfldr primero.");
+            notify("PS5 KBM Bridge: elfldr no responde / not responding (9021)");
         } else {
             int bad = send_all(fd, g_elf, n);
             close(fd);
-            notify(bad ? "PS5 KBM Bridge: fallo el envio a elfldr"
-                       : "PS5 KBM Bridge iniciado. Abriendo ajustes...");
+            notify(bad ? "PS5 KBM Bridge: fallo el envio / send to elfldr failed"
+                       : "PS5 KBM Bridge: iniciado / started");
         }
     }
     /* The bridge closes this title (sceSystemServiceKillApp). If anything went

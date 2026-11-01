@@ -92,7 +92,27 @@ const PORT = 18111, OUT = process.argv[2] || '.';
       }
       await page.close();
     }
+    // ---- language: manual switch to English on the Spanish console ----
+    {
+      const page = await browser.newPage({ viewport: {width: 1200, height: 900} });
+      page.on('pageerror', e => errors.push('lang: ' + e.message));
+      await page.goto(`http://127.0.0.1:${PORT}/`);
+      await page.waitForSelector('#binds tr');
+      if (await page.$eval('#gameSec h2', e => e.textContent) !== 'Juego actual') throw new Error('spanish heading');
+      await page.click('[data-lang="en"]'); await page.waitForTimeout(600);
+      if (await page.$eval('#gameSec h2', e => e.textContent) !== 'Current game') throw new Error('english heading');
+      if (await page.evaluate(() => document.documentElement.lang) !== 'en') throw new Error('html lang');
+      await page.click('#pchg');
+      const g = await page.$$eval('#plist h3', h => h.map(x => x.textContent).join('|'));
+      if (g !== 'In use now|Templates|Games (A–Z)') throw new Error('english groups ' + g);
+      const firstOut = await page.$$eval('#binds td.out', t => t.map(x => x.textContent));
+      if (!firstOut.some(x => x.includes('Left stick'))) throw new Error('english outputs');
+      await page.screenshot({ path: `${OUT}/ui_english.png`, fullPage: false });
+      await page.click('[data-lang="auto"]'); await page.waitForTimeout(600);
+      if (await page.$eval('#gameSec h2', e => e.textContent) !== 'Juego actual') throw new Error('back to auto (es)');
+      await page.close();
+    }
     if (errors.length) throw new Error(errors.join('\n'));
-    console.log('PASS: web UI (render, no overflow at 390px, game name + auto profile, grouped profile list, slider, key pick, capture, game/template/other buttons, title rule, auto native, autostart, idle, ADS, pointer, no JS errors)');
+    console.log('PASS: web UI (render, no overflow at 390px, game name + auto profile, grouped profile list, slider, key pick, capture, game/template/other buttons, title rule, auto native, ES/EN switch, autostart, idle, ADS, pointer, no JS errors)');
   } finally { await browser.close(); srv.kill(); }
 })().catch(e => { console.error('FAIL:', e.message); process.exit(1); });

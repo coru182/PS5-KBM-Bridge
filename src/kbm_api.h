@@ -41,6 +41,8 @@ typedef struct {
     int autostart_on;       /* ...and its .auto_start marker exists */
     int etahen;             /* /data/etaHEN exists (autostart only applies to etaHEN) */
     int pointer_mode;       /* mouse drives the PS5 browser cursor */
+    int sys_lang;           /* PS5 system language: KBM_LANG_ES / EN, AUTO = unknown */
+    int lang;               /* effective language (config, else system) */
 } KbmRuntime;
 
 typedef struct {
@@ -67,6 +69,6 @@ void kbm_runtime_set_title(KbmRuntime *rt, const KbmConfig *c, const char *tid);
 int kbm_api_command(KbmApi *api, const char *path, const KbmQuery *q, char *out, size_t n);
 
 /* Assign key code to profile/action/slot. Removes the same key from other
- * actions of that profile (writes their label into moved_from). 0 ok, -1 err. */
+ * actions of that profile (writes that action's id into moved_from). 0 ok, -1 err. */
 int kbm_config_bind(KbmConfig *c, const char *profile, const char *action, int slot,
                     uint8_t code, char *moved_from, size_t mf_n);

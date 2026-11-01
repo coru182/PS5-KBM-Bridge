@@ -23,7 +23,8 @@ static void profile_from_builtin(KbmProfile *p, int bi) {
     const KbmBuiltinProfile *d = &KBM_BUILTIN[bi];
     memset(p, 0, sizeof(*p));
     copy_str(p->id, sizeof(p->id), d->id);
-    copy_str(p->name, sizeof(p->name), d->name);
+    p->name = d->name;
+    p->name_en = d->name_en;
     KbmMapping m; kbm_mapping_defaults(&m);
     p->sens = m.sens; p->yratio = m.yratio; p->smooth_ms = m.smooth_ms;
     p->deadzone = m.deadzone; p->invert_y = m.invert_y;
@@ -32,7 +33,8 @@ static void profile_from_builtin(KbmProfile *p, int bi) {
     p->n = d->n < KBM_MAX_ACTIONS ? d->n : KBM_MAX_ACTIONS;
     for (int i = 0; i < p->n; ++i) {
         copy_str(p->a[i].id, sizeof(p->a[i].id), d->a[i].id);
-        copy_str(p->a[i].label, sizeof(p->a[i].label), d->a[i].label);
+        p->a[i].label = d->a[i].label;
+        p->a[i].label_en = d->a[i].label_en;
         p->a[i].out = d->a[i].out;
         p->a[i].key[0] = kbm_key_reserved(d->a[i].k1) ? 0 : d->a[i].k1;
         p->a[i].key[1] = kbm_key_reserved(d->a[i].k2) ? 0 : d->a[i].k2;
@@ -49,6 +51,7 @@ void kbm_config_defaults(KbmConfig *c) {
     c->idle_exit_min = 0;
     c->open_settings_on_launch = 1;
     c->pointer_sens = 10;
+    c->lang = KBM_LANG_AUTO;
     copy_str(c->default_profile, sizeof(c->default_profile), "generic");
     c->n_profiles = KBM_BUILTIN_COUNT;
     for (int i = 0; i < KBM_BUILTIN_COUNT; ++i) profile_from_builtin(&c->p[i], i);
@@ -69,6 +72,18 @@ int kbm_profile_modified(const KbmProfile *p) {
     for (int i = 0; i < p->n; ++i)
         if (p->a[i].key[0] != d.a[i].key[0] || p->a[i].key[1] != d.a[i].key[1]) return 1;
     return 0;
+}
+
+/* ------------------------------------------------------------------ language */
+int kbm_lang_effective(const KbmConfig *c, int sys) {
+    if (c->lang == KBM_LANG_ES || c->lang == KBM_LANG_EN) return c->lang;
+    return sys == KBM_LANG_ES ? KBM_LANG_ES : KBM_LANG_EN;
+}
+const char *kbm_lang_code(int lang) { return lang == KBM_LANG_ES ? "es" : lang == KBM_LANG_EN ? "en" : "auto"; }
+int kbm_lang_from_system(int id) {
+    /* SCE system language ids: 3 = Spanish (Spain), 20 = Spanish (Latin America). */
+    if (id == 3 || id == 20) return KBM_LANG_ES;
+    return (id >= 0 && id < 64) ? KBM_LANG_EN : KBM_LANG_AUTO;
 }
 
 /* ------------------------------------------------------------------ title database */
@@ -283,6 +298,7 @@ int kbm_config_parse(KbmConfig *c, const char *text) {
             else if (!strcmp(k, "auto_native")) c->auto_native = iv ? 1 : 0;
             else if (!strcmp(k, "idle_exit_min")) c->idle_exit_min = iv < 0 ? 0 : (iv > 240 ? 240 : iv);
             else if (!strcmp(k, "open_settings_on_launch")) c->open_settings_on_launch = iv ? 1 : 0;
+            else if (!strcmp(k, "lang")) c->lang = !strcmp(v, "es") ? KBM_LANG_ES : !strcmp(v, "en") ? KBM_LANG_EN : KBM_LANG_AUTO;
             else if (!strcmp(k, "pointer_sens")) c->pointer_sens = iv < 1 ? 1 : (iv > 50 ? 50 : iv);
             else if (!strcmp(k, "default_profile") && kbm_valid_profile_id(v))
                 copy_str(c->default_profile, sizeof(c->default_profile), v);
@@ -327,8 +343,8 @@ int kbm_config_write(const KbmConfig *c, char *buf, size_t n) {
     buf[0] = 0;
     outf(&o, "# PS5 KBM Bridge config (v2). Editable from http://<PS5-IP>:8099\n"
              "# Only profiles you changed are stored; the rest come built into the bridge.\n");
-    outf(&o, "[global]\ninject_hz=%d\nauto_activate=%d\nrelease_on_exit=%d\nnative_switch=%d\nauto_native=%d\nidle_exit_min=%d\nopen_settings_on_launch=%d\npointer_sens=%d\ndefault_profile=%s\n\n",
-         c->inject_hz, c->auto_activate, c->release_on_exit, c->native_switch, c->auto_native, c->idle_exit_min, c->open_settings_on_launch, c->pointer_sens, c->default_profile);
+    outf(&o, "[global]\ninject_hz=%d\nauto_activate=%d\nrelease_on_exit=%d\nnative_switch=%d\nauto_native=%d\nidle_exit_min=%d\nopen_settings_on_launch=%d\npointer_sens=%d\nlang=%s\ndefault_profile=%s\n\n",
+         c->inject_hz, c->auto_activate, c->release_on_exit, c->native_switch, c->auto_native, c->idle_exit_min, c->open_settings_on_launch, c->pointer_sens, kbm_lang_code(c->lang), c->default_profile);
     outf(&o, "[titles]\n");
     for (int i = 0; i < c->n_titles; ++i) outf(&o, "%s=%s\n", c->titles[i].tid, c->titles[i].target);
     for (int i = 0; i < c->n_profiles; ++i) {
@@ -372,6 +388,7 @@ static void profile_detail(KbmJson *j, const KbmProfile *p) {
     const KbmBuiltinProfile *b = &KBM_BUILTIN[p->builtin];
     kbm_json_raw(j, "{\"id\":"); kbm_json_str(j, p->id);
     kbm_json_raw(j, ",\"name\":"); kbm_json_str(j, p->name);
+    kbm_json_raw(j, ",\"name_en\":"); kbm_json_str(j, p->name_en);
     kbm_json_raw(j, ",\"kind\":"); kbm_json_str(j, kind_name(p->builtin));
     kbm_json_raw(j, ",\"tmpl\":"); kbm_json_str(j, b->tmpl);
     kbm_json_raw(j, ",\"notes\":"); kbm_json_str(j, b->notes);
@@ -383,6 +400,7 @@ static void profile_detail(KbmJson *j, const KbmProfile *p) {
         if (a) jput(j, ',');
         kbm_json_raw(j, "{\"id\":"); kbm_json_str(j, p->a[a].id);
         kbm_json_raw(j, ",\"label\":"); kbm_json_str(j, p->a[a].label);
+        kbm_json_raw(j, ",\"label_en\":"); kbm_json_str(j, p->a[a].label_en);
         kbm_json_raw(j, ",\"out\":"); kbm_json_str(j, kbm_out_describe(p->a[a].out, d, sizeof(d)));
         kbm_json_raw(j, ",\"keys\":[");
         kbm_json_str(j, p->a[a].key[0] ? kn(p->a[a].key[0]) : "");
@@ -404,9 +422,9 @@ int kbm_config_json(const KbmConfig *c, const char *edit, char *buf, size_t n) {
     KbmJson j; kbm_json_init(&j, buf, n);
     kbm_json_fmt(&j, "{\"inject_hz\":%d,\"effective_hz\":%d,\"auto_activate\":%d,\"release_on_exit\":%d,"
                  "\"native_switch\":%d,\"auto_native\":%d,\"idle_exit_min\":%d,\"open_settings_on_launch\":%d,\"pointer_sens\":%d,"
-                 "\"title_db\":%d,\"default_profile\":", c->inject_hz, kbm_config_effective_hz(c),
+                 "\"title_db\":%d,\"lang\":\"%s\",\"default_profile\":", c->inject_hz, kbm_config_effective_hz(c),
                  c->auto_activate, c->release_on_exit, c->native_switch, c->auto_native, c->idle_exit_min,
-                 c->open_settings_on_launch, c->pointer_sens, KBM_TITLE_COUNT);
+                 c->open_settings_on_launch, c->pointer_sens, KBM_TITLE_COUNT, kbm_lang_code(c->lang));
     kbm_json_str(&j, c->default_profile);
     kbm_json_raw(&j, ",\"titles\":[");
     for (int i = 0; i < c->n_titles; ++i) {
@@ -424,6 +442,7 @@ int kbm_config_json(const KbmConfig *c, const char *edit, char *buf, size_t n) {
         if (i) jput(&j, ',');
         kbm_json_raw(&j, "{\"id\":"); kbm_json_str(&j, p->id);
         kbm_json_raw(&j, ",\"name\":"); kbm_json_str(&j, p->name);
+        kbm_json_raw(&j, ",\"name_en\":"); kbm_json_str(&j, p->name_en);
         kbm_json_raw(&j, ",\"kind\":"); kbm_json_str(&j, kind_name(p->builtin));
         kbm_json_raw(&j, ",\"tmpl\":"); kbm_json_str(&j, b->tmpl);
         kbm_json_fmt(&j, ",\"conf\":%d,\"native\":%d,\"mod\":%d}", b->confidence, b->native, kbm_profile_modified(p));

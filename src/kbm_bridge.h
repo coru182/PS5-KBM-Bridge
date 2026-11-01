@@ -20,3 +20,5 @@ void kbm_bridge_enable_injection(void);
 void kbm_bridge_set_vda(int created);
 /* Stops threads; hands the receiver back if release_on_exit. Blocks <= 3 s. */
 void kbm_bridge_shutdown(void);
+/* Pick the Spanish or English text for user-facing messages. */
+const char *kbm_tr(const char *es, const char *en);

@@ -41,7 +41,7 @@ try:
 
     # bind R (reload) onto aim slot 0 -> reload loses R
     s, r = api("/api/bind?profile=re2r&action=aim&slot=0&key=R")
-    assert r["ok"] and r.get("moved_from") == "Recargar", r
+    assert r["ok"] and r.get("moved_from") == "reload", r
     assert api("/api/bind?profile=re2r&action=aim&slot=0&key=F12")[1]["ok"] is False
     assert api("/api/bind?profile=nope&action=aim&slot=0&key=R")[1]["ok"] is False
 
@@ -71,6 +71,16 @@ try:
     assert api("/api/profile_get?id=nope")[1]["ok"] is False
     assert api("/api/global?auto_native=1")[1]["ok"] and api("/api/lookup?tid=PPSA01923")[1]["native"] == 1
     assert api("/api/global?auto_native=0")[1]["ok"]
+    # language: system language (simulated es), override, back to auto
+    st = api("/api/state")[1]
+    assert st["config"]["lang"] == "auto" and st["runtime"]["sys_lang"] == "es" and st["runtime"]["lang"] == "es", st["runtime"]
+    assert api("/api/global?lang=en")[1]["ok"]
+    st = api("/api/state?edit=re2r")[1]
+    assert st["config"]["lang"] == "en" and st["runtime"]["lang"] == "en"
+    rl = [a for a in st["config"]["edit"]["actions"] if a["id"] == "reload"][0]
+    assert rl["label"] == "Recargar" and rl["label_en"] == "Reload", rl
+    assert [p for p in st["config"]["profiles"] if p["id"] == "generic"][0]["name_en"] == "Generic (all buttons)"
+    assert api("/api/global?lang=bogus")[1]["ok"] and api("/api/state")[1]["config"]["lang"] == "auto"
     assert api("/api/global?inject_hz=120&auto_activate=0&default_profile=generic")[1]["ok"]
     c = api("/api/state")[1]["config"]
     assert c["inject_hz"] == 120 and c["effective_hz"] == 120 and c["auto_activate"] == 0 and c["default_profile"] == "generic"
@@ -95,7 +105,7 @@ try:
     assert api("/api/nothing")[0] == 404
 
     ini = open(cfg_out).read()
-    assert "idle_exit_min=0" in ini and "ads_pct=220" in ini and "pointer_sens=50" in ini
+    assert "lang=auto" in ini and "idle_exit_min=0" in ini and "ads_pct=220" in ini and "pointer_sens=50" in ini
     assert "PPSA04289=requiem" in ini and "[profile.re2r]" not in ini and "[profile.requiem]" in ini and "[profile.elden_ring]" not in ini and "key.heal=Q,H" in ini and "inject_hz=120" in ini
 
     # robustness: garbage requests must not kill the server

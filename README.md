@@ -1,46 +1,47 @@
 # PS5 KBM Bridge
 
-Teclado y mouse en cualquier juego de PS5, sin adaptadores ni PC. Un payload para PS5 con jailbreak que lee un teclado y un mouse USB y los convierte en un DualSense virtual, con perfiles que imitan las teclas de la versión de PC de cada juego.
+**English** · [Español](README.es.md)
 
-> **English:** a homebrew payload for jailbroken PS5 consoles (tested on firmware 11.60) that turns a USB keyboard + mouse into a virtual DualSense. It detects the running game by Title ID and applies a per-game profile that mirrors the PC version's default keybindings. Settings page served by the console itself on port 8099. Built on top of [Ghostcontrol](https://github.com/srbraboo/Ghostcontrol-PS5-USB-Controller-Patcher). Docs are in Spanish.
+Keyboard and mouse in any PS5 game, with no adapter and no PC. A payload for jailbroken PS5 consoles that reads a USB keyboard and mouse and turns them into a virtual DualSense, with profiles that mirror each game's PC keybindings.
 
 > [!WARNING]
-> **Experimental.** Necesita una PS5 con jailbreak. Lo usás bajo tu responsabilidad.
-> - Solo traduce entradas: no modifica juegos ni inyecta trucos.
-> - Algunos juegos online prohíben o penalizan los adaptadores de teclado y mouse (Marvel Rivals, Rainbow Six Siege, entre otros). Pensado para jugar offline.
+> **Experimental.** Requires a jailbroken PS5. Use at your own risk.
+> - It only translates input: it does not modify games or inject cheats.
+> - Some online games ban or penalise keyboard/mouse adapters (Marvel Rivals, Rainbow Six Siege, among others). Meant for offline play.
 
-## Qué hace
+## What it does
 
-- **DualSense virtual** a partir del receptor inalámbrico del teclado y mouse, sobre el DualSense virtual de Ghostcontrol. El mouse mueve el stick derecho por velocidad: la sensación es la misma a 30, 60 o 120 fps. Inyecta a 250 Hz.
-- **Reconoce el juego** que abrís por su Title ID. Trae una base de unos 24.600 títulos de PS5 y PS4, así que conoce el nombre del juego.
-- **Perfil por juego:** 42 juegos con las teclas por defecto de su versión de PC, traducidas al botón que hace lo mismo en PS5. Unos 290 juegos más usan una plantilla por género (shooter, tercera persona, souls-like, carreras). Lista completa con fuentes: [`data/PROFILES.md`](data/PROFILES.md).
-- **Página de ajustes** en `http://IP-de-la-PS5:8099`, desde el celular, la PC o el propio navegador de la PS5:
-  - sensibilidad, sensibilidad al apuntar (ADS) y asignación de teclas con captura;
-  - qué perfil usa cada juego, y marcar un juego como "nativo".
-- **Desde la PS5, sin celular:**
-  - un ícono en el home (vía ShadowMountPlus) abre los ajustes;
-  - **F11** los abre en medio de un juego.
-  - En esa página, el mouse maneja el cursor.
-- **Juegos con teclado y mouse propios** (Fortnite, Call of Duty, Battlefield 6…): te sugiere devolverle el receptor a la PS5 mientras jugás.
+- **Virtual DualSense** from the keyboard and mouse wireless receiver, built on Ghostcontrol's virtual DualSense. The mouse drives the right stick by speed, so it feels the same at 30, 60 or 120 fps. Injects at 250 Hz.
+- **Recognises the game** you open by its Title ID. Ships a database of about 24,600 PS5 and PS4 titles, so it knows the game's name.
+- **Per-game profiles:** 42 games use their PC version's default keys, mapped to the button that does the same thing on PS5. About 290 more games use a genre template (shooter, third-person, souls-like, racing). Full list with sources: [`data/PROFILES.md`](data/PROFILES.md).
+- **Settings page** at `http://PS5-IP:8099`, from your phone, a PC or the PS5's own browser:
+  - sensitivity, aiming (ADS) sensitivity and key binding with capture;
+  - which profile each game uses, and marking a game as "native".
+- **From the PS5, no phone needed:**
+  - a home screen icon (through ShadowMountPlus) opens the settings;
+  - **F11** opens them in the middle of a game.
+  - On that page the mouse drives the cursor.
+- **English or Spanish:** the settings page and notifications follow your PS5's language. You can set it by hand under General.
+- **Games with their own keyboard/mouse support** (Fortnite, Call of Duty, Battlefield 6…): it suggests handing the receiver back to the PS5 while you play.
 
-### Teclas reservadas
+### Reserved keys
 
-| Tecla | Qué hace |
+| Key | What it does |
 |---|---|
-| Windows | Botón PS |
-| F8 | Activar el mando a mano (si desactivaste el arranque automático) |
-| F9 | Mouse como cursor / como cámara |
-| F10 | Solo en el ELF de diagnóstico: prueba de devolver el receptor a la PS5 |
-| F11 | Abrir los ajustes en el navegador de la PS5 |
-| F12 | Detener el bridge |
+| Windows | PS button |
+| F8 | Start the controller by hand (if you turned off automatic start) |
+| F9 | Mouse as cursor / as camera |
+| F10 | Diagnostics ELF only: test handing the receiver back to the PS5 |
+| F11 | Open the settings in the PS5 browser |
+| F12 | Stop the bridge |
 
-## Requisitos
+## Requirements
 
-- **PS5 con jailbreak.** Probado en firmware **11.60** con elfldr, kstuff, ShadowMountPlus y backpork. Con etaHEN también puede arrancar solo al iniciar.
-- **Receptor inalámbrico Logitech `046d:c534`** (teclado y mouse por el mismo receptor). Es el único probado y el código lo busca por ese VID:PID. Otros receptores con protocolo de arranque HID podrían funcionar cambiando `TARGET_VID`/`TARGET_PID` en `src/kbm_bridge.c`, pero no está probado.
-- **Para compilar:** Linux o WSL (Ubuntu) con `git`, `python3`, `make`, `gcc` y el [PS5 Payload SDK](https://github.com/ps5-payload-dev/sdk) en `/opt/ps5-payload-sdk`. Para las pruebas de la página, Node y Playwright (opcional).
+- **Jailbroken PS5.** Tested on firmware **11.60** with elfldr, kstuff, ShadowMountPlus and backpork. With etaHEN it can also start automatically.
+- **Logitech wireless receiver `046d:c534`** (keyboard and mouse on the same receiver). It's the only one tested, and the code looks for that VID:PID. Other receivers that speak the HID boot protocol might work by changing `TARGET_VID`/`TARGET_PID` in `src/kbm_bridge.c`, but that is untested.
+- **To build:** Linux or WSL (Ubuntu) with `git`, `python3`, `make`, `gcc` and the [PS5 Payload SDK](https://github.com/ps5-payload-dev/sdk) in `/opt/ps5-payload-sdk`. Node and Playwright for the page tests (optional).
 
-## Compilar
+## Build
 
 ```bash
 git clone https://github.com/coru182/ps5-kbm-bridge.git
@@ -49,91 +50,93 @@ export PS5_PAYLOAD_SDK=/opt/ps5-payload-sdk
 ./build_wsl.sh
 ```
 
-El script hace todo:
+The script does everything:
 
-1. Genera los perfiles, la base de títulos y la página embebida.
-2. Corre las pruebas.
-3. Clona Ghostcontrol y le aplica el patch.
-4. Compila los dos ELF.
-5. Arma la app del ícono. La primera vez baja sus dependencias a `~/.cache/ps5-kbm/`.
+1. Generates the profiles, the title database and the embedded page.
+2. Runs the tests.
+3. Clones Ghostcontrol and applies the patch.
+4. Builds both ELFs.
+5. Builds the icon app. The first time it downloads its dependencies to `~/.cache/ps5-kbm/`.
 
-Resultado en `out/`:
+Output in `out/`:
 
-| Archivo | Para qué |
+| File | Purpose |
 |---|---|
-| `ps5-kbm-bridge-v08.elf` | El bridge |
-| `ps5-kbm-diag-v08.elf` | Diagnóstico: solo lee y mide, **nunca** crea el mando virtual, se cierra a los 5 min |
-| `homebrew/PPSA51258/` | Ícono para el home (ShadowMountPlus) |
-| `etaHEN/payloads/` | Arranque automático, solo si usás etaHEN |
+| `ps5-kbm-bridge-v09.elf` | The bridge |
+| `ps5-kbm-diag-v09.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
+| `homebrew/PPSA51258/` | Home screen icon (ShadowMountPlus) |
+| `etaHEN/payloads/` | Automatic start, only if you use etaHEN |
 
-`KBM_SKIP_LAUNCHER=1 ./build_wsl.sh` compila sin el ícono.
+`KBM_SKIP_LAUNCHER=1 ./build_wsl.sh` builds without the icon.
 
-## Instalar y usar
+## Install and use
 
-1. Copiá `out/homebrew/PPSA51258/` a `/data/homebrew/PPSA51258/` en la PS5 por FTP (por ejemplo con ps5upload). Reiniciá y cargá tus payloads; ShadowMountPlus agrega el ícono **PS5 KBM Bridge** al home.
-   - Sin ShadowMountPlus: mandá `ps5-kbm-bridge-v08.elf` a elfldr (puerto 9021).
-2. Conectá el receptor y abrí el ícono. Se abre la página de ajustes. Mové el mouse y tocá una tecla: aparece el DualSense virtual.
-3. Abrí un juego. La notificación dice qué juego reconoció y qué perfil aplicó. Para cambiar algo en medio del juego: **F11**. Volvés con el botón PS (o la tecla Windows).
+1. Copy `out/homebrew/PPSA51258/` to `/data/homebrew/PPSA51258/` on the PS5 over FTP (for example with ps5upload). Reboot and load your payloads; ShadowMountPlus adds the **PS5 KBM Bridge** icon to the home screen.
+   - Without ShadowMountPlus: send `ps5-kbm-bridge-v09.elf` to elfldr (port 9021).
+2. Plug in the receiver and open the icon. The settings page opens. Move the mouse and press a key: the virtual DualSense appears.
+3. Open a game. The notification says which game it recognised and which profile it applied. To change something mid-game: **F11**. Go back with the PS button (or the Windows key).
 
-Los ajustes se guardan en `/data/ps5-kbm/config.ini` (solo lo que cambiaste). El registro de diagnóstico queda en `/data/ghostpad/gc_status.log`.
+Settings are saved in `/data/ps5-kbm/config.ini` (only what you changed). The diagnostics log is `/data/ghostpad/gc_status.log`.
 
-**Primera vez en una consola nueva:** probá antes el ELF de diagnóstico.
-1. Mové el mouse y tocá teclas.
-2. Abrí un juego y volvé al home: el log tiene que mostrar `GAME PPSAxxxxx`.
-3. Apretá F10: el receptor vuelve a la PS5 por 20 s y después se retoma.
+**First time on a new console:** try the diagnostics ELF first.
+1. Move the mouse and press keys.
+2. Open a game and go back home: the log should show `GAME PPSAxxxxx`.
+3. Press F10: the receiver goes back to the PS5 for 20 s and is then taken back.
 
-### Cómo elige el perfil
+### How it picks the profile
 
-Por cada juego que abrís, en este orden:
+For each game you open, in this order:
 
-1. lo que elegiste vos para ese juego en la página;
-2. el perfil propio del juego;
-3. la plantilla de su género;
-4. el perfil por defecto ★ (para juegos que no reconoce).
+1. what you chose for that game on the page;
+2. the game's own profile;
+3. its genre template;
+4. the default profile ★ (for games it doesn't recognise).
 
-Si la base dice que el juego soporta teclado y mouse en PS5, te lo sugiere. Solo lo pasa a "nativo" sin preguntar si activás esa opción.
+If the database says the game supports keyboard and mouse on PS5, it suggests "native". It only switches to native without asking if you turn that option on.
 
-## Agregar o corregir un perfil
+## Add or fix a profile
 
-1. Creá o editá `data/profiles/<id>.json`, con las teclas de PC por defecto y el botón de PS5 de cada acción. Mirá los existentes como ejemplo.
-   - No incluyas movimiento ni cámara: WASD, flechas, mouse y la tecla Windows (botón PS) se agregan solos.
-2. Agregá el nombre del juego en `data/games.json`. Es una expresión regular sobre el nombre normalizado: minúsculas, sin acentos ni ™.
-3. Corré `./build_wsl.sh`. `tools/gen_builtin.py` revisa cada tecla y botón, y frena si algo no es válido. También regenera [`data/PROFILES.md`](data/PROFILES.md).
+1. Create or edit `data/profiles/<id>.json` with the PC default keys and the PS5 button for each action. Use the existing ones as examples.
+   - Don't include movement or camera: WASD, arrows, mouse and the Windows key (PS button) are added automatically.
+2. Add the game's name to `data/games.json`. It's a regular expression on the normalised name: lowercase, no accents, no ™.
+3. Add the English text of each new action to `data/i18n/en.json` (action labels in the profiles are written in Spanish).
+4. Run `./build_wsl.sh`. `tools/gen_builtin.py` checks every key, button and translation, and stops if anything is invalid. It also regenerates `data/PROFILES.md` and `data/PROFILES.es.md`.
 
-Perfiles de otros jugadores son bienvenidos (issues o pull requests), mejor con fuentes. Los que tienen investigación incompleta están en `data/unverified/` y no se incluyen.
+Profiles from other players are welcome (issues or pull requests), ideally with sources. Profiles with incomplete research are in `data/unverified/` and are not built in.
 
-## Estructura
+## Layout
 
-| Carpeta | Contenido |
+| Folder | Contents |
 |---|---|
-| `src/` | El bridge en C: lectura USB (`kbm_usbfs`), motor teclado/mouse → mando (`kbm_engine`), perfiles y base de títulos (`kbm_config`), servidor HTTP y API (`kbm_http`, `kbm_api`), hilos y ciclo de vida (`kbm_bridge`) |
-| `web/` | La página de ajustes, embebida en el ELF por `tools/embed_web.py` |
-| `data/` | Perfiles, plantillas, patrones de nombres, juegos con teclado/mouse nativo y la base de títulos |
-| `launcher/` | La app del ícono (PPSA51258): le manda el ELF a elfldr y abre los ajustes |
-| `tools/` | Generadores y el patch para Ghostcontrol |
-| `tests/` | Pruebas en PC: motor, configuración, USB simulado, API HTTP real y la página en Chromium |
+| `src/` | The bridge in C: USB reading (`kbm_usbfs`), keyboard/mouse → controller engine (`kbm_engine`), profiles and title database (`kbm_config`), HTTP server and API (`kbm_http`, `kbm_api`), threads and lifecycle (`kbm_bridge`) |
+| `web/` | The settings page, embedded in the ELF by `tools/embed_web.py` |
+| `data/` | Profiles, templates, name patterns, games with native keyboard/mouse, translations and the title database |
+| `launcher/` | The icon app (PPSA51258): sends the ELF to elfldr and opens the settings |
+| `tools/` | Generators and the Ghostcontrol patch |
+| `tests/` | PC tests: engine, configuration, simulated USB, the real HTTP API and the page in Chromium |
 
-## Qué está probado
+## What's tested
 
-| | Estado |
+| | Status |
 |---|---|
-| Lectura USB, motor, mouse independiente de la frecuencia | Probado en consola (v0.6–v0.7.7) con RE2 Remake y RE Requiem |
-| Ícono, página de ajustes en la PS5, F11 en medio del juego, botón PS con la tecla Windows | Probado en consola (v0.7.x) |
-| Detección del juego por Title ID | Probado en consola (v0.7) |
-| Elección automática del perfil y base de títulos (v0.8) | Pruebas en PC. **Sin probar en consola** |
-| Teclas de los perfiles por juego | Validadas contra sus fuentes, **no probadas jugando**. Las de confianza "media" tienen partes deducidas |
-| Devolver el receptor a la PS5 y retomarlo (juegos "nativos") | Devolverlo funciona. **Al retomarlo hubo un caso en que el mouse dejó de responder: está en revisión** |
-| Arranque automático con etaHEN | Sin probar |
+| USB reading, engine, rate-independent mouse | Tested on console (v0.6–v0.7.7) with RE2 Remake and RE Requiem |
+| Icon, settings page on the PS5, F11 mid-game, PS button on the Windows key | Tested on console (v0.7.x) |
+| Game detection by Title ID | Tested on console (v0.7) |
+| Automatic profile choice and title database (v0.8) | PC tests. **Not tested on console** |
+| PS5 system language (v0.9) | Read with `sceSystemServiceParamGetInt` and logged (`system language: ...`). **Not tested on console**; if it fails, the page uses the browser language and notifications are in English. Can be set under General |
+| Per-game profile keys | Checked against their sources, **not tested in play**. "Medium" confidence profiles have inferred parts |
+| Handing the receiver to the PS5 and taking it back ("native" games) | Handing it back works. **Taking it back once left the mouse unresponsive: under investigation** |
+| Automatic start with etaHEN | Not tested |
 
-**Seguridad:** la página en el puerto 8099 no tiene contraseña. Cualquiera en tu red local puede cambiar ajustes o detener el bridge. Bien para una red de casa, no para una red pública.
+**Security:** the page on port 8099 has no password. Anyone on your local network can change settings or stop the bridge. Fine for a home network, not for a public one.
 
-## Créditos y licencia
+## Credits and license
 
-GPL-3.0-or-later (ver [`LICENSE`](LICENSE)).
+GPL-3.0-or-later (see [`LICENSE`](LICENSE)).
 
-- [**Ghostcontrol**](https://github.com/srbraboo/Ghostcontrol-PS5-USB-Controller-Patcher), de StonedModder (srbraboo, GPL-3.0-or-later): este proyecto está construido sobre su DualSense virtual. Su código no está en este repo: se baja del original al compilar.
-- [**ps5-native-app-boilerplate**](https://github.com/blackbearreloaded/ps5-native-app-boilerplate), de BlackBearReloaded (vía [ScreenTester5](https://github.com/Marice/ScreenTester5)): herramientas del ícono.
-- [**PS5 Payload SDK**](https://github.com/ps5-payload-dev/sdk), de ps5-payload-dev.
-- [**PlayStation-Titles**](https://github.com/andshrew/PlayStation-Titles), de andshrew (MIT): base de títulos.
+- [**Ghostcontrol**](https://github.com/srbraboo/Ghostcontrol-PS5-USB-Controller-Patcher) by StonedModder (srbraboo, GPL-3.0-or-later): this project is built on its virtual DualSense. Its code is not in this repo: the build downloads it from the original.
+- [**ps5-native-app-boilerplate**](https://github.com/blackbearreloaded/ps5-native-app-boilerplate) by BlackBearReloaded (via [ScreenTester5](https://github.com/Marice/ScreenTester5)): icon app tooling.
+- [**PS5 Payload SDK**](https://github.com/ps5-payload-dev/sdk) by ps5-payload-dev.
+- [**PlayStation-Titles**](https://github.com/andshrew/PlayStation-Titles) by andshrew (MIT): title database.
 
-El detalle completo, con referencias y fuentes de cada perfil, está en [`CREDITS.md`](CREDITS.md). Historial de versiones en [`CHANGELOG.md`](CHANGELOG.md).
+Full details, with references and the sources of each profile, are in [`CREDITS.md`](CREDITS.md). Version history in [`CHANGELOG.md`](CHANGELOG.md).

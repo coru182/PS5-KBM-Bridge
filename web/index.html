@@ -86,6 +86,7 @@ td.out{color:var(--dim);font-size:13px;white-space:nowrap}
   .key{flex-wrap:wrap}
   main{padding:12px}section{padding:14px}
 }
+.langsel button.on{background:var(--acc2);border-color:var(--acc2)}
 </style>
 </head>
 <body>
@@ -93,83 +94,84 @@ td.out{color:var(--dim);font-size:13px;white-space:nowrap}
   <span class="dot" id="dot"></span>
   <h1>PS5 KBM Bridge</h1>
   <span class="ver" id="ver"></span>
-  <span class="ps5hint">Para salir: botón PS (o tecla Windows)</span>
+  <span class="ps5hint" data-i18n="ps5hint"></span>
 </header>
 <main>
-  <div class="offline" id="offline">No hay conexión con el bridge. ¿Está corriendo en la PS5 y estás en la misma red?</div>
+  <div class="offline" id="offline" data-i18n="offline"></div>
 
   <section>
-    <h2>Estado</h2>
+    <h2 data-i18n="h_status"></h2>
     <div class="stats" id="stats"></div>
     <div class="row" id="ptrRow" style="margin-top:10px"></div>
   </section>
 
   <section id="gameSec">
-    <h2>Juego actual</h2>
+    <h2 data-i18n="h_game"></h2>
     <div id="game"></div>
   </section>
 
   <section>
-    <h2>Perfil</h2>
-    <p class="tabs-label">Perfil que estás editando (no cambia el del juego):</p>
+    <h2 data-i18n="h_profile"></h2>
+    <p class="tabs-label" data-i18n="editing"></p>
     <div id="pcur"></div>
     <div class="plist" id="plist"></div>
     <div id="pnotes"></div>
     <div id="params"></div>
     <div class="row" style="margin-top:10px">
       <button class="small" id="btnUseGame" style="display:none"></button>
-      <button class="small" id="btnDefault">Usar como perfil por defecto (juegos que no reconozco)</button>
-      <button class="small danger" id="btnReset">Restaurar teclas de fábrica</button>
+      <button class="small" id="btnDefault" data-i18n="btn_default"></button>
+      <button class="small danger" id="btnReset" data-i18n="btn_reset"></button>
     </div>
   </section>
 
   <section>
-    <h2>Asignación de teclas</h2>
-    <p class="muted" style="margin-top:-4px">Tocá <b>Capturar</b> y apretá la tecla o botón del mouse nuevo en el teclado conectado a la PS5. También podés elegirla de la lista. F8, F9, F11 y F12 están reservadas.</p>
-    <table><thead><tr><th>Acción</th><th class="out">Mando</th><th>Tecla 1</th><th>Tecla 2</th></tr></thead>
+    <h2 data-i18n="h_binds"></h2>
+    <p class="muted" style="margin-top:-4px" data-i18n-html="binds_help"></p>
+    <table><thead><tr><th data-i18n="th_action"></th><th class="out" data-i18n="th_pad"></th><th data-i18n="th_key1"></th><th data-i18n="th_key2"></th></tr></thead>
     <tbody id="binds"></tbody></table>
   </section>
 
   <section>
-    <h2>General</h2>
+    <h2 data-i18n="h_general"></h2>
+    <div class="row langsel" id="langRow" style="margin-bottom:10px"></div>
     <div class="row" style="margin-bottom:8px">
-      <label class="muted" for="hz">Frecuencia de inyección</label>
+      <label class="muted" for="hz" data-i18n="hz_label"></label>
       <select id="hz">
-        <option value="0">Auto (250 Hz, sirve para 30/60/120 fps)</option>
+        <option value="0" data-i18n="hz_auto"></option>
         <option value="60">60 Hz</option><option value="120">120 Hz</option><option value="250">250 Hz</option>
       </select>
     </div>
-    <label class="check"><input type="checkbox" id="auto"> Activar el DualSense virtual solo (sin F8) cuando respondan teclado y mouse</label>
-    <label class="check"><input type="checkbox" id="nat"> En juegos marcados como nativos, devolver el teclado/mouse a la PS5</label>
-    <label class="check"><input type="checkbox" id="autonat"> Marcar como nativos, sin preguntar, los juegos que según la base de datos ya soportan teclado/mouse en PS5 (Fortnite, Call of Duty, Battlefield 6…)</label>
-    <label class="check"><input type="checkbox" id="rel"> Al salir (F12), devolver el teclado/mouse a la PS5</label>
+    <label class="check"><input type="checkbox" id="auto"> <span data-i18n="opt_auto"></span></label>
+    <label class="check"><input type="checkbox" id="nat"> <span data-i18n="opt_nat"></span></label>
+    <label class="check"><input type="checkbox" id="autonat"> <span data-i18n="opt_autonat"></span></label>
+    <label class="check"><input type="checkbox" id="rel"> <span data-i18n="opt_rel"></span></label>
     <div id="autostartRow">
-    <label class="check"><input type="checkbox" id="autostart"> Iniciar automáticamente al cargar etaHEN</label>
+    <label class="check"><input type="checkbox" id="autostart"> <span data-i18n="opt_autostart"></span></label>
     <p class="muted" id="autostartNote" style="margin:0 0 8px 26px"></p>
     </div>
-    <div class="slider"><label for="psens">Velocidad del cursor (modo puntero)</label>
+    <div class="slider"><label for="psens" data-i18n="psens"></label>
       <input type="range" id="psens" min="1" max="50" step="1"><output id="psens_o"></output></div>
-    <p class="muted" style="margin-top:0">Modo puntero: el mouse mueve el cursor del navegador de la PS5 (clic izq. = ✕, clic der. = ○, rueda = scroll). Se activa solo al abrir esta página desde el ícono o con <b>F11</b> (también en medio de un juego) y se desactiva con el botón PS, al abrir un juego o con F9.</p>
-    <label class="check"><input type="checkbox" id="openpage"> Al abrir el ícono "PS5 KBM Bridge", mostrar esta página en la PS5</label>
+    <p class="muted" style="margin-top:0" data-i18n-html="ptr_help"></p>
+    <label class="check"><input type="checkbox" id="openpage"> <span data-i18n="opt_openpage"></span></label>
     <div class="row" style="margin:6px 0">
-      <label class="muted" for="idle">Apagar si no se usa</label>
+      <label class="muted" for="idle" data-i18n="idle_label"></label>
       <select id="idle">
-        <option value="0">Nunca (recomendado con autoarranque)</option>
-        <option value="15">Después de 15 min</option><option value="30">Después de 30 min</option><option value="60">Después de 60 min</option>
+        <option value="0" data-i18n="idle_0"></option>
+        <option value="15" data-i18n="idle_15"></option><option value="30" data-i18n="idle_30"></option><option value="60" data-i18n="idle_60"></option>
       </select>
     </div>
     <p class="muted" id="hzNote"></p>
   </section>
 
   <section>
-    <h2>Juegos recordados</h2>
+    <h2 data-i18n="h_titles"></h2>
     <div id="titles"></div>
   </section>
 
   <section>
     <div class="row" style="justify-content:space-between">
-      <span class="muted">Ajustes guardados en la PS5: /data/ps5-kbm/config.ini</span>
-      <button class="danger" id="btnStop">Detener bridge</button>
+      <span class="muted" data-i18n="saved_at"></span>
+      <button class="danger" id="btnStop" data-i18n="btn_stop"></button>
     </div>
   </section>
 </main>
@@ -179,43 +181,163 @@ td.out{color:var(--dim);font-size:13px;white-space:nowrap}
 "use strict";
 const API = location.protocol.startsWith("http") ? "" : "http://127.0.0.1:8099";
 const $ = id => document.getElementById(id);
-let S = null, sel = null, lastCfg = "", busy = false, showOther = false, showList = false;
+let S = null, sel = null, lastCfg = "", busy = false, showOther = false, showList = false, L = "", lastLang = "";
 
-const KEYNAMES = {MOUSE1:"Clic izq.",MOUSE2:"Clic der.",MOUSE3:"Clic rueda",MOUSE4:"Mouse 4",MOUSE5:"Mouse 5",
-  WHEEL_UP:"Rueda ↑",WHEEL_DOWN:"Rueda ↓",LSHIFT:"Shift izq.",RSHIFT:"Shift der.",LCTRL:"Ctrl izq.",RCTRL:"Ctrl der.",
-  LALT:"Alt",RALT:"AltGr",LGUI:"Win",RGUI:"Win der.",SPACE:"Espacio",ESC:"Esc",ENTER:"Enter",BACKSPACE:"Borrar",
-  TAB:"Tab",UP:"↑",DOWN:"↓",LEFT:"←",RIGHT:"→",SEMICOLON:"Ñ",CAPSLOCK:"Bloq May",GRAVE:"º",MINUS:"' ?",
-  EQUAL:"¡ ¿",LBRACKET:"` ^",RBRACKET:"+ *",BACKSLASH:"Ç",QUOTE:"´ ¨",COMMA:",",PERIOD:".",SLASH:"-",
-  ISO_BACKSLASH:"< >",PAGEUP:"RePág",PAGEDOWN:"AvPág",DELETE:"Supr",INSERT:"Insert",HOME:"Inicio",END:"Fin"};
-const OUTNAMES = {CROSS:"✕",CIRCLE:"○",SQUARE:"□",TRIANGLE:"△",L1:"L1",R1:"R1",L2:"L2",R2:"R2",L3:"L3",R3:"R3",
-  OPTIONS:"Options",TOUCHPAD:"Touchpad",PS:"Botón PS",DPAD_UP:"Cruceta ↑",DPAD_DOWN:"Cruceta ↓",DPAD_LEFT:"Cruceta ←",
-  DPAD_RIGHT:"Cruceta →",LS_UP:"Stick izq. ↑",LS_DOWN:"Stick izq. ↓",LS_LEFT:"Stick izq. ←",LS_RIGHT:"Stick izq. →"};
-const STATUS = {waiting:"Esperando teclado y mouse",active:"Activo",native:"Juego nativo: teclado/mouse en la PS5",
-  released:"Receptor liberado",stopped:"Detenido",diag:"Diagnóstico (sin mando virtual)"};
-const kn = k => k ? (KEYNAMES[k] || k) : "—";
-const on = o => o.split("+").map(x => OUTNAMES[x] || x).join(" + ");
+/* ------------------------------------------------------------------ texts */
+const STR = {
+es: {
+  ps5hint:"Para salir: botón PS (o tecla Windows)",
+  offline:"No hay conexión con el bridge. ¿Está corriendo en la PS5 y estás en la misma red?",
+  h_status:"Estado", h_game:"Juego actual", h_profile:"Perfil", h_binds:"Asignación de teclas", h_general:"General", h_titles:"Juegos recordados",
+  editing:"Perfil que estás editando (no cambia el del juego):",
+  btn_default:"Usar como perfil por defecto (juegos que no reconozco)", btn_reset:"Restaurar teclas de fábrica",
+  binds_help:"Tocá <b>Capturar</b> y apretá la tecla o botón del mouse nuevo en el teclado conectado a la PS5. También podés elegirla de la lista. F8, F9, F11 y F12 están reservadas.",
+  th_action:"Acción", th_pad:"Mando", th_key1:"Tecla 1", th_key2:"Tecla 2",
+  lang_label:"Idioma / Language:", lang_auto:"Automático (idioma de la PS5)",
+  hz_label:"Frecuencia de inyección", hz_auto:"Auto (250 Hz, sirve para 30/60/120 fps)",
+  opt_auto:"Activar el DualSense virtual solo (sin F8) cuando respondan teclado y mouse",
+  opt_nat:"En juegos marcados como nativos, devolver el teclado/mouse a la PS5",
+  opt_autonat:"Marcar como nativos, sin preguntar, los juegos que según la base de datos ya soportan teclado/mouse en PS5 (Fortnite, Call of Duty, Battlefield 6…)",
+  opt_rel:"Al salir (F12), devolver el teclado/mouse a la PS5",
+  opt_autostart:"Iniciar automáticamente al cargar etaHEN",
+  psens:"Velocidad del cursor (modo puntero)",
+  ptr_help:"Modo puntero: el mouse mueve el cursor del navegador de la PS5 (clic izq. = ✕, clic der. = ○, rueda = scroll). Se activa solo al abrir esta página desde el ícono o con <b>F11</b> (también en medio de un juego) y se desactiva con el botón PS, al abrir un juego o con F9.",
+  opt_openpage:"Al abrir el ícono \"PS5 KBM Bridge\", mostrar esta página en la PS5",
+  idle_label:"Apagar si no se usa", idle_0:"Nunca (recomendado con autoarranque)", idle_15:"Después de 15 min", idle_30:"Después de 30 min", idle_60:"Después de 60 min",
+  saved_at:"Ajustes guardados en la PS5: /data/ps5-kbm/config.ini", btn_stop:"Detener bridge",
+  st_waiting:"Esperando teclado y mouse", st_active:"Activo", st_native:"Juego nativo: teclado/mouse en la PS5", st_released:"Receptor liberado", st_stopped:"Detenido", st_diag:"Diagnóstico (sin mando virtual)",
+  k_status:"Estado", k_game:"Juego", k_profile:"Perfil en uso", k_receiver:"Receptor", k_vda:"Mando virtual", k_inject:"Inyección", k_lat:"Latencia p50 / p95", k_reports:"Reportes 5 s (tecl./mouse)", k_mouse:"Mouse",
+  v_menu:"Ninguno (menú)", v_native:"Nativo", v_rx_bridge:"Tomado por el bridge", v_rx_ps5:"En la PS5", v_connected:"Conectado", v_no:"No", v_cursor:"Cursor (modo puntero)", v_camera:"Cámara",
+  ptr_to_cam:"Usar mouse como cámara", ptr_to_cur:"Usar mouse como cursor",
+  no_game:"No hay ningún juego abierto. Cuando abras uno lo reconozco por su Title ID y le aplico el perfil que corresponde.",
+  unknown_game:"Juego no reconocido", t_auto:"Automático: ", t_native:"Nativo (teclado/mouse del juego)", t_other:"Otro juego…", t_hide:"Ocultar lista", t_games_az:"Perfiles de juegos (A–Z)",
+  sug_native:"Según la base de datos, la versión de PS5 de este juego <b>soporta teclado y mouse</b>. Si preferís usar ese soporte, tocá <b>Nativo</b>: el bridge le devuelve el receptor al juego mientras esté abierto.",
+  game_help:"Lo que elijas se recuerda para este juego y se aplica al instante. \"Automático\" usa el perfil que trae el bridge para este juego.",
+  use_in:"Usar este perfil en ",
+  src_game:"Perfil de este juego (teclas de la versión de PC)", src_template:"Plantilla por género (el juego no tiene perfil propio todavía)",
+  src_default:"Juego no reconocido: usa el perfil por defecto ★", src_rule:"Elegido por vos para este juego", src_native:"Nativo: el juego recibe el teclado y el mouse",
+  src_auto_native:"Nativo automático (la base de datos dice que el juego soporta teclado/mouse)",
+  conf3:"Teclas verificadas con fuentes", conf2:"Algunas teclas inferidas: revisalas en el juego", conf1:"Sin verificar", conf0:"Plantilla genérica",
+  native_badge:"Teclado/mouse nativo en PS5", edit_other:"Editar otro perfil…", close_list:"Cerrar lista",
+  g_inuse:"En uso ahora", g_templates:"Plantillas", g_games:"Juegos (A–Z)", legend:"★ = perfil por defecto para juegos que no reconozco · • = modificado por vos",
+  notes:"Notas de la investigación de teclas (en inglés)",
+  s_sens:"Sensibilidad", s_yratio:"Vertical (% de X)", s_ads:"Sensibilidad al apuntar (ADS)", s_smooth:"Suavizado", s_dz:"Compensar zona muerta", invert:"Invertir eje vertical",
+  capture:"Capturar", pick:"Elegir tecla", none:"(ninguna)",
+  as_on:"Activado: etaHEN lo arranca solo cada vez que lo cargás.", as_avail:"El ELF ya está en /data/etaHEN/payloads/. Marcá la casilla para que arranque solo.",
+  as_missing:"Para activarlo, copiá ps5-kbm-bridge.elf (sin número de versión) a /data/etaHEN/payloads/ por FTP.",
+  hz_note:"En uso: {hz} Hz. El mouse se convierte por velocidad, así que la sensación es la misma a cualquier frecuencia; más Hz solo baja la latencia.",
+  forget:"Olvidar", no_titles:"Todavía no cambiaste el perfil de ningún juego. Cada juego usa su perfil automático (o la plantilla de su género; los que no reconozco, el perfil por defecto ★).",
+  err:"Error: ", moved:"Esa tecla estaba en «{a}»; se la saqué de ahí", noconn:"Sin conexión con el bridge", press_now:"Apretá la tecla nueva en el teclado de la PS5",
+  cap_timeout:"No se apretó ninguna tecla (10 s)", cap_cancel:"Captura cancelada", cap_ok:"Asignada: ",
+  confirm_reset:"¿Restaurar las teclas y ajustes de fábrica de este perfil?", confirm_stop:"¿Detener el bridge? Se borra el mando virtual."
+},
+en: {
+  ps5hint:"To leave: PS button (or Windows key)",
+  offline:"No connection to the bridge. Is it running on the PS5, and are you on the same network?",
+  h_status:"Status", h_game:"Current game", h_profile:"Profile", h_binds:"Key bindings", h_general:"General", h_titles:"Remembered games",
+  editing:"Profile you are editing (doesn't change the game's profile):",
+  btn_default:"Use as default profile (games I don't recognise)", btn_reset:"Restore factory keys",
+  binds_help:"Tap <b>Capture</b> and press the new key or mouse button on the keyboard connected to the PS5. You can also pick it from the list. F8, F9, F11 and F12 are reserved.",
+  th_action:"Action", th_pad:"Controller", th_key1:"Key 1", th_key2:"Key 2",
+  lang_label:"Idioma / Language:", lang_auto:"Automatic (PS5 language)",
+  hz_label:"Injection rate", hz_auto:"Auto (250 Hz, works for 30/60/120 fps)",
+  opt_auto:"Create the virtual DualSense automatically (no F8) once the keyboard and mouse respond",
+  opt_nat:"For games marked native, hand the keyboard/mouse back to the PS5",
+  opt_autonat:"Mark as native, without asking, the games that the database says already support keyboard/mouse on PS5 (Fortnite, Call of Duty, Battlefield 6…)",
+  opt_rel:"On exit (F12), hand the keyboard/mouse back to the PS5",
+  opt_autostart:"Start automatically when etaHEN loads",
+  psens:"Cursor speed (pointer mode)",
+  ptr_help:"Pointer mode: the mouse moves the PS5 browser cursor (left click = ✕, right click = ○, wheel = scroll). It turns on when you open this page from the icon or with <b>F11</b> (also in the middle of a game) and turns off with the PS button, when a game opens, or with F9.",
+  opt_openpage:"When opening the \"PS5 KBM Bridge\" icon, show this page on the PS5",
+  idle_label:"Turn off when idle", idle_0:"Never (recommended with autostart)", idle_15:"After 15 min", idle_30:"After 30 min", idle_60:"After 60 min",
+  saved_at:"Settings saved on the PS5: /data/ps5-kbm/config.ini", btn_stop:"Stop bridge",
+  st_waiting:"Waiting for keyboard and mouse", st_active:"Active", st_native:"Native game: keyboard/mouse on the PS5", st_released:"Receiver released", st_stopped:"Stopped", st_diag:"Diagnostics (no virtual controller)",
+  k_status:"Status", k_game:"Game", k_profile:"Profile in use", k_receiver:"Receiver", k_vda:"Virtual controller", k_inject:"Injection", k_lat:"Latency p50 / p95", k_reports:"Reports 5 s (kbd/mouse)", k_mouse:"Mouse",
+  v_menu:"None (menu)", v_native:"Native", v_rx_bridge:"Held by the bridge", v_rx_ps5:"On the PS5", v_connected:"Connected", v_no:"No", v_cursor:"Cursor (pointer mode)", v_camera:"Camera",
+  ptr_to_cam:"Use mouse as camera", ptr_to_cur:"Use mouse as cursor",
+  no_game:"No game is open. When you open one, I recognise it by its Title ID and apply the matching profile.",
+  unknown_game:"Unrecognised game", t_auto:"Automatic: ", t_native:"Native (game's own keyboard/mouse)", t_other:"Other game…", t_hide:"Hide list", t_games_az:"Game profiles (A–Z)",
+  sug_native:"According to the database, the PS5 version of this game <b>supports keyboard and mouse</b>. If you'd rather use that, tap <b>Native</b>: the bridge hands the receiver to the game while it is open.",
+  game_help:"Your choice is remembered for this game and applied right away. \"Automatic\" uses the profile the bridge ships for this game.",
+  use_in:"Use this profile in ",
+  src_game:"This game's profile (PC version keys)", src_template:"Genre template (this game has no profile of its own yet)",
+  src_default:"Unrecognised game: using the default profile ★", src_rule:"Chosen by you for this game", src_native:"Native: the game gets the keyboard and mouse",
+  src_auto_native:"Automatic native (the database says this game supports keyboard/mouse)",
+  conf3:"Keys verified against sources", conf2:"Some keys inferred: check them in game", conf1:"Unverified", conf0:"Generic template",
+  native_badge:"Native keyboard/mouse on PS5", edit_other:"Edit another profile…", close_list:"Close list",
+  g_inuse:"In use now", g_templates:"Templates", g_games:"Games (A–Z)", legend:"★ = default profile for games I don't recognise · • = changed by you",
+  notes:"Key research notes",
+  s_sens:"Sensitivity", s_yratio:"Vertical (% of X)", s_ads:"Aiming sensitivity (ADS)", s_smooth:"Smoothing", s_dz:"Dead-zone compensation", invert:"Invert vertical axis",
+  capture:"Capture", pick:"Pick key", none:"(none)",
+  as_on:"On: etaHEN starts it every time it loads.", as_avail:"The ELF is already in /data/etaHEN/payloads/. Tick the box to start it automatically.",
+  as_missing:"To enable it, copy ps5-kbm-bridge.elf (without the version number) to /data/etaHEN/payloads/ over FTP.",
+  hz_note:"In use: {hz} Hz. The mouse is converted by speed, so it feels the same at any rate; more Hz only lowers latency.",
+  forget:"Forget", no_titles:"You haven't changed any game's profile yet. Each game uses its automatic profile (or its genre template; games I don't recognise use the default profile ★).",
+  err:"Error: ", moved:"That key was on «{a}»; I removed it from there", noconn:"No connection to the bridge", press_now:"Press the new key on the PS5 keyboard",
+  cap_timeout:"No key was pressed (10 s)", cap_cancel:"Capture cancelled", cap_ok:"Assigned: ",
+  confirm_reset:"Restore this profile's factory keys and settings?", confirm_stop:"Stop the bridge? The virtual controller will be removed."
+}};
+const KEYNAMES = {
+  es: {MOUSE1:"Clic izq.",MOUSE2:"Clic der.",MOUSE3:"Clic rueda",MOUSE4:"Mouse 4",MOUSE5:"Mouse 5",
+    WHEEL_UP:"Rueda ↑",WHEEL_DOWN:"Rueda ↓",LSHIFT:"Shift izq.",RSHIFT:"Shift der.",LCTRL:"Ctrl izq.",RCTRL:"Ctrl der.",
+    LALT:"Alt",RALT:"AltGr",LGUI:"Win",RGUI:"Win der.",SPACE:"Espacio",ESC:"Esc",ENTER:"Enter",BACKSPACE:"Borrar",
+    TAB:"Tab",UP:"↑",DOWN:"↓",LEFT:"←",RIGHT:"→",SEMICOLON:"Ñ",CAPSLOCK:"Bloq May",GRAVE:"º",MINUS:"' ?",
+    EQUAL:"¡ ¿",LBRACKET:"` ^",RBRACKET:"+ *",BACKSLASH:"Ç",QUOTE:"´ ¨",COMMA:",",PERIOD:".",SLASH:"-",
+    ISO_BACKSLASH:"< >",PAGEUP:"RePág",PAGEDOWN:"AvPág",DELETE:"Supr",INSERT:"Insert",HOME:"Inicio",END:"Fin"},
+  en: {MOUSE1:"Left click",MOUSE2:"Right click",MOUSE3:"Middle click",MOUSE4:"Mouse 4",MOUSE5:"Mouse 5",
+    WHEEL_UP:"Wheel ↑",WHEEL_DOWN:"Wheel ↓",LSHIFT:"L Shift",RSHIFT:"R Shift",LCTRL:"L Ctrl",RCTRL:"R Ctrl",
+    LALT:"Alt",RALT:"R Alt",LGUI:"Win",RGUI:"R Win",SPACE:"Space",ESC:"Esc",ENTER:"Enter",BACKSPACE:"Backspace",
+    TAB:"Tab",UP:"↑",DOWN:"↓",LEFT:"←",RIGHT:"→",SEMICOLON:";",CAPSLOCK:"Caps Lock",GRAVE:"`",MINUS:"-",
+    EQUAL:"=",LBRACKET:"[",RBRACKET:"]",BACKSLASH:"\\",QUOTE:"'",COMMA:",",PERIOD:".",SLASH:"/",
+    ISO_BACKSLASH:"\\ (ISO)",PAGEUP:"Page Up",PAGEDOWN:"Page Down",DELETE:"Delete",INSERT:"Insert",HOME:"Home",END:"End"}};
+const OUTNAMES = {
+  es: {CROSS:"✕",CIRCLE:"○",SQUARE:"□",TRIANGLE:"△",L1:"L1",R1:"R1",L2:"L2",R2:"R2",L3:"L3",R3:"R3",
+    OPTIONS:"Options",TOUCHPAD:"Touchpad",PS:"Botón PS",DPAD_UP:"Cruceta ↑",DPAD_DOWN:"Cruceta ↓",DPAD_LEFT:"Cruceta ←",
+    DPAD_RIGHT:"Cruceta →",LS_UP:"Stick izq. ↑",LS_DOWN:"Stick izq. ↓",LS_LEFT:"Stick izq. ←",LS_RIGHT:"Stick izq. →"},
+  en: {CROSS:"✕",CIRCLE:"○",SQUARE:"□",TRIANGLE:"△",L1:"L1",R1:"R1",L2:"L2",R2:"R2",L3:"L3",R3:"R3",
+    OPTIONS:"Options",TOUCHPAD:"Touchpad",PS:"PS button",DPAD_UP:"D-pad ↑",DPAD_DOWN:"D-pad ↓",DPAD_LEFT:"D-pad ←",
+    DPAD_RIGHT:"D-pad →",LS_UP:"Left stick ↑",LS_DOWN:"Left stick ↓",LS_LEFT:"Left stick ←",LS_RIGHT:"Left stick →"}};
+
+const t = (k, vars) => { let s = (STR[L] && STR[L][k]) || STR.es[k] || k; if (vars) for (const v in vars) s = s.replace("{" + v + "}", vars[v]); return s; };
+const kn = k => k ? (KEYNAMES[L][k] || k) : "—";
+const on = o => o.split("+").map(x => OUTNAMES[L][x] || x).join(" + ");
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pnameOf = p => (L === "en" && p.name_en ? p.name_en : p.name).replace(/^(Plantilla|Template): /, "");
+const alabel = a => (L === "en" && a.label_en) ? a.label_en : a.label;
 
-function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),2600);}
+/* Language: the setting, else the PS5 system language, else the browser's. */
+function pickLang(){
+  const c = S.config.lang, sys = S.runtime.sys_lang;
+  if (c === "es" || c === "en") return c;
+  if (sys === "es" || sys === "en") return sys;
+  return /^es\b/i.test(navigator.language || "") ? "es" : "en";
+}
+function applyStatic(){
+  document.documentElement.lang = L;
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
+}
+
+function toast(m){const e=$("toast");e.textContent=m;e.classList.add("show");clearTimeout(e._h);e._h=setTimeout(()=>e.classList.remove("show"),2600);}
 async function call(path, params){
   const qs = new URLSearchParams(params||{}).toString();
   try{
     const r = await fetch(API + path + (qs?"?"+qs:""));
     const j = await r.json();
-    if(!j.ok) toast("Error: " + (j.error||r.status));
-    else if(j.moved_from) toast("Esa tecla estaba en «" + j.moved_from + "»; se la saqué de ahí");
+    if(!j.ok) toast(t("err") + (j.error||r.status));
+    else if(j.moved_from){
+      const a = (profile().actions || []).find(x => x.id === j.moved_from);
+      toast(t("moved", {a: a ? alabel(a) : j.moved_from}));
+    }
     await refresh(true);
     return j;
-  }catch(e){toast("Sin conexión con el bridge");return null;}
+  }catch(e){toast(t("noconn"));return null;}
 }
 function profile(){ return S.config.edit || {id:"", name:"", actions:[], notes:""}; }
 const pinfo = id => S.config.profiles.find(p => p.id === id);
-const pname = id => { const p = pinfo(id); return p ? p.name.replace(/^Plantilla: /, "") : id; };
-const byName = (a, b) => a.name.localeCompare(b.name, "es", {sensitivity: "base"});
-const SRC = {game:"Perfil de este juego (teclas de la versión de PC)", template:"Plantilla por género (el juego no tiene perfil propio todavía)",
-  default:"Juego no reconocido: usa el perfil por defecto ★", rule:"Elegido por vos para este juego", native:"Nativo: el juego recibe el teclado y el mouse",
-  auto_native:"Nativo automático (la base de datos dice que el juego soporta teclado/mouse)", none:""};
-const CONF = {3:["ok","Teclas verificadas con fuentes"], 2:["warn","Algunas teclas inferidas: revisalas en el juego"], 1:["warn","Sin verificar"], 0:["","Plantilla genérica"]};
+const pname = id => { const p = pinfo(id); return p ? pnameOf(p) : id; };
+const byName = (a, b) => pnameOf(a).localeCompare(pnameOf(b), L, {sensitivity: "base"});
+const CONF = {3:"ok", 2:"warn", 1:"warn", 0:""};
 function setHTML(el, html){ if (el._h === html) return false; el.innerHTML = html; el._h = html; return true; }
 /* While a <select> picker is open (PS5 shows its own overlay) do not touch the page. */
 let freezeUntil = 0;
@@ -228,55 +350,55 @@ function renderRuntime(){
   $("ver").textContent = "v" + r.version + (r.diag ? " · diag" : "");
   const d = $("dot"); d.className = "dot " + (r.status==="active"?"active":r.status==="native"||r.status==="released"?"native":r.status==="stopped"?"off":"");
   const lat = r.e2i_p95_us ? (r.e2i_p50_us/1000).toFixed(1) + " / " + (r.e2i_p95_us/1000).toFixed(1) + " ms" : "—";
-  const prof = S.config.profiles.find(p=>p.id===r.profile);
+  const isNative = r.title_source === "native" || r.title_source === "auto_native";
   const items = [
-    ["Estado", STATUS[r.status] || r.status],
-    ["Juego", r.title ? (r.title_name || r.title) : "Ninguno (menú)"],
-    ["Perfil en uso", r.title_source === "native" || r.title_source === "auto_native" ? "Nativo" : (prof ? pname(prof.id) : r.profile)],
-    ["Receptor", r.receiver ? "Tomado por el bridge" : "En la PS5"],
-    ["Mando virtual", r.vda ? "Conectado" : "No"],
-    ["Inyección", r.hz + " Hz"],
-    ["Latencia p50 / p95", lat],
-    ["Reportes 5 s (tecl./mouse)", r.kb_reports_5s + " / " + r.mouse_reports_5s],
-    ["Mouse", r.pointer_mode ? "Cursor (modo puntero)" : "Cámara"],
+    [t("k_status"), t("st_" + r.status) === "st_" + r.status ? r.status : t("st_" + r.status)],
+    [t("k_game"), r.title ? (r.title_name || r.title) : t("v_menu")],
+    [t("k_profile"), isNative ? t("v_native") : pname(r.profile)],
+    [t("k_receiver"), r.receiver ? t("v_rx_bridge") : t("v_rx_ps5")],
+    [t("k_vda"), r.vda ? t("v_connected") : t("v_no")],
+    [t("k_inject"), r.hz + " Hz"],
+    [t("k_lat"), lat],
+    [t("k_reports"), r.kb_reports_5s + " / " + r.mouse_reports_5s],
+    [t("k_mouse"), r.pointer_mode ? t("v_cursor") : t("v_camera")],
   ];
   setHTML($("stats"), items.map(([k,v]) => `<div class="stat"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join(""));
   /* Only rebuild interactive parts when they change: on the PS5 browser a node
    * replaced between press and release (or while a picker is open) loses the click. */
-  if (setHTML($("ptrRow"), `<button class="small" id="ptrBtn">${r.pointer_mode ? "Usar mouse como cámara" : "Usar mouse como cursor"} (F9)</button>`))
+  if (setHTML($("ptrRow"), `<button class="small" id="ptrBtn">${esc(r.pointer_mode ? t("ptr_to_cam") : t("ptr_to_cur"))} (F9)</button>`))
     $("ptrBtn").onclick = () => call("/api/pointer", {on: S.runtime.pointer_mode ? 0 : 1});
 
   const g = $("game");
-  if(!r.title){ setHTML(g, `<p class="muted">No hay ningún juego abierto. Cuando abras uno lo reconozco por su Title ID y le aplico el perfil que corresponde.</p>`); }
+  if(!r.title){ setHTML(g, `<p class="muted">${esc(t("no_game"))}</p>`); }
   else {
-    const rule = S.config.titles.find(t => t.tid === r.title);
+    const rule = S.config.titles.find(x => x.tid === r.title);
     const cur = rule ? rule.target : "auto";
     const P = S.config.profiles;
     const tpl = P.filter(p => p.kind === "template");
     const games = P.filter(p => p.kind === "game").sort(byName);
-    const btn = (v, t, extra) => `<button class="${v===cur?"on":""} ${extra||""}" data-target="${v}">${v===cur?"✓ ":""}${esc(t)}</button>`;
-    let row = btn("auto", "Automático: " + pname(r.auto_profile)) + btn("native", "Nativo (teclado/mouse del juego)", "native")
-      + tpl.map(p => btn(p.id, pname(p.id))).join("");
+    const btn = (v, txt, extra) => `<button class="${v===cur?"on":""} ${extra||""}" data-target="${v}">${v===cur?"✓ ":""}${esc(txt)}</button>`;
+    let row = btn("auto", t("t_auto") + pname(r.auto_profile)) + btn("native", t("t_native"), "native")
+      + tpl.map(p => btn(p.id, pnameOf(p))).join("");
     if (cur !== "auto" && cur !== "native" && !tpl.some(p => p.id === cur)) row += btn(cur, pname(cur));
-    row += `<button data-other="1">${showOther ? "Ocultar lista" : "Otro juego…"}</button>`;
-    const other = showOther ? `<div class="plist"><h3>Perfiles de juegos (A–Z)</h3><div class="targets">${games.map(p => btn(p.id, p.name)).join("")}</div></div>` : "";
-    const sug = r.native_suggested ? `<p class="note">Según la base de datos, la versión de PS5 de este juego <b>soporta teclado y mouse</b>. Si preferís usar ese soporte, tocá <b>Nativo</b>: el bridge le devuelve el receptor al juego mientras esté abierto.</p>` : "";
-    const html = `<div class="gname">${esc(r.title_name || "Juego no reconocido")}</div>
-      <div class="row"><span class="chip">${esc(r.title)}</span><span class="muted">${esc(SRC[r.title_source] || "")}</span></div>
+    row += `<button data-other="1">${esc(showOther ? t("t_hide") : t("t_other"))}</button>`;
+    const other = showOther ? `<div class="plist"><h3>${esc(t("t_games_az"))}</h3><div class="targets">${games.map(p => btn(p.id, pnameOf(p))).join("")}</div></div>` : "";
+    const sug = r.native_suggested ? `<p class="note">${t("sug_native")}</p>` : "";
+    const html = `<div class="gname">${esc(r.title_name || t("unknown_game"))}</div>
+      <div class="row"><span class="chip">${esc(r.title)}</span><span class="muted">${esc(r.title_source ? t("src_" + r.title_source) : "")}</span></div>
       ${sug}
       <div class="targets">${row}</div>${other}
-      <p class="muted">Lo que elijas se recuerda para este juego y se aplica al instante. "Automático" usa el perfil que trae el bridge para este juego.</p>`;
+      <p class="muted">${esc(t("game_help"))}</p>`;
     if (setHTML(g, html)) {
       g.querySelectorAll("[data-target]").forEach(b => b.onclick = () => call("/api/title", {tid: S.runtime.title, target: b.dataset.target}));
       g.querySelector("[data-other]").onclick = () => { showOther = !showOther; renderRuntime(); };
     }
   }
   const ug = $("btnUseGame");
-  if (r.title) { ug.style.display = ""; ug.textContent = "Usar este perfil en " + (r.title_name || r.title); } else ug.style.display = "none";
+  if (r.title) { ug.style.display = ""; ug.textContent = t("use_in") + (r.title_name || r.title); } else ug.style.display = "none";
 }
 
 function slider(id, label, min, max, step, val, unit){
-  return `<div class="slider"><label for="${id}">${label}</label>
+  return `<div class="slider"><label for="${id}">${esc(label)}</label>
     <input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}">
     <output id="${id}_o">${val}${unit||""}</output></div>`;
 }
@@ -285,25 +407,25 @@ function renderConfig(){
   const p = profile();
   if(!sel) sel = p.id;
   const star = id => (id === c.default_profile ? " ★" : "") + (pinfo(id) && pinfo(id).mod ? " •" : "");
-  const cf = CONF[p.kind === "template" ? 0 : p.conf] || CONF[0];
-  $("pcur").innerHTML = `<div class="row"><b style="font-size:17px">${esc(p.name)}${star(p.id)}</b>
-      <span class="badge ${cf[0]}">${esc(cf[1])}</span>${p.native?`<span class="badge ok">Teclado/mouse nativo en PS5</span>`:""}
-      <button class="small" id="pchg">${showList ? "Cerrar lista" : "Editar otro perfil…"}</button></div>`;
+  const ck = p.kind === "template" ? 0 : p.conf;
+  $("pcur").innerHTML = `<div class="row"><b style="font-size:17px">${esc(p.id ? pnameOf(p) : "")}${star(p.id)}</b>
+      <span class="badge ${CONF[ck] || ""}">${esc(t("conf" + (ck || 0)))}</span>${p.native?`<span class="badge ok">${esc(t("native_badge"))}</span>`:""}
+      <button class="small" id="pchg">${esc(showList ? t("close_list") : t("edit_other"))}</button></div>`;
   $("pchg").onclick = () => { showList = !showList; renderConfig(); };
-  const grp = (t, list) => `<h3>${t}</h3><div class="targets">${list.map(q => `<button class="${q.id===p.id?"on":""}" data-p="${q.id}">${esc(q.name.replace(/^Plantilla: /,""))}${star(q.id)}</button>`).join("")}</div>`;
-  $("plist").innerHTML = showList ? grp("En uso ahora", c.profiles.filter(q => q.id === S.runtime.profile))
-      + grp("Plantillas", c.profiles.filter(q => q.kind === "template"))
-      + grp("Juegos (A–Z)", c.profiles.filter(q => q.kind === "game").sort(byName))
-      + `<p class="muted">★ = perfil por defecto para juegos que no reconozco · • = modificado por vos</p>` : "";
+  const grp = (title, list) => `<h3>${esc(title)}</h3><div class="targets">${list.map(q => `<button class="${q.id===p.id?"on":""}" data-p="${q.id}">${esc(pnameOf(q))}${star(q.id)}</button>`).join("")}</div>`;
+  $("plist").innerHTML = showList ? grp(t("g_inuse"), c.profiles.filter(q => q.id === S.runtime.profile))
+      + grp(t("g_templates"), c.profiles.filter(q => q.kind === "template"))
+      + grp(t("g_games"), c.profiles.filter(q => q.kind === "game").sort(byName))
+      + `<p class="muted">${esc(t("legend"))}</p>` : "";
   $("plist").querySelectorAll("[data-p]").forEach(b => b.onclick = () => { sel = b.dataset.p; showList = false; refresh(true); });
-  $("pnotes").innerHTML = p.notes ? `<details><summary>Notas de la investigación de teclas (en inglés)</summary><p class="muted">${esc(p.notes)}</p></details>` : "";
+  $("pnotes").innerHTML = p.notes ? `<details><summary>${esc(t("notes"))}</summary><p class="muted">${esc(p.notes)}</p></details>` : "";
   $("params").innerHTML =
-    slider("sens","Sensibilidad",1,50,1,p.sens) +
-    slider("yratio","Vertical (% de X)",25,400,5,p.yratio,"%") +
-    slider("ads_pct","Sensibilidad al apuntar (ADS)",25,400,5,p.ads_pct,"%") +
-    slider("smooth_ms","Suavizado",4,60,1,p.smooth_ms," ms") +
-    slider("deadzone","Compensar zona muerta",0,90,1,p.deadzone) +
-    `<label class="check"><input type="checkbox" id="invert_y" ${p.invert_y?"checked":""}> Invertir eje vertical</label>`;
+    slider("sens",t("s_sens"),1,50,1,p.sens) +
+    slider("yratio",t("s_yratio"),25,400,5,p.yratio,"%") +
+    slider("ads_pct",t("s_ads"),25,400,5,p.ads_pct,"%") +
+    slider("smooth_ms",t("s_smooth"),4,60,1,p.smooth_ms," ms") +
+    slider("deadzone",t("s_dz"),0,90,1,p.deadzone) +
+    `<label class="check"><input type="checkbox" id="invert_y" ${p.invert_y?"checked":""}> ${esc(t("invert"))}</label>`;
   ["sens","yratio","ads_pct","smooth_ms","deadzone"].forEach(k => {
     const el = $(k), o = $(k+"_o"), unit = o.textContent.replace(/^[0-9]+/,"");
     el.oninput = () => { o.textContent = el.value + unit; busy = true; };
@@ -312,40 +434,45 @@ function renderConfig(){
   $("invert_y").onchange = e => call("/api/profile", {id:p.id, invert_y:e.target.checked?1:0});
 
   const cap = S.runtime.capture;
-  $("binds").innerHTML = p.actions.map(a => `<tr><td>${esc(a.label)}</td><td class="out">${esc(on(a.out))}</td>
+  $("binds").innerHTML = p.actions.map(a => `<tr><td>${esc(alabel(a))}</td><td class="out">${esc(on(a.out))}</td>
     ${[0,1].map(s => {
       const capping = cap.active && cap.profile===p.id && cap.action===a.id && cap.slot===s;
       return `<td><span class="key"><span class="chip ${capping?"cap":a.keys[s]?"":"empty"}">${capping?"…":esc(kn(a.keys[s]))}</span>
-        <button class="small" data-a="${a.id}" data-s="${s}" data-act="cap" ${S.runtime.receiver?"":"disabled"}>Capturar</button>
-        <select class="small" data-a="${a.id}" data-s="${s}" data-act="pick" aria-label="Elegir tecla">
-          <option value="">…</option><option value="NONE">(ninguna)</option>
+        <button class="small" data-a="${a.id}" data-s="${s}" data-act="cap" ${S.runtime.receiver?"":"disabled"}>${esc(t("capture"))}</button>
+        <select class="small" data-a="${a.id}" data-s="${s}" data-act="pick" aria-label="${esc(t("pick"))}">
+          <option value="">…</option><option value="NONE">${esc(t("none"))}</option>
           ${S.keys.map(k=>`<option value="${k}">${esc(kn(k))}</option>`).join("")}</select></span></td>`;}).join("")}</tr>`).join("");
   $("binds").querySelectorAll("[data-act=cap]").forEach(b => b.onclick = () => {
-    call("/api/capture", {profile:p.id, action:b.dataset.a, slot:b.dataset.s}).then(j => j && j.ok && toast("Apretá la tecla nueva en el teclado de la PS5"));
+    call("/api/capture", {profile:p.id, action:b.dataset.a, slot:b.dataset.s}).then(j => j && j.ok && toast(t("press_now")));
   });
   $("binds").querySelectorAll("[data-act=pick]").forEach(s => s.onchange = () => {
     if(s.value) call("/api/bind", {profile:p.id, action:s.dataset.a, slot:s.dataset.s, key:s.value});
   });
+
+  /* language buttons (no <select>: the PS5 browser handles buttons better) */
+  const lg = c.lang || "auto";
+  $("langRow").innerHTML = `<span class="muted">${esc(t("lang_label"))}</span>` +
+    [["auto", t("lang_auto")], ["es", "Español"], ["en", "English"]].map(([v, txt]) =>
+      `<button class="small ${v===lg?"on":""}" data-lang="${v}">${v===lg?"✓ ":""}${esc(txt)}</button>`).join("");
+  $("langRow").querySelectorAll("[data-lang]").forEach(b => b.onclick = () => call("/api/global", {lang: b.dataset.lang}));
 
   $("hz").value = String(c.inject_hz);
   const r = S.runtime;
   $("autostartRow").style.display = r.etahen ? "" : "none";
   $("autostart").checked = !!r.autostart_on;
   $("autostart").disabled = !r.autostart_avail;
-  $("autostartNote").textContent = r.autostart_avail
-    ? (r.autostart_on ? "Activado: etaHEN lo arranca solo cada vez que lo cargás." : "El ELF ya está en /data/etaHEN/payloads/. Marcá la casilla para que arranque solo.")
-    : "Para activarlo, copiá ps5-kbm-bridge.elf (sin número de versión) a /data/etaHEN/payloads/ por FTP.";
+  $("autostartNote").textContent = r.autostart_avail ? (r.autostart_on ? t("as_on") : t("as_avail")) : t("as_missing");
   $("idle").value = String([0,15,30,60].includes(c.idle_exit_min) ? c.idle_exit_min : 0);
   $("openpage").checked = !!c.open_settings_on_launch;
   $("psens").value = c.pointer_sens; $("psens_o").textContent = c.pointer_sens;
   $("auto").checked = !!c.auto_activate; $("nat").checked = !!c.native_switch; $("autonat").checked = !!c.auto_native; $("rel").checked = !!c.release_on_exit;
-  $("hzNote").textContent = "En uso: " + c.effective_hz + " Hz. El mouse se convierte por velocidad, así que la sensación es la misma a cualquier frecuencia; más Hz solo baja la latencia.";
+  $("hzNote").textContent = t("hz_note", {hz: c.effective_hz});
 
   const T = c.titles;
-  $("titles").innerHTML = T.length ? `<table>${T.map(t => {
-      return `<tr><td>${esc(t.name || "?")} <span class="chip">${esc(t.tid)}</span></td><td>${esc(t.target==="native"?"Nativo":pname(t.target))}</td>
-      <td style="text-align:right"><button class="small danger" data-t="${t.tid}">Olvidar</button></td></tr>`;}).join("")}</table>`
-    : `<p class="muted">Todavía no cambiaste el perfil de ningún juego. Cada juego usa su perfil automático (o la plantilla de su género; los que no reconozco, el perfil por defecto ★).</p>`;
+  $("titles").innerHTML = T.length ? `<table>${T.map(x => {
+      return `<tr><td>${esc(x.name || "?")} <span class="chip">${esc(x.tid)}</span></td><td>${esc(x.target==="native"?t("v_native"):pname(x.target))}</td>
+      <td style="text-align:right"><button class="small danger" data-t="${x.tid}">${esc(t("forget"))}</button></td></tr>`;}).join("")}</table>`
+    : `<p class="muted">${esc(t("no_titles"))}</p>`;
   $("titles").querySelectorAll("[data-t]").forEach(b => b.onclick = () => call("/api/title", {tid:b.dataset.t, target:""}));
 }
 
@@ -356,20 +483,23 @@ async function refresh(force){
     $("offline").style.display = "none";
   }catch(e){ $("offline").style.display = "block"; return; }
   if (!force && Date.now() < freezeUntil) return;
+  L = pickLang();
+  const langChanged = L !== lastLang;
+  if (langChanged) { lastLang = L; applyStatic(); }
   renderRuntime();
-  const cfg = JSON.stringify(S.config) + JSON.stringify(S.runtime.capture) + S.runtime.receiver + S.runtime.autostart_avail + S.runtime.autostart_on + S.runtime.pointer_mode;
+  const cfg = L + JSON.stringify(S.config) + JSON.stringify(S.runtime.capture) + S.runtime.receiver + S.runtime.autostart_avail + S.runtime.autostart_on + S.runtime.pointer_mode;
   const editing = busy || (document.activeElement && document.activeElement.tagName === "SELECT");
-  if(force || (cfg !== lastCfg && !editing)){ lastCfg = cfg; renderConfig(); }
+  if(force || langChanged || (cfg !== lastCfg && !editing)){ lastCfg = cfg; renderConfig(); }
   if(S.runtime.capture.result && S.runtime.capture.result !== window._lastCap){
     window._lastCap = S.runtime.capture.result;
-    if(!S.runtime.capture.active) toast(S.runtime.capture.result === "timeout" ? "No se apretó ninguna tecla (10 s)" :
-       S.runtime.capture.result === "cancelled" ? "Captura cancelada" : "Asignada: " + kn(S.runtime.capture.result));
+    if(!S.runtime.capture.active) toast(S.runtime.capture.result === "timeout" ? t("cap_timeout") :
+       S.runtime.capture.result === "cancelled" ? t("cap_cancel") : t("cap_ok") + kn(S.runtime.capture.result));
   }
 }
 
 $("btnDefault").onclick = () => call("/api/global", {default_profile: profile().id});
 $("btnUseGame").onclick = () => { if (S.runtime.title) call("/api/title", {tid: S.runtime.title, target: profile().id}); };
-$("btnReset").onclick = () => { if(confirm("¿Restaurar las teclas y ajustes de fábrica de este perfil?")) call("/api/reset", {profile: profile().id}); };
+$("btnReset").onclick = () => { if(confirm(t("confirm_reset"))) call("/api/reset", {profile: profile().id}); };
 $("hz").onchange = e => call("/api/global", {inject_hz: e.target.value});
 $("auto").onchange = e => call("/api/global", {auto_activate: e.target.checked?1:0});
 $("nat").onchange = e => call("/api/global", {native_switch: e.target.checked?1:0});
@@ -380,7 +510,7 @@ $("idle").onchange = e => call("/api/global", {idle_exit_min: e.target.value});
 $("openpage").onchange = e => call("/api/global", {open_settings_on_launch: e.target.checked?1:0});
 $("psens").oninput = e => { $("psens_o").textContent = e.target.value; busy = true; };
 $("psens").onchange = e => { busy = false; call("/api/global", {pointer_sens: e.target.value}); };
-$("btnStop").onclick = () => { if(confirm("¿Detener el bridge? Se borra el mando virtual.")) call("/api/stop"); };
+$("btnStop").onclick = () => { if(confirm(t("confirm_stop"))) call("/api/stop"); };
 
 if (/PlayStation/i.test(navigator.userAgent)) document.documentElement.classList.add("isps5");
 refresh(true);

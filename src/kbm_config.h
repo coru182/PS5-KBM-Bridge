@@ -14,16 +14,21 @@
 #define KBM_MAX_TITLES   64
 #define KBM_ID_LEN       24
 
+#define KBM_LANG_AUTO 0
+#define KBM_LANG_ES   1
+#define KBM_LANG_EN   2
+
+
 typedef struct {
     char id[KBM_ID_LEN];
-    char label[48];
+    const char *label, *label_en;   /* built-in strings (Spanish / English) */
     uint64_t out;
     uint8_t key[2];
 } KbmAction;
 
 typedef struct {
     char id[KBM_ID_LEN];
-    char name[64];
+    const char *name, *name_en;     /* built-in strings (Spanish / English) */
     int sens, yratio, smooth_ms, deadzone, invert_y;
     int ads_pct;          /* sensitivity % while aiming (L2 held) */
     int builtin;          /* index into KBM_BUILTIN */
@@ -45,6 +50,7 @@ typedef struct {
     int idle_exit_min;    /* exit after N min without input; 0 = never (service mode) */
     int open_settings_on_launch; /* home-screen icon opens the settings page in the PS5 browser */
     int pointer_sens;     /* cursor speed in pointer mode (PS5 browser), 1..50 */
+    int lang;             /* KBM_LANG_AUTO (follow the PS5 system language) / ES / EN */
     char default_profile[KBM_ID_LEN];   /* for games the database doesn't know */
     int n_titles;
     KbmTitleRule titles[KBM_MAX_TITLES];
@@ -71,6 +77,13 @@ typedef struct {
     KbmTitleInfo info;
 } KbmResolved;
 void kbm_config_resolve(const KbmConfig *c, const char *tid, KbmResolved *r);
+
+/* Effective language: config choice, else the PS5 system language
+ * (sys = KBM_LANG_ES / KBM_LANG_EN, or KBM_LANG_AUTO if unknown -> English). */
+int kbm_lang_effective(const KbmConfig *c, int sys);
+const char *kbm_lang_code(int lang);      /* "auto" | "es" | "en" */
+/* PS5 system language id (sceSystemServiceParamGetInt, param 1) -> ES / EN. */
+int kbm_lang_from_system(int id);
 
 void kbm_config_defaults(KbmConfig *c);
 int  kbm_profile_reset(KbmConfig *c, const char *id);       /* 0 ok, -1 unknown */

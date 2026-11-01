@@ -53,7 +53,7 @@ int kbm_config_bind(KbmConfig *c, const char *profile, const char *action, int s
                 if (&p->a[i] == a && s == slot) continue;
                 if (p->a[i].key[s] == code) {
                     p->a[i].key[s] = 0;
-                    if (moved_from && mf_n && !moved_from[0]) snprintf(moved_from, mf_n, "%s", p->a[i].label);
+                    if (moved_from && mf_n && !moved_from[0]) snprintf(moved_from, mf_n, "%s", p->a[i].id);
                 }
             }
         }
@@ -75,6 +75,7 @@ static void rt_json(KbmJson *j, const KbmRuntime *r) {
                  "\"uptime_s\":%u,\"idle_s\":%u,\"autostart_avail\":%d,\"autostart_on\":%d,\"etahen\":%d,\"pointer_mode\":%d,\"ip\":", r->hz, r->kb_reports_5s, r->mouse_reports_5s,
                  r->e2i_p50_us, r->e2i_p95_us, r->uptime_s, r->idle_s, r->autostart_avail, r->autostart_on, r->etahen, r->pointer_mode);
     kbm_json_str(j, r->ip);
+    kbm_json_fmt(j, ",\"sys_lang\":\"%s\",\"lang\":\"%s\"", r->sys_lang ? kbm_lang_code(r->sys_lang) : "", kbm_lang_code(r->lang));
     kbm_json_fmt(j, ",\"capture\":{\"active\":%d,\"profile\":", r->capture_active);
     kbm_json_str(j, r->cap_profile);
     kbm_json_raw(j, ",\"action\":"); kbm_json_str(j, r->cap_action);
@@ -91,6 +92,7 @@ void kbm_runtime_set_title(KbmRuntime *rt, const KbmConfig *c, const char *tid) 
     rt->native_suggested = r.native_suggested;
     snprintf(rt->profile, sizeof(rt->profile), "%s", r.p->id);
     snprintf(rt->auto_profile, sizeof(rt->auto_profile), "%s", r.auto_p->id);
+    rt->lang = kbm_lang_effective(c, rt->sys_lang);
 }
 
 int kbm_api_state_json(KbmApi *api, const char *edit, char *buf, size_t n) {
@@ -229,6 +231,8 @@ int kbm_api_command(KbmApi *api, const char *path, const KbmQuery *q, char *out,
         if (get_int(q, "release_on_exit", &v)) c->release_on_exit = v ? 1 : 0;
         if (get_int(q, "native_switch", &v)) c->native_switch = v ? 1 : 0;
         if (get_int(q, "auto_native", &v)) c->auto_native = v ? 1 : 0;
+        const char *lg = kbm_query_get(q, "lang");
+        if (lg) c->lang = !strcmp(lg, "es") ? KBM_LANG_ES : !strcmp(lg, "en") ? KBM_LANG_EN : KBM_LANG_AUTO;
         if (get_int(q, "idle_exit_min", &v)) c->idle_exit_min = v < 0 ? 0 : (v > 240 ? 240 : v);
         if (get_int(q, "open_settings_on_launch", &v)) c->open_settings_on_launch = v ? 1 : 0;
         if (get_int(q, "pointer_sens", &v)) c->pointer_sens = v < 1 ? 1 : (v > 50 ? 50 : v);
