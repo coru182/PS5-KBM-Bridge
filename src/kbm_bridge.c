@@ -44,7 +44,7 @@
 #ifndef KBM_DIAG_ONLY
 #define KBM_DIAG_ONLY 0
 #endif
-#define KBM_VERSION "0.9.1"
+#define KBM_VERSION "0.9.2"
 
 extern void ghostpad_status_log(const char *fmt, ...);
 #define KLOG(...) ghostpad_status_log("[KBM] " __VA_ARGS__)
@@ -711,6 +711,7 @@ static void *watch_thread(void *unused) {
         int changed = first || strcmp(tid, last) != 0;
         if (changed) {
             kbm_set_layer(&g_engine, KBM_LAYER_FOOT);   /* new game: start on foot */
+            kbm_reset_motion(&g_engine);                /* don't carry mouse motion across profiles */
             apply_profile_locked(tid);
             if (tid[0]) {
                 set_pointer_locked(0, "game started");

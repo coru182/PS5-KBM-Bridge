@@ -2,6 +2,14 @@
 
 **English** · [Español](CHANGELOG.es.md)
 
+## v0.9.2: PS5 menu profile
+
+- New **"PS5 menu" profile**, used automatically while no game is running (home screen, library, store, settings):
+  - WASD or arrows = D-pad; Enter, F, E or left click = ✕; Esc, Backspace or right click = ○; Space = Options; Tab = △; Q = □; Z/X or mouse side buttons = L1/R1; C/V = L2/R2; mouse wheel = up/down; Windows key = PS button.
+  - **Moving the mouse moves the selection one step at a time** (D-pad), instead of the camera. The speed is the "Cursor and menu mouse speed" slider under General.
+- It can be edited like any other profile ("Edit the menu profile" on the page when no game is open).
+- When a game is open (even if you go back to the home screen with the game in the background), the game's profile stays active.
+
 ## v0.9.1: GTA Trilogy and vehicle mode
 
 - **New profile: GTA: The Trilogy – Definitive Edition** (GTA III, Vice City and San Andreas, PS5 and PS4 versions). PS5 buttons follow the Modern scheme. PC keys are the original PC defaults plus the Definitive Edition changes found in sources (Tab = weapon wheel); no complete PC key list for the Definitive Edition was found, so some keys may differ.

@@ -30,7 +30,7 @@ const PORT = 18111, OUT = process.argv[2] || '.';
         // profile list: open, groups, switch
         await page.click('#pchg');
         const groups = await page.$$eval('#plist h3', h => h.map(x => x.textContent));
-        if (groups.join('|') !== 'En uso ahora|Plantillas|Juegos (A–Z)') throw new Error('groups ' + groups);
+        if (groups.join('|') !== 'En uso ahora|Menú de la PS5|Plantillas|Juegos (A–Z)') throw new Error('groups ' + groups);
         await page.click('#plist button[data-p="requiem"]'); await page.waitForTimeout(500);
         if (await page.$$eval('#binds tr', r => r.length) !== 22) throw new Error('requiem rows');
         // slider
@@ -104,7 +104,7 @@ const PORT = 18111, OUT = process.argv[2] || '.';
       if (await page.evaluate(() => document.documentElement.lang) !== 'en') throw new Error('html lang');
       await page.click('#pchg');
       const g = await page.$$eval('#plist h3', h => h.map(x => x.textContent).join('|'));
-      if (g !== 'In use now|Templates|Games (A–Z)') throw new Error('english groups ' + g);
+      if (g !== 'In use now|PS5 menu|Templates|Games (A–Z)') throw new Error('english groups ' + g);
       const firstOut = await page.$$eval('#binds td.out', t => t.map(x => x.textContent));
       if (!firstOut.some(x => x.includes('Left stick'))) throw new Error('english outputs');
       await page.screenshot({ path: `${OUT}/ui_english.png`, fullPage: false });

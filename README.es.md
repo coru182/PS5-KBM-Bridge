@@ -21,6 +21,7 @@ Teclado y mouse en cualquier juego de PS5, sin adaptadores ni PC. Un payload par
   - un ícono en el home (vía ShadowMountPlus) abre los ajustes;
   - **F11** los abre en medio de un juego.
   - En esa página, el mouse maneja el cursor.
+- **Perfil para el menú de la PS5:** sin juego abierto, WASD/flechas y mover el mouse mueven la selección, Enter/F/E/clic izquierdo seleccionan, Esc/clic derecho vuelven y Espacio abre Options.
 - **A pie y en vehículo:** un perfil puede usar teclas distintas a pie y en un vehículo (GTA Trilogy: W camina, o acelera en el auto). F cambia de modo al subir o bajar; B lo cambia a mano.
 - **En español o en inglés:** la página de ajustes y las notificaciones usan el idioma de tu PS5. Se puede fijar a mano en General.
 - **Juegos con teclado y mouse propios** (Fortnite, Call of Duty, Battlefield 6…): te sugiere devolverle el receptor a la PS5 mientras jugás.
@@ -63,8 +64,8 @@ Resultado en `out/`:
 
 | Archivo | Para qué |
 |---|---|
-| `ps5-kbm-bridge-v091.elf` | El bridge |
-| `ps5-kbm-diag-v091.elf` | Diagnóstico: solo lee y mide, **nunca** crea el mando virtual, se cierra a los 5 min |
+| `ps5-kbm-bridge-v092.elf` | El bridge |
+| `ps5-kbm-diag-v092.elf` | Diagnóstico: solo lee y mide, **nunca** crea el mando virtual, se cierra a los 5 min |
 | `homebrew/PPSA51258/` | Ícono para el home (ShadowMountPlus) |
 | `etaHEN/payloads/` | Arranque automático, solo si usás etaHEN |
 
@@ -73,7 +74,7 @@ Resultado en `out/`:
 ## Instalar y usar
 
 1. Copiá `out/homebrew/PPSA51258/` a `/data/homebrew/PPSA51258/` en la PS5 por FTP (por ejemplo con ps5upload). Reiniciá y cargá tus payloads; ShadowMountPlus agrega el ícono **PS5 KBM Bridge** al home.
-   - Sin ShadowMountPlus: mandá `ps5-kbm-bridge-v091.elf` a elfldr (puerto 9021).
+   - Sin ShadowMountPlus: mandá `ps5-kbm-bridge-v092.elf` a elfldr (puerto 9021).
 2. Conectá el receptor y abrí el ícono. Se abre la página de ajustes. Mové el mouse y tocá una tecla: aparece el DualSense virtual.
 3. Abrí un juego. La notificación dice qué juego reconoció y qué perfil aplicó. Para cambiar algo en medio del juego: **F11**. Volvés con el botón PS (o la tecla Windows).
 
@@ -92,6 +93,8 @@ Por cada juego que abrís, en este orden:
 2. el perfil propio del juego;
 3. la plantilla de su género;
 4. el perfil por defecto ★ (para juegos que no reconoce).
+
+Sin ningún juego abierto usa el perfil "Menú de la PS5".
 
 Si la base dice que el juego soporta teclado y mouse en PS5, te lo sugiere. Solo lo pasa a "nativo" sin preguntar si activás esa opción.
 

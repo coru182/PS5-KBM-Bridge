@@ -200,16 +200,17 @@ es: {
   opt_autonat:"Marcar como nativos, sin preguntar, los juegos que según la base de datos ya soportan teclado/mouse en PS5 (Fortnite, Call of Duty, Battlefield 6…)",
   opt_rel:"Al salir (F12), devolver el teclado/mouse a la PS5",
   opt_autostart:"Iniciar automáticamente al cargar etaHEN",
-  psens:"Velocidad del cursor (modo puntero)",
+  psens:"Velocidad del cursor y del mouse en el menú",
   ptr_help:"Modo puntero: el mouse mueve el cursor del navegador de la PS5 (clic izq. = ✕, clic der. = ○, rueda = scroll). Se activa solo al abrir esta página desde el ícono o con <b>F11</b> (también en medio de un juego) y se desactiva con el botón PS, al abrir un juego o con F9.",
   opt_openpage:"Al abrir el ícono \"PS5 KBM Bridge\", mostrar esta página en la PS5",
   idle_label:"Apagar si no se usa", idle_0:"Nunca (recomendado con autoarranque)", idle_15:"Después de 15 min", idle_30:"Después de 30 min", idle_60:"Después de 60 min",
   saved_at:"Ajustes guardados en la PS5: /data/ps5-kbm/config.ini", btn_stop:"Detener bridge",
   st_waiting:"Esperando teclado y mouse", st_active:"Activo", st_native:"Juego nativo: teclado/mouse en la PS5", st_released:"Receptor liberado", st_stopped:"Detenido", st_diag:"Diagnóstico (sin mando virtual)",
   k_status:"Estado", k_game:"Juego", k_profile:"Perfil en uso", k_receiver:"Receptor", k_vda:"Mando virtual", k_inject:"Inyección", k_lat:"Latencia p50 / p95", k_reports:"Reportes 5 s (tecl./mouse)", k_mouse:"Mouse",
-  v_menu:"Ninguno (menú)", v_native:"Nativo", v_rx_bridge:"Tomado por el bridge", v_rx_ps5:"En la PS5", v_connected:"Conectado", v_no:"No", v_cursor:"Cursor (modo puntero)", v_camera:"Cámara",
+  v_menu:"Ninguno (menú)", v_native:"Nativo", v_rx_bridge:"Tomado por el bridge", v_rx_ps5:"En la PS5", v_connected:"Conectado", v_no:"No", v_cursor:"Cursor (modo puntero)", v_camera:"Cámara", v_dpad:"Mueve la cruceta (menú)",
   ptr_to_cam:"Usar mouse como cámara", ptr_to_cur:"Usar mouse como cursor",
-  no_game:"No hay ningún juego abierto. Cuando abras uno lo reconozco por su Title ID y le aplico el perfil que corresponde.",
+  no_game:"No hay ningún juego abierto: estás en el menú de la PS5 y se usa el perfil «Menú de la PS5» (WASD/flechas o mover el mouse = cruceta, Enter/F/E/clic = ✕, Esc/clic der. = ○, Espacio = Options). Cuando abras un juego lo reconozco por su Title ID y le aplico su perfil.",
+  edit_menu:"Editar el perfil del menú", src_menu:"Menú de la PS5", g_menu:"Menú de la PS5",
   unknown_game:"Juego no reconocido", t_auto:"Automático: ", t_native:"Nativo (teclado/mouse del juego)", t_other:"Otro juego…", t_hide:"Ocultar lista", t_games_az:"Perfiles de juegos (A–Z)",
   sug_native:"Según la base de datos, la versión de PS5 de este juego <b>soporta teclado y mouse</b>. Si preferís usar ese soporte, tocá <b>Nativo</b>: el bridge le devuelve el receptor al juego mientras esté abierto.",
   game_help:"Lo que elijas se recuerda para este juego y se aplica al instante. \"Automático\" usa el perfil que trae el bridge para este juego.",
@@ -248,16 +249,17 @@ en: {
   opt_autonat:"Mark as native, without asking, the games that the database says already support keyboard/mouse on PS5 (Fortnite, Call of Duty, Battlefield 6…)",
   opt_rel:"On exit (F12), hand the keyboard/mouse back to the PS5",
   opt_autostart:"Start automatically when etaHEN loads",
-  psens:"Cursor speed (pointer mode)",
+  psens:"Cursor and menu mouse speed",
   ptr_help:"Pointer mode: the mouse moves the PS5 browser cursor (left click = ✕, right click = ○, wheel = scroll). It turns on when you open this page from the icon or with <b>F11</b> (also in the middle of a game) and turns off with the PS button, when a game opens, or with F9.",
   opt_openpage:"When opening the \"PS5 KBM Bridge\" icon, show this page on the PS5",
   idle_label:"Turn off when idle", idle_0:"Never (recommended with autostart)", idle_15:"After 15 min", idle_30:"After 30 min", idle_60:"After 60 min",
   saved_at:"Settings saved on the PS5: /data/ps5-kbm/config.ini", btn_stop:"Stop bridge",
   st_waiting:"Waiting for keyboard and mouse", st_active:"Active", st_native:"Native game: keyboard/mouse on the PS5", st_released:"Receiver released", st_stopped:"Stopped", st_diag:"Diagnostics (no virtual controller)",
   k_status:"Status", k_game:"Game", k_profile:"Profile in use", k_receiver:"Receiver", k_vda:"Virtual controller", k_inject:"Injection", k_lat:"Latency p50 / p95", k_reports:"Reports 5 s (kbd/mouse)", k_mouse:"Mouse",
-  v_menu:"None (menu)", v_native:"Native", v_rx_bridge:"Held by the bridge", v_rx_ps5:"On the PS5", v_connected:"Connected", v_no:"No", v_cursor:"Cursor (pointer mode)", v_camera:"Camera",
+  v_menu:"None (menu)", v_native:"Native", v_rx_bridge:"Held by the bridge", v_rx_ps5:"On the PS5", v_connected:"Connected", v_no:"No", v_cursor:"Cursor (pointer mode)", v_camera:"Camera", v_dpad:"Moves the D-pad (menu)",
   ptr_to_cam:"Use mouse as camera", ptr_to_cur:"Use mouse as cursor",
-  no_game:"No game is open. When you open one, I recognise it by its Title ID and apply the matching profile.",
+  no_game:"No game is open: you're in the PS5 menu and the \"PS5 menu\" profile is in use (WASD/arrows or moving the mouse = D-pad, Enter/F/E/click = ✕, Esc/right click = ○, Space = Options). When you open a game, I recognise it by its Title ID and apply its profile.",
+  edit_menu:"Edit the menu profile", src_menu:"PS5 menu", g_menu:"PS5 menu",
   unknown_game:"Unrecognised game", t_auto:"Automatic: ", t_native:"Native (game's own keyboard/mouse)", t_other:"Other game…", t_hide:"Hide list", t_games_az:"Game profiles (A–Z)",
   sug_native:"According to the database, the PS5 version of this game <b>supports keyboard and mouse</b>. If you'd rather use that, tap <b>Native</b>: the bridge hands the receiver to the game while it is open.",
   game_help:"Your choice is remembered for this game and applied right away. \"Automatic\" uses the profile the bridge ships for this game.",
@@ -364,7 +366,7 @@ function renderRuntime(){
     [t("k_inject"), r.hz + " Hz"],
     [t("k_lat"), lat],
     [t("k_reports"), r.kb_reports_5s + " / " + r.mouse_reports_5s],
-    [t("k_mouse"), r.pointer_mode ? t("v_cursor") : t("v_camera")],
+    [t("k_mouse"), r.pointer_mode ? t("v_cursor") : r.mouse_dpad ? t("v_dpad") : t("v_camera")],
   ];
   if (r.has_layers) items.splice(3, 0, [t("k_mode"), r.layer ? t("v_vehicle") : t("v_foot")]);
   setHTML($("stats"), items.map(([k,v]) => `<div class="stat"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join(""));
@@ -374,7 +376,10 @@ function renderRuntime(){
     $("ptrBtn").onclick = () => call("/api/pointer", {on: S.runtime.pointer_mode ? 0 : 1});
 
   const g = $("game");
-  if(!r.title){ setHTML(g, `<p class="muted">${esc(t("no_game"))}</p>`); }
+  if(!r.title){
+    if (setHTML(g, `<p class="muted">${esc(t("no_game"))}</p><div class="targets"><button class="small" id="editMenu">${esc(t("edit_menu"))}</button></div>`))
+      $("editMenu").onclick = () => { sel = "ps_menu"; showList = false; refresh(true); };
+  }
   else {
     const rule = S.config.titles.find(x => x.tid === r.title);
     const cur = rule ? rule.target : "auto";
@@ -419,6 +424,7 @@ function renderConfig(){
   $("pchg").onclick = () => { showList = !showList; renderConfig(); };
   const grp = (title, list) => `<h3>${esc(title)}</h3><div class="targets">${list.map(q => `<button class="${q.id===p.id?"on":""}" data-p="${q.id}">${esc(pnameOf(q))}${star(q.id)}</button>`).join("")}</div>`;
   $("plist").innerHTML = showList ? grp(t("g_inuse"), c.profiles.filter(q => q.id === S.runtime.profile))
+      + grp(t("g_menu"), c.profiles.filter(q => q.kind === "menu"))
       + grp(t("g_templates"), c.profiles.filter(q => q.kind === "template"))
       + grp(t("g_games"), c.profiles.filter(q => q.kind === "game").sort(byName))
       + `<p class="muted">${esc(t("legend"))}</p>` : "";

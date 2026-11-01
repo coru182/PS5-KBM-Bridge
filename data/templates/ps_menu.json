@@ -1,0 +1,31 @@
+{
+ "id": "ps_menu",
+ "name": "Menú de la PS5",
+ "kind": "menu",
+ "mouse": "dpad",
+ "template": "menu",
+ "no_auto_move": true,
+ "notes": "Used while no game is running (home screen, library, store, settings). Keys move the D-pad; moving the mouse also moves the selection one step at a time (speed: 'cursor speed' under General).",
+ "actions": [
+  {"id": "up", "label": "Arriba", "ps5": "DPAD_UP", "pc": ["W", "UP"]},
+  {"id": "down", "label": "Abajo", "ps5": "DPAD_DOWN", "pc": ["S", "DOWN"]},
+  {"id": "left", "label": "Izquierda", "ps5": "DPAD_LEFT", "pc": ["A", "LEFT"]},
+  {"id": "right", "label": "Derecha", "ps5": "DPAD_RIGHT", "pc": ["D", "RIGHT"]},
+  {"id": "select", "label": "Seleccionar", "ps5": "CROSS", "pc": ["ENTER", "F"]},
+  {"id": "select2", "label": "Seleccionar (E / clic izq.)", "ps5": "CROSS", "pc": ["E", "MOUSE1"]},
+  {"id": "back", "label": "Volver", "ps5": "CIRCLE", "pc": ["ESC", "BACKSPACE"]},
+  {"id": "back_mouse", "label": "Volver (clic der.)", "ps5": "CIRCLE", "pc": ["MOUSE2", ""]},
+  {"id": "options", "label": "Opciones (menú)", "ps5": "OPTIONS", "pc": ["SPACE", ""]},
+  {"id": "triangle", "label": "Triángulo △", "ps5": "TRIANGLE", "pc": ["TAB", "MOUSE3"]},
+  {"id": "square", "label": "Cuadrado □", "ps5": "SQUARE", "pc": ["Q", ""]},
+  {"id": "l1", "label": "L1 (pestaña anterior)", "ps5": "L1", "pc": ["Z", "MOUSE4"]},
+  {"id": "r1", "label": "R1 (pestaña siguiente)", "ps5": "R1", "pc": ["X", "MOUSE5"]},
+  {"id": "l2", "label": "L2", "ps5": "L2", "pc": ["C", "PAGEUP"]},
+  {"id": "r2", "label": "R2", "ps5": "R2", "pc": ["V", "PAGEDOWN"]},
+  {"id": "l3", "label": "L3 (stick izq.)", "ps5": "L3", "pc": ["LSHIFT", ""]},
+  {"id": "r3", "label": "R3 (stick der.)", "ps5": "R3", "pc": ["LCTRL", ""]},
+  {"id": "touchpad", "label": "Touchpad", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+  {"id": "scroll_up", "label": "Rueda ↑ (arriba)", "ps5": "DPAD_UP", "pc": ["WHEEL_UP", ""]},
+  {"id": "scroll_down", "label": "Rueda ↓ (abajo)", "ps5": "DPAD_DOWN", "pc": ["WHEEL_DOWN", ""]}
+ ]
+}

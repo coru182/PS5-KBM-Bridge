@@ -150,7 +150,12 @@ def load_profile(path, kind):
         name = name.encode("utf-8")[:63].decode("utf-8", "ignore")
     conf = {"high": 3, "medium": 2, "low": 1}.get(d.get("confidence", ""), 0)
     ads = int(d.get("ads_pct", 100) or 100)
-    return {"id": pid, "name": name, "kind": kind, "template": d.get("template", "generic"), "conf": conf,
+    if d.get("kind") == "menu":
+        kind = 2
+    mouse = {"camera": 0, "dpad": 1}.get(d.get("mouse", "camera"))
+    if mouse is None:
+        die(f"{path}: mouse must be camera or dpad")
+    return {"id": pid, "name": name, "kind": kind, "mouse": mouse, "template": d.get("template", "generic"), "conf": conf,
             "ads": max(25, min(400, ads)), "native": bool(d.get("native_kbm_ps5") is True), "actions": out,
             "notes": (d.get("notes") or "")[:700], "sources": d.get("sources") or []}
 
@@ -252,7 +257,8 @@ def main():
 typedef struct {{ const char *id, *label, *label_en; uint64_t out; uint8_t k1, k2, layer; }} KbmBuiltinAction;
 typedef struct {{
     const char *id, *name, *name_en, *tmpl, *notes;
-    uint8_t kind;        /* 0 = game profile, 1 = template */
+    uint8_t kind;        /* 0 = game profile, 1 = template, 2 = PS5 menu (no game running) */
+    uint8_t mouse_dpad;  /* mouse movement -> D-pad steps instead of right stick */
     uint8_t confidence;  /* 3 high, 2 medium, 1 low, 0 n/a */
     uint8_t native;      /* PS5 version supports KB+M natively */
     int16_t ads_pct;
@@ -280,7 +286,7 @@ extern const char KBM_CONCEPT_NAMES[];
     out.append("const KbmBuiltinProfile KBM_BUILTIN[KBM_BUILTIN_COUNT] = {")
     for i, p in enumerate(allp):
         out.append(f"  {{{c_str(p['id'])}, {c_str(p['name'])}, {c_str(I18N['names'].get(p['name'], p['name']))}, {c_str(p['template'])}, {c_str(p['notes'])}, "
-                   f"{p['kind']}, {p['conf']}, {int(p['native'])}, {p['ads']}, {len(p['actions'])}, A{i}}},")
+                   f"{p['kind']}, {p['mouse']}, {p['conf']}, {int(p['native'])}, {p['ads']}, {len(p['actions'])}, A{i}}},")
     out.append("};")
     blob, offs = bytearray(), []
     for disp, _, _ in concepts:
@@ -337,7 +343,7 @@ extern const char KBM_CONCEPT_NAMES[];
             src = " ".join(f"[{i + 1}]({u})" for i, u in enumerate(p["sources"][:6]))
             md.append(f"| {p['name']} | {t['conf'][p['conf']]} | {t['yes'] if p['native'] else t['no']} | {len(p['actions'])} | {src} |")
         md += ["", f"## {t['tpl_h']}", "", t["tpl_i"], ""]
-        for p in templates:
+        for p in (q for q in templates if q["kind"] == 1):
             n = sum(1 for _, pr, _ in concepts if pr == index[p["id"]])
             nm = I18N["names"].get(p["name"], p["name"]) if t["en"] else p["name"]
             md.append(f"- **{nm}** (`{p['id']}`): {n} {t['games']}")

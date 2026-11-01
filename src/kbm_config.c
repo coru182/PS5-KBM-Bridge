@@ -172,10 +172,16 @@ void kbm_config_resolve(const KbmConfig *c, const char *tid, KbmResolved *r) {
     if (r->info.builtin >= 0 && r->info.builtin < c->n_profiles) {
         ap = &c->p[r->info.builtin];
         asrc = KBM_BUILTIN[r->info.builtin].kind == 0 ? "game" : "template";
+    } else if (!tid || !*tid) {
+        /* no game running: PS5 home screen, library, store... */
+        ap = kbm_config_profile_c(c, "ps_menu");
+        asrc = "menu";
+        if (!ap) { ap = kbm_config_profile_c(c, c->default_profile); asrc = "none"; }
+        if (!ap) ap = &c->p[0];
     } else {
         ap = kbm_config_profile_c(c, c->default_profile);
         if (!ap) ap = &c->p[0];
-        asrc = (tid && *tid) ? "default" : "none";
+        asrc = "default";
     }
     r->auto_p = ap;
     r->p = ap;
@@ -221,6 +227,7 @@ void kbm_profile_to_mapping(const KbmProfile *p, KbmMapping *m) {
     m->sens = p->sens; m->yratio = p->yratio; m->smooth_ms = p->smooth_ms;
     m->deadzone = p->deadzone; m->invert_y = p->invert_y;
     m->ads_pct = p->ads_pct;
+    m->mouse_dpad = KBM_BUILTIN[p->builtin].mouse_dpad;
     static uint64_t spec[2][256], both[256];
     static uint8_t bound[2][256];
     memset(spec, 0, sizeof(spec)); memset(both, 0, sizeof(both)); memset(bound, 0, sizeof(bound));
@@ -404,7 +411,9 @@ void kbm_json_fmt(KbmJson *j, const char *fmt, ...) {
     kbm_json_raw(j, t);
 }
 
-static const char *kind_name(int bi) { return KBM_BUILTIN[bi].kind == 0 ? "game" : "template"; }
+static const char *kind_name(int bi) {
+    return KBM_BUILTIN[bi].kind == 0 ? "game" : KBM_BUILTIN[bi].kind == 2 ? "menu" : "template";
+}
 
 static void profile_detail(KbmJson *j, const KbmProfile *p) {
     const KbmBuiltinProfile *b = &KBM_BUILTIN[p->builtin];

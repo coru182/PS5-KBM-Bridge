@@ -2,6 +2,14 @@
 
 [English](CHANGELOG.md) · **Español**
 
+## v0.9.2: perfil para el menú de la PS5
+
+- Nuevo **perfil "Menú de la PS5"**, que se usa solo mientras no hay ningún juego abierto (home, biblioteca, tienda, ajustes):
+  - WASD o flechas = cruceta; Enter, F, E o clic izquierdo = ✕; Esc, Borrar o clic derecho = ○; Espacio = Options; Tab = △; Q = □; Z/X o los botones laterales del mouse = L1/R1; C/V = L2/R2; rueda del mouse = arriba/abajo; tecla Windows = botón PS.
+  - **Mover el mouse mueve la selección de a un paso** (cruceta), en vez de la cámara. La velocidad es el control "Velocidad del cursor y del mouse en el menú" en General.
+- Se edita como cualquier otro perfil ("Editar el perfil del menú" en la página cuando no hay juego abierto).
+- Con un juego abierto (aunque vuelvas al home con el juego en segundo plano) sigue el perfil del juego.
+
 ## v0.9.1: GTA Trilogy y modo vehículo
 
 - **Perfil nuevo: GTA: The Trilogy – Definitive Edition** (GTA III, Vice City y San Andreas, versiones de PS5 y PS4). Los botones de PS5 siguen el esquema Moderno. Las teclas de PC son las de la versión original de PC más los cambios de la Definitive Edition que aparecen en las fuentes (Tab = rueda de armas); no encontré una lista completa de teclas de PC de la Definitive Edition, así que alguna puede diferir.

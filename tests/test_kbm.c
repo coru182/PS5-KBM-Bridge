@@ -227,7 +227,7 @@ static void test_title_db(void) {
     kbm_config_resolve(&c, "PPSA00000", &r);
     assert(!r.info.known && !strcmp(r.source, "default") && !strcmp(r.p->id, "generic"));
     kbm_config_resolve(&c, "", &r);
-    assert(!strcmp(r.source, "none"));
+    assert(!strcmp(r.source, "menu") && !strcmp(r.p->id, "ps_menu"));
     /* every built-in: has move + PS actions, no reserved keys, at most 32 actions */
     for (int i = 0; i < c.n_profiles; ++i) {
         const KbmProfile *p = &c.p[i];
@@ -322,6 +322,43 @@ static void test_vehicle_layers(void) {
     assert(!g.map.has_layers); kbm_set_layer(&g, KBM_LAYER_VEHICLE); assert(g.layer == KBM_LAYER_FOOT);
 }
 
+/* No game running: PS5 menu profile, keys and mouse move the D-pad */
+static void test_ps_menu(void) {
+    static KbmConfig c;
+    kbm_config_defaults(&c);
+    KbmResolved r;
+    kbm_config_resolve(&c, "", &r);
+    assert(!strcmp(r.p->id, "ps_menu") && !strcmp(r.source, "menu"));
+    KbmEngine e; kbm_init(&e); load_profile(&e, &c, "ps_menu");
+    assert(e.map.mouse_dpad && e.map.pointer_sens == 10);
+    KbmFrame f;
+    const uint8_t W = 0x1a, UP = 0x52, ENTER = 0x28, F = 0x09, E = 0x08, SPACE = 0x2c, ESC = 0x29;
+    kb(&e, 0, W, 0); kbm_frame(&e, 1, &f); assert(f.buttons == KBM_BTN_UP && f.lx == 128 && f.ly == 128);
+    kb(&e, 0, UP, 0); kbm_frame(&e, 2, &f); assert(f.buttons == KBM_BTN_UP);
+    kb(&e, 0, ENTER, 0); kbm_frame(&e, 3, &f); assert(f.buttons == KBM_BTN_CROSS);
+    kb(&e, 0, F, 0); kbm_frame(&e, 4, &f); assert(f.buttons == KBM_BTN_CROSS);
+    kb(&e, 0, E, 0); kbm_frame(&e, 5, &f); assert(f.buttons == KBM_BTN_CROSS);
+    kb(&e, 0, SPACE, 0); kbm_frame(&e, 6, &f); assert(f.buttons == KBM_BTN_OPTIONS);
+    kb(&e, 0, ESC, 0); kbm_frame(&e, 7, &f); assert(f.buttons == KBM_BTN_CIRCLE);
+    kb(&e, 0, 0, 0);
+    /* mouse: 120 counts right (default speed) = one D-pad step, no camera */
+    const uint64_t MS = 1000000ull;
+    uint64_t t = 1000 * MS;
+    for (int i = 0; i < 13; ++i) { uint8_t m[4] = {0, 10, 0, 0}; kbm_mouse(&e, 0, m, 4, t + i * MS); }
+    t += 13 * MS;
+    kbm_frame(&e, t, &f); assert(f.buttons == KBM_BTN_RIGHT && f.rx == 128 && f.ry == 128);
+    kbm_frame(&e, t + 70 * MS, &f); assert(f.buttons == 0);         /* released after 60 ms */
+    kbm_frame(&e, t + 120 * MS, &f); assert(f.buttons == 0);        /* only 10 counts left */
+    for (int i = 0; i < 30; ++i) { uint8_t m[4] = {0, 0, (uint8_t)(int8_t)-10, 0}; kbm_mouse(&e, 0, m, 4, t + (130 + i) * MS); }
+    kbm_frame(&e, t + 160 * MS, &f); assert(f.buttons == KBM_BTN_UP);   /* vertical swipe: up */
+    kbm_frame(&e, t + 900 * MS, &f); assert(f.buttons == 0);        /* idle: leftover dropped */
+    uint8_t click[4] = {1, 0, 0, 0}; kbm_mouse(&e, 0, click, 4, t + 901 * MS);
+    kbm_frame(&e, t + 902 * MS, &f); assert(f.buttons & KBM_BTN_CROSS);   /* left click selects */
+    /* a game profile keeps the mouse on the camera */
+    kbm_config_resolve(&c, "PPSA04289", &r);
+    assert(!strcmp(r.p->id, "re2r"));
+}
+
 static void test_usb_descriptor_parser(void) {
     const uint8_t composite[] = {
       9,2,59,0,2,1,0,0x80,50,
@@ -345,7 +382,8 @@ int main(void) {
     test_config_roundtrip();
     test_title_db();
     test_vehicle_layers();
+    test_ps_menu();
     test_usb_descriptor_parser();
-    puts("PASS: keys, RE2R/Requiem defaults, combos, wheel, rate-independent mouse, capture, config INI/JSON, title DB + auto profile, vehicle layers, HID parser");
+    puts("PASS: keys, RE2R/Requiem defaults, combos, wheel, rate-independent mouse, capture, config INI/JSON, title DB + auto profile, vehicle layers, PS5 menu profile, HID parser");
     return 0;
 }

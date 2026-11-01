@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "kbm_api.h"
 #include "kbm_keys.h"
+#include "kbm_builtin_gen.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -71,7 +72,7 @@ static void rt_json(KbmJson *j, const KbmRuntime *r) {
     kbm_json_fmt(j, ",\"vda\":%d,\"receiver\":%d,\"title\":", r->vda, r->receiver); kbm_json_str(j, r->title);
     kbm_json_raw(j, ",\"title_name\":"); kbm_json_str(j, r->title_name);
     kbm_json_raw(j, ",\"title_source\":"); kbm_json_str(j, r->title_source);
-    kbm_json_fmt(j, ",\"native_suggested\":%d,\"layer\":%d,\"has_layers\":%d", r->native_suggested, r->layer, r->has_layers);
+    kbm_json_fmt(j, ",\"native_suggested\":%d,\"layer\":%d,\"has_layers\":%d,\"mouse_dpad\":%d", r->native_suggested, r->layer, r->has_layers, r->mouse_dpad);
     kbm_json_raw(j, ",\"profile\":"); kbm_json_str(j, r->profile);
     kbm_json_raw(j, ",\"auto_profile\":"); kbm_json_str(j, r->auto_profile);
     kbm_json_fmt(j, ",\"hz\":%d,\"kb_reports_5s\":%u,\"mouse_reports_5s\":%u,\"e2i_p50_us\":%u,\"e2i_p95_us\":%u,"
@@ -97,6 +98,7 @@ void kbm_runtime_set_title(KbmRuntime *rt, const KbmConfig *c, const char *tid) 
     snprintf(rt->auto_profile, sizeof(rt->auto_profile), "%s", r.auto_p->id);
     rt->lang = kbm_lang_effective(c, rt->sys_lang);
     rt->has_layers = kbm_profile_has_layers(r.p);
+    rt->mouse_dpad = KBM_BUILTIN[r.p->builtin].mouse_dpad;
     if (!rt->has_layers) rt->layer = 0;
 }
 

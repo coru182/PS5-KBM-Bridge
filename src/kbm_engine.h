@@ -52,6 +52,7 @@ typedef struct {
     uint64_t out[256];   /* input code -> output mask (on foot / only layer) */
     uint64_t out_veh[256]; /* same, vehicle layer (used when has_layers) */
     int has_layers;      /* profile defines vehicle actions */
+    int mouse_dpad;      /* menus: mouse movement -> D-pad steps (pointer_sens = speed), no camera */
     int sens;            /* 1..50  */
     int yratio;          /* 25..400 % of X sensitivity */
     int smooth_ms;       /* 4..60 velocity window */
@@ -75,6 +76,10 @@ typedef struct {
      * RMB = circle, wheel -> right stick scroll. Keyboard mapping unchanged. */
     int pointer_mode;
     int layer;               /* KBM_LAYER_FOOT / KBM_LAYER_VEHICLE */
+    /* mouse_dpad: accumulated counts and the current D-pad step */
+    int32_t dpad_ax, dpad_ay;
+    uint64_t dpad_last_move, dpad_until, dpad_next;
+    uint32_t dpad_mask;
     int capture_armed;
     int captured;            /* -1 none, else code */
 } KbmEngine;

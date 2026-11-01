@@ -70,6 +70,10 @@ int kbm_mouse(KbmEngine *e, int owner, const uint8_t *r, size_t n, uint64_t t_ns
         if (d != e->down[KBM_KEY_MOUSE1 + b]) press_edge(e, (uint8_t)(KBM_KEY_MOUSE1 + b), d);
     }
     int dx = (int8_t)r[1], dy = (int8_t)r[2];
+    if ((dx || dy) && e->map.mouse_dpad && !e->pointer_mode) {
+        e->dpad_ax += dx; e->dpad_ay += dy;
+        e->dpad_last_move = t_ns;
+    }
     if (dx || dy) {
         unsigned i = e->ring_head;
         e->ring[i].t = t_ns; e->ring[i].dx = (int16_t)dx; e->ring[i].dy = (int16_t)dy;
@@ -103,6 +107,8 @@ void kbm_disconnect(KbmEngine *e, int owner) {
 }
 
 void kbm_reset_motion(KbmEngine *e) {
+    e->dpad_ax = e->dpad_ay = 0;
+    e->dpad_mask = 0; e->dpad_until = e->dpad_next = 0;
     e->ring_n = 0;
     e->wheel_up_until = e->wheel_down_until = 0;
 }
@@ -127,6 +133,39 @@ static int stick_axis(long v_milli, long sens_pct, int ratio_pct, int deadzone) 
 
 static int is_mouse_code(int c) { return c >= KBM_KEY_MOUSE1 && c <= KBM_KEY_WHEEL_DOWN; }
 
+/* Menus: every `step` mouse counts on the dominant axis = one D-pad press
+ * (60 ms down, at most ~9 steps per second). Stale motion is dropped. */
+#define KBM_DPAD_PRESS_NS  60000000ull
+#define KBM_DPAD_PERIOD_NS 110000000ull
+#define KBM_DPAD_IDLE_NS   300000000ull
+static uint32_t mouse_dpad_step(KbmEngine *e, uint64_t t_ns) {
+    if (e->dpad_mask && t_ns < e->dpad_until) return e->dpad_mask;
+    e->dpad_mask = 0;
+    if (t_ns > e->dpad_last_move + KBM_DPAD_IDLE_NS) { e->dpad_ax = e->dpad_ay = 0; return 0; }
+    if (t_ns < e->dpad_next) return 0;
+    int32_t step = 1200 / clampi(e->map.pointer_sens, 1, 50);
+    if (step < 8) step = 8;
+    int32_t ax = e->dpad_ax < 0 ? -e->dpad_ax : e->dpad_ax, ay = e->dpad_ay < 0 ? -e->dpad_ay : e->dpad_ay;
+    if (ax < step && ay < step) return 0;
+    if (ax >= ay) {
+        e->dpad_mask = e->dpad_ax > 0 ? KBM_BTN_RIGHT : KBM_BTN_LEFT;
+        e->dpad_ax += e->dpad_ax > 0 ? -step : step;
+        e->dpad_ay = 0;
+    } else {
+        e->dpad_mask = e->dpad_ay > 0 ? KBM_BTN_DOWN : KBM_BTN_UP;
+        e->dpad_ay += e->dpad_ay > 0 ? -step : step;
+        e->dpad_ax = 0;
+    }
+    /* never queue more than two steps: a big swipe shouldn't scroll forever */
+    if (e->dpad_ax > 2 * step) e->dpad_ax = 2 * step;
+    if (e->dpad_ax < -2 * step) e->dpad_ax = -2 * step;
+    if (e->dpad_ay > 2 * step) e->dpad_ay = 2 * step;
+    if (e->dpad_ay < -2 * step) e->dpad_ay = -2 * step;
+    e->dpad_until = t_ns + KBM_DPAD_PRESS_NS;
+    e->dpad_next = t_ns + KBM_DPAD_PERIOD_NS;
+    return e->dpad_mask;
+}
+
 void kbm_frame(KbmEngine *e, uint64_t t_ns, KbmFrame *o) {
     memset(o, 0, sizeof(*o));
     const int ptr = e->pointer_mode;
@@ -143,6 +182,7 @@ void kbm_frame(KbmEngine *e, uint64_t t_ns, KbmFrame *o) {
     } else {
         if (e->wheel_up_until > t_ns)   mask |= tab[KBM_KEY_WHEEL_UP];
         if (e->wheel_down_until > t_ns) mask |= tab[KBM_KEY_WHEEL_DOWN];
+        if (e->map.mouse_dpad) mask |= mouse_dpad_step(e, t_ns);
     }
 
     o->buttons = (uint32_t)(mask & 0xffffffffu);
@@ -182,6 +222,8 @@ void kbm_frame(KbmEngine *e, uint64_t t_ns, KbmFrame *o) {
         if (e->wheel_down_until > t_ns) o->ry = 128 + 100;
         return;
     }
+
+    if (e->map.mouse_dpad) { o->rx = 128; o->ry = 128; return; }   /* menus: no camera */
 
     long sens_pct = (long)clampi(e->map.sens, 1, 50) * 100;
     if (o->buttons & KBM_BTN_L2)                       /* aiming (ADS) */

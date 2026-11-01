@@ -21,6 +21,7 @@ Keyboard and mouse in any PS5 game, with no adapter and no PC. A payload for jai
   - a home screen icon (through ShadowMountPlus) opens the settings;
   - **F11** opens them in the middle of a game.
   - On that page the mouse drives the cursor.
+- **PS5 menu profile:** with no game open, WASD/arrows and mouse movement move the selection, Enter/F/E/left click select, Esc/right click go back and Space opens Options.
 - **On foot and in vehicles:** a profile can use different keys on foot and in a vehicle (GTA Trilogy: W walks, or accelerates in a car). F switches mode when you get in or out; B switches it by hand.
 - **English or Spanish:** the settings page and notifications follow your PS5's language. You can set it by hand under General.
 - **Games with their own keyboard/mouse support** (Fortnite, Call of Duty, Battlefield 6…): it suggests handing the receiver back to the PS5 while you play.
@@ -63,8 +64,8 @@ Output in `out/`:
 
 | File | Purpose |
 |---|---|
-| `ps5-kbm-bridge-v091.elf` | The bridge |
-| `ps5-kbm-diag-v091.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
+| `ps5-kbm-bridge-v092.elf` | The bridge |
+| `ps5-kbm-diag-v092.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
 | `homebrew/PPSA51258/` | Home screen icon (ShadowMountPlus) |
 | `etaHEN/payloads/` | Automatic start, only if you use etaHEN |
 
@@ -73,7 +74,7 @@ Output in `out/`:
 ## Install and use
 
 1. Copy `out/homebrew/PPSA51258/` to `/data/homebrew/PPSA51258/` on the PS5 over FTP (for example with ps5upload). Reboot and load your payloads; ShadowMountPlus adds the **PS5 KBM Bridge** icon to the home screen.
-   - Without ShadowMountPlus: send `ps5-kbm-bridge-v091.elf` to elfldr (port 9021).
+   - Without ShadowMountPlus: send `ps5-kbm-bridge-v092.elf` to elfldr (port 9021).
 2. Plug in the receiver and open the icon. The settings page opens. Move the mouse and press a key: the virtual DualSense appears.
 3. Open a game. The notification says which game it recognised and which profile it applied. To change something mid-game: **F11**. Go back with the PS button (or the Windows key).
 
@@ -92,6 +93,8 @@ For each game you open, in this order:
 2. the game's own profile;
 3. its genre template;
 4. the default profile ★ (for games it doesn't recognise).
+
+With no game open it uses the "PS5 menu" profile.
 
 If the database says the game supports keyboard and mouse on PS5, it suggests "native". It only switches to native without asking if you turn that option on.
 
