@@ -27,15 +27,15 @@ jobs:
       - name: Which tag
         id: tag
         run: echo "tag=${{ github.event.inputs.tag || github.ref_name }}" >> "$GITHUB_OUTPUT"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Check out the tag (or stay on main for a new one)
         run: |
           git checkout "${{ steps.tag.outputs.tag }}" 2>/dev/null || echo "tag ${{ steps.tag.outputs.tag }} doesn't exist yet, building main ($(git rev-parse --short HEAD))"
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
       - name: Tag matches the source version
         run: |
           ver="$(sed -n 's/^#define KBM_VERSION "\(.*\)"/\1/p' src/kbm_bridge.c)"
