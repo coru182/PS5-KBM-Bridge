@@ -2,6 +2,20 @@
 
 [English](CHANGELOG.md) · **Español**
 
+## v0.12: cualquier teclado y mouse, perfiles propios, bicis y aviones
+
+- **Cualquier teclado y mouse USB.** El bridge ya no busca solo el receptor Logitech `046d:c534`: toma cualquier dispositivo USB que hable el protocolo HID boot (prácticamente todos los teclados y mouse), sea un receptor con los dos o dos dispositivos separados (teclado en un puerto, mouse en otro). Los dispositivos de Sony no se tocan. El log dice qué encontró (`matched USB vvvv:pppp at ...: keyboard mouse`). **Todavía no se probó en la consola con dos dispositivos: probá primero el ELF de diagnóstico.**
+- **Perfiles propios sin recompilar.** Sección nueva "Compartir e importar perfiles" en la página de ajustes:
+  - **Exportar** cualquier perfil como JSON (descargar o copiar), con sus teclas y ajustes actuales y los juegos a los que se lo asignaste;
+  - **Importar** uno (pegándolo o eligiendo un archivo `.json`). Se valida (teclas, botones, teclas repetidas en el mismo modo) y se guarda en la PS5 en `/data/ps5-kbm/profiles/`, y se carga en cada arranque;
+  - un perfil con el id de uno de fábrica lo reemplaza (borralo para volver al de fábrica); un id nuevo agrega un perfil; `"title_ids"` hace que se aplique solo en esos juegos.
+  - Formato: [`docs/custom-profiles.es.md`](docs/custom-profiles.es.md).
+- **Modos bici y avión.** Los modos ahora rotan a pie → auto → bici → aire (B en GTA). F siempre te deja "a pie". Los botones de modo de la página muestran solo los modos que tiene el perfil.
+  - **GTA V**: bici (W/Bloq Mayús pedalear, S/Q frenar, Shift/Ctrl inclinarse, Espacio freno de mano/salto, E timbre, disparar con el mouse) y aviones/helicópteros (W/S acelerador, A/D timón, teclado numérico 8/5/4/6 cabeceo y alabeo, 7/9 objetivos, Espacio o clic izquierdo disparar, G tren de aterrizaje, E contramedidas/VTOL, Insert cámara del arma). Las teclas del auto no cambian.
+  - **GTA Trilogy** (Moderno y Clásico): también con capas de bici y avión.
+- **8 perfiles de juegos nuevos**, con las teclas por defecto de PC: Stellar Blade, Monster Hunter Wilds, Star Wars Jedi: Survivor, Assassin's Creed Shadows, Kingdom Come: Deliverance II, Far Cry 6, Ratchet & Clank: Una dimensión aparte, Sniper Elite 5. Marvel Rivals sigue sin verificar (y NetEase penaliza los adaptadores de teclado/mouse en consola).
+- **Descarga lista para usar**: `build_wsl.sh` también arma `out/release/PS5-KBM-Bridge-v0.12.zip` (los dos ELF, el icono, el autoarranque de etaHEN y las instrucciones) para la página de Releases de GitHub.
+
 ## v0.11: el cambio entre juego y menú de la PS5 es automático
 
 - El bridge ahora le pregunta a la PS5 qué app tiene el foco (`sceSystemServiceGetAppFocusedAppStatus`, verificado con el ELF de diagnóstico en el firmware 11.60: el primer valor es el id de la app con foco). Cada 200 ms mientras hay un juego abierto:

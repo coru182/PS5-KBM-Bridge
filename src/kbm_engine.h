@@ -33,13 +33,18 @@
 #define KBM_OUT_LS_DOWN  (1ull << 33)
 #define KBM_OUT_LS_LEFT  (1ull << 34)
 #define KBM_OUT_LS_RIGHT (1ull << 35)
-/* Switches between the on-foot and vehicle key layers (on key press). */
+/* On key press: on foot <-> car (MODE_TOGGLE), or next mode in the cycle
+ * on foot -> car -> bike -> aircraft (MODE_CYCLE, skips modes the profile lacks). */
 #define KBM_OUT_MODE_TOGGLE (1ull << 36)
+#define KBM_OUT_MODE_CYCLE  (1ull << 37)
 
 /* Key layers: a profile may bind a key differently on foot and in a vehicle. */
 #define KBM_LAYER_FOOT    0
-#define KBM_LAYER_VEHICLE 1
-#define KBM_LAYER_BOTH    2   /* action layer only: applies on foot and in vehicles */
+#define KBM_LAYER_VEHICLE 1   /* car (and anything driven like one) */
+#define KBM_LAYER_BOTH    2   /* action layer only: applies in every mode */
+#define KBM_LAYER_BIKE    3   /* bicycles */
+#define KBM_LAYER_AIR     4   /* planes and helicopters */
+#define KBM_LAYER_BIT(l)  (1u << (l))
 
 #define KBM_MOUSE_RING 64
 
@@ -50,8 +55,10 @@ typedef struct {
 
 typedef struct {
     uint64_t out[256];   /* input code -> output mask (on foot / only layer) */
-    uint64_t out_veh[256]; /* same, vehicle layer (used when has_layers) */
+    uint64_t out_veh[256]; /* same, car layer (used when has_layers) */
+    uint64_t out_bike[256], out_air[256];
     int has_layers;      /* profile defines vehicle actions */
+    unsigned layers;     /* KBM_LAYER_BIT() of the vehicle modes it defines */
     int mouse_dpad;      /* menus: mouse movement -> D-pad steps (pointer_sens = speed), no camera */
     int sens;            /* 1..50  */
     int yratio;          /* 25..400 % of X sensitivity */

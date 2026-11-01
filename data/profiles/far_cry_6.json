@@ -1,0 +1,43 @@
+{
+  "id": "far_cry_6",
+  "name": "Far Cry 6",
+  "template": "fps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No consta soporte de teclado/mouse en PS5: Family Gaming Database y gamertweak listan solo mando para PlayStation; teclado/mouse solo en PC.",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "PC (a pie): defkey, gameskeys y gamertweak coinciden. PS5: gamertweak (tabla PS4/PS5) + Family Gaming Database (R3 cuerpo a cuerpo, L1 rueda, Triángulo curar/arma, Círculo agacharse, Cuadrado interactuar, R1 artilugio, touchpad mapa), Supremo L1+R1 (game8, twinfinite), curar = mantener Triángulo (progameguides). En PS5 Cuadrado recarga y mantenido interactúa (PC lo separa en R/E). La rueda del mouse es 'última arma' y también zoom al apuntar; acá va a Triángulo (en PS5 el zoom es R3, sin mapear). Artilugios 6-9 en PC; en PS5 se eligen con la cruceta dentro de la rueda (L1): se mapean como L1+cruceta, verificar que la selección registre. Solo controles a pie: vehículos/caballo/aviones usan otras teclas en PC (p. ej. X arma del vehículo, 4 bocina) que chocan con las de a pie. Mapa: Tab o M. Arsenal: U (o F1) / Esc.",
+  "sources": [
+    "https://gamertweak.com/far-cry-6-controls-key-bindings",
+    "https://defkey.com/far-cry-6-shortcuts",
+    "https://gameskeys.net/far-cry-6-controls-guide/",
+    "https://www.familygamingdatabase.com/accessibility/Far+Cry+6",
+    "https://game8.co/games/FarCry6/archives/345538",
+    "https://twinfinite.net/guides/far-cry-6-supremo-weapon-how-use/",
+    "https://progameguides.com/far-cry/how-to-heal-in-far-cry-6/"
+  ],
+  "actions": [
+    {"label": "Disparar", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Apuntar / asomarse", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Recargar", "ps5": "SQUARE", "pc": ["R", ""]},
+    {"label": "Interactuar", "ps5": "SQUARE", "pc": ["E", ""]},
+    {"label": "Saltar / trepar / paracaídas", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Agacharse / deslizarse", "ps5": "CIRCLE", "pc": ["LCTRL", ""]},
+    {"label": "Correr / contener aliento / traje", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Cuerpo a cuerpo / derribo", "ps5": "R3", "pc": ["F", ""]},
+    {"label": "Rueda de armas", "ps5": "L1", "pc": ["Q", ""]},
+    {"label": "Usar artilugio", "ps5": "R1", "pc": ["MOUSE3", ""]},
+    {"label": "Supremo", "ps5": "L1+R1", "pc": ["V", ""]},
+    {"label": "Última arma", "ps5": "TRIANGLE", "pc": ["WHEEL_UP", "WHEEL_DOWN"]},
+    {"label": "Curarse", "ps5": "TRIANGLE", "pc": ["Z", ""]},
+    {"label": "Llamar / dirigir Amigo", "ps5": "DPAD_RIGHT", "pc": ["G", ""]},
+    {"label": "Cámara del teléfono", "ps5": "DPAD_UP", "pc": ["X", ""]},
+    {"label": "Fotos", "ps5": "DPAD_DOWN", "pc": ["B", ""]},
+    {"label": "Artilugio 1", "ps5": "L1+DPAD_LEFT", "pc": ["6", ""]},
+    {"label": "Artilugio 2", "ps5": "L1+DPAD_UP", "pc": ["7", ""]},
+    {"label": "Artilugio 3", "ps5": "L1+DPAD_RIGHT", "pc": ["8", ""]},
+    {"label": "Artilugio 4", "ps5": "L1+DPAD_DOWN", "pc": ["9", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["TAB", "M"]},
+    {"label": "Arsenal / pausa", "ps5": "OPTIONS", "pc": ["U", "ESC"]}
+  ]
+}

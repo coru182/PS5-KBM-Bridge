@@ -15,7 +15,7 @@ const PORT = 18111, OUT = process.argv[2] || '.';
     for (const [name, vp] of [['desktop', {width: 1200, height: 900}], ['mobile', {width: 390, height: 844}]]) {
       const page = await browser.newPage({ viewport: vp });
       page.on('pageerror', e => errors.push(name + ': ' + e.message));
-      page.on('console', m => { if (m.type() === 'error') errors.push(name + ' console: ' + m.text()); });
+      page.on('console', m => { if (m.type() === 'error' && !m.text().includes('status of 400')) errors.push(name + ' console: ' + m.text()); });   // 400 = the deliberately bad import
       await page.goto(`http://127.0.0.1:${PORT}/`);
       await page.waitForSelector('#binds tr');
       const rows = await page.$$eval('#binds tr', r => r.length);
@@ -94,6 +94,25 @@ const PORT = 18111, OUT = process.argv[2] || '.';
         if (st2.config.idle_exit_min !== 30) throw new Error('idle select');
         await page.check('#autonat'); await page.waitForTimeout(400);
         if ((await st()).config.auto_native !== 1) throw new Error('auto_native');
+        // export -> edit -> import -> delete
+        await pick(page, 'gta5');
+        await page.click('#btnExport'); await page.waitForTimeout(400);
+        const exported = JSON.parse(await page.$eval('#exportText', e => e.value));
+        if (exported.id !== 'gta5' || !exported.actions.length) throw new Error('export');
+        exported.id = 'gta5_mine'; exported.name = 'GTA V (mío)'; exported.sens = 27;
+        await page.fill('#importText', JSON.stringify(exported));
+        await page.click('#btnImport'); await page.waitForTimeout(600);
+        const imp = (await st('gta5_mine')).config.edit;
+        if (!imp || imp.custom !== 1 || imp.sens !== 27) throw new Error('import');
+        if (!(await page.$eval('#pcur', e => e.textContent.includes('GTA V (mío)') && e.textContent.includes('✎')))) throw new Error('imported profile not selected');
+        if (!(await page.isVisible('#btnDelCustom'))) throw new Error('delete button hidden');
+        await page.fill('#importText', '{"id":"bad","actions":[{"ps5":"CROSS","pc":["F12"]}]}');
+        await page.click('#btnImport'); await page.waitForTimeout(400);
+        if (!(await page.$eval('#toast', e => e.textContent.includes('reserved')))) throw new Error('import error toast');
+        page.once('dialog', d => d.accept());
+        await page.click('#btnDelCustom'); await page.waitForTimeout(600);
+        if ((await st()).config.profiles.some(q => q.id === 'gta5_mine')) throw new Error('delete');
+        if (await page.$eval('#pcur', e => e.textContent.includes('mío'))) throw new Error('deleted profile still selected');
         await page.screenshot({ path: `${OUT}/ui_desktop_after.png`, fullPage: true });
       }
       await page.close();
@@ -119,6 +138,6 @@ const PORT = 18111, OUT = process.argv[2] || '.';
       await page.close();
     }
     if (errors.length) throw new Error(errors.join('\n'));
-    console.log('PASS: web UI (render, no overflow at 390px, game name + auto profile, grouped profile list, slider, key pick, capture, game/template/other buttons, title rule, auto native, ES/EN switch, autostart, idle, ADS, pointer, no JS errors)');
+    console.log('PASS: web UI (render, no overflow at 390px, game name + auto profile, grouped profile list, slider, key pick, capture, game/template/other buttons, title rule, auto native, ES/EN switch, autostart, idle, ADS, pointer, export/import/delete profile, no JS errors)');
   } finally { await browser.close(); srv.kill(); }
 })().catch(e => { console.error('FAIL:', e.message); process.exit(1); });

@@ -6,7 +6,7 @@
  "native_kbm_note": "The PS5 version only accepts a keyboard in menus/text (tcrf.net); gameplay needs a controller.",
  "ads_pct": 100,
  "confidence": "medium",
- "notes": "One profile for GTA III, Vice City and San Andreas DE. PC keys: Definitive Edition PC defaults (magicgameworld GTA III DE list: Shift sprint, Space jump, Ctrl stealth, Tab weapon/radio wheel, W/S drive, Space handbrake, Q/E look, H horn, R sub-mission, Z look behind). SA-only keys (T gang follow, Y/N answers, Ctrl nitro) are not in that list. Two layers: F switches on foot / vehicle, B fixes it. Bikes (pedal = Cross) and aircraft use other buttons.",
+ "notes": "One profile for GTA III, Vice City and San Andreas DE. PC keys: Definitive Edition PC defaults (magicgameworld GTA III DE list: Shift sprint, Space jump, Ctrl stealth, Tab weapon/radio wheel, W/S drive, Space handbrake, Q/E look, H horn, R sub-mission, Z look behind). SA-only keys (T gang follow, Y/N answers, Ctrl nitro) are not in that list. Two layers: F switches on foot / vehicle, B fixes it. Modes: on foot, car, bicycle, aircraft. F switches on foot <-> car; B cycles foot -> car -> bike -> aircraft. Bicycle/aircraft PC keys are the original PC defaults (gtabase).",
  "tips": {
   "es": "Este perfil es para el esquema de control Moderno del juego (Opciones → Controles → Esquema de control: Moderno, que es el que viene por defecto). Si usás el esquema Clásico, elegí «GTA Trilogy DE (esquema Clásico)» en Juego actual → Otro juego…",
   "en": "This profile is for the game's Modern control scheme (Options → Controls → Control scheme: Modern, the default). If you use the Classic scheme, pick \"GTA Trilogy DE (Classic scheme)\" under Current game → Other game…"
@@ -30,8 +30,8 @@
   },
   {
    "id": "mode",
-   "label": "Cambiar modo a pie / vehículo",
-   "ps5": "MODE_TOGGLE",
+   "label": "Cambiar modo: a pie → auto → bici → aire",
+   "ps5": "MODE_CYCLE",
    "pc": [
     "B",
     ""
@@ -297,6 +297,156 @@
     "2"
    ],
    "layer": "vehicle"
+  },
+  {
+   "id": "bike_pedal",
+   "label": "Pedalear (mantener) / más rápido (tocar)",
+   "ps5": "CROSS",
+   "pc": [
+    "W",
+    "UP"
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_brake",
+   "label": "Frenar",
+   "ps5": "SQUARE",
+   "pc": [
+    "S",
+    "DOWN"
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_handbrake",
+   "label": "Freno de mano",
+   "ps5": "R1",
+   "pc": [
+    "SPACE",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_hop",
+   "label": "Salto / bunny hop (mantener: más alto)",
+   "ps5": "L1",
+   "pc": [
+    "LSHIFT",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_fire",
+   "label": "Disparar desde la bici",
+   "ps5": "CIRCLE",
+   "pc": [
+    "MOUSE1",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_bell",
+   "label": "Timbre",
+   "ps5": "L3",
+   "pc": [
+    "H",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "air_up",
+   "label": "Acelerar / subir",
+   "ps5": "R2",
+   "pc": [
+    "W",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_down",
+   "label": "Frenar / bajar",
+   "ps5": "L2",
+   "pc": [
+    "S",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_yaw_l",
+   "label": "Timón a la izquierda",
+   "ps5": "L1",
+   "pc": [
+    "Q",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_yaw_r",
+   "label": "Timón a la derecha",
+   "ps5": "R1",
+   "pc": [
+    "E",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_fire",
+   "label": "Arma principal",
+   "ps5": "CROSS",
+   "pc": [
+    "MOUSE1",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_fire2",
+   "label": "Arma secundaria",
+   "ps5": "CIRCLE",
+   "pc": [
+    "LCTRL",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_gear",
+   "label": "Tren de aterrizaje",
+   "ps5": "L3",
+   "pc": [
+    "CAPSLOCK",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_hover",
+   "label": "Vuelo estacionario / misión secundaria",
+   "ps5": "DPAD_UP",
+   "pc": [
+    "H",
+    "2"
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_radio",
+   "label": "Radio (mantener: rueda de radios)",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "TAB",
+    "WHEEL_DOWN"
+   ],
+   "layer": "air"
   }
  ]
 }

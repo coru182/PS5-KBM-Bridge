@@ -35,6 +35,7 @@ button:hover{border-color:var(--acc)}
 button.primary{background:var(--acc2);border-color:var(--acc2)}
 button.danger{border-color:#5a2a2a;color:#ffb3b3}
 button.small{padding:5px 9px;font-size:13px}
+textarea{width:100%;box-sizing:border-box;font:12px ui-monospace,Menlo,Consolas,monospace;background:var(--bg,#111);color:inherit;border:1px solid #555;border-radius:8px;padding:8px;margin:6px 0}
 select.small{padding:5px 6px;font-size:13px;max-width:96px}
 .targets{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .targets button.on,#game .row button.on{background:var(--acc2);border-color:var(--acc2)}
@@ -125,6 +126,22 @@ td.out{color:var(--dim);font-size:13px;white-space:nowrap}
   </section>
 
   <section>
+    <h2 data-i18n="h_share"></h2>
+    <p class="muted" style="margin-top:-4px" data-i18n="share_help"></p>
+    <div class="row">
+      <button class="small" id="btnExport"></button>
+      <button class="small danger" id="btnDelCustom" style="display:none"></button>
+    </div>
+    <div id="exportBox" style="display:none">
+      <textarea id="exportText" rows="8" readonly></textarea>
+      <div class="row"><button class="small" id="btnDl" data-i18n="btn_dl"></button><button class="small" id="btnCopy" data-i18n="btn_copy"></button></div>
+    </div>
+    <h3 data-i18n="import_h"></h3>
+    <textarea id="importText" rows="5"></textarea>
+    <div class="row"><input type="file" id="importFile" accept=".json,application/json"><button class="small" id="btnImport" data-i18n="btn_import"></button></div>
+  </section>
+
+  <section>
     <h2 data-i18n="h_binds"></h2>
     <p class="muted" style="margin-top:-4px" data-i18n-html="binds_help"></p>
     <table><thead><tr><th data-i18n="th_action"></th><th class="out" data-i18n="th_pad"></th><th data-i18n="th_key1"></th><th data-i18n="th_key2"></th></tr></thead>
@@ -207,14 +224,14 @@ es: {
   opt_openpage:"Al abrir el ícono \"PS5 KBM Bridge\", mostrar esta página en la PS5",
   idle_label:"Apagar si no se usa", idle_0:"Nunca (recomendado con autoarranque)", idle_15:"Después de 15 min", idle_30:"Después de 30 min", idle_60:"Después de 60 min",
   saved_at:"Ajustes guardados en la PS5: /data/ps5-kbm/config.ini", btn_stop:"Detener bridge",
-  st_waiting:"Esperando teclado y mouse", st_active:"Activo", st_native:"Juego nativo: teclado/mouse en la PS5", st_released:"Receptor liberado", st_stopped:"Detenido", st_diag:"Diagnóstico (sin mando virtual)",
-  k_status:"Estado", k_game:"Juego", k_profile:"Perfil en uso", k_receiver:"Receptor", k_vda:"Mando virtual", k_inject:"Inyección", k_lat:"Latencia p50 / p95", k_reports:"Reportes 5 s (tecl./mouse)", k_mouse:"Mouse",
+  st_waiting:"Esperando teclado y mouse", st_active:"Activo", st_native:"Juego nativo: teclado/mouse en la PS5", st_released:"Teclado y mouse devueltos a la PS5", st_stopped:"Detenido", st_diag:"Diagnóstico (sin mando virtual)",
+  k_status:"Estado", k_game:"Juego", k_profile:"Perfil en uso", k_receiver:"Teclado y mouse", k_vda:"Mando virtual", k_inject:"Inyección", k_lat:"Latencia p50 / p95", k_reports:"Reportes 5 s (tecl./mouse)", k_mouse:"Mouse",
   v_menu:"Ninguno (menú)", v_native:"Nativo", v_rx_bridge:"Tomado por el bridge", v_rx_ps5:"En la PS5", v_connected:"Conectado", v_no:"No", v_cursor:"Cursor (modo puntero)", v_camera:"Cámara", v_dpad:"Mueve la cruceta (menú)",
   ptr_to_cam:"Usar mouse como cámara", ptr_to_cur:"Usar mouse como cursor",
   no_game:"No hay ningún juego abierto: estás en el menú de la PS5 y se usa el perfil «Menú de la PS5» (WASD/flechas o mover el mouse = cruceta, Enter/F/E/clic = ✕, Esc/clic der. = ○, Espacio = Options). Cuando abras un juego lo reconozco por su Title ID y le aplico su perfil.",
   edit_menu:"Editar el perfil del menú", src_menu:"Menú de la PS5", g_menu:"Menú de la PS5",
   unknown_game:"Juego no reconocido", t_auto:"Automático: ", t_native:"Nativo (teclado/mouse del juego)", t_other:"Otro juego…", t_hide:"Ocultar lista", t_games_az:"Perfiles de juegos (A–Z)",
-  sug_native:"Según la base de datos, la versión de PS5 de este juego <b>soporta teclado y mouse</b>. Si preferís usar ese soporte, tocá <b>Nativo</b>: el bridge le devuelve el receptor al juego mientras esté abierto.",
+  sug_native:"Según la base de datos, la versión de PS5 de este juego <b>soporta teclado y mouse</b>. Si preferís usar ese soporte, tocá <b>Nativo</b>: el bridge le devuelve el teclado y el mouse al juego mientras esté abierto.",
   game_help:"Lo que elijas se recuerda para este juego y se aplica al instante. \"Automático\" usa el perfil que trae el bridge para este juego.",
   use_in:"Usar este perfil en ",
   src_game:"Perfil de este juego (teclas de la versión de PC)", src_template:"Plantilla por género (el juego no tiene perfil propio todavía)",
@@ -224,9 +241,14 @@ es: {
   src_overlay_auto:"Menú de la PS5 encima del juego: perfil del menú. Vuelve solo al perfil del juego cuando el juego está otra vez en pantalla",
   conf3:"Teclas verificadas con fuentes", conf2:"Algunas teclas inferidas: revisalas en el juego", conf1:"Sin verificar", conf0:"Plantilla genérica",
   native_badge:"Teclado/mouse nativo en PS5", edit_other:"Editar otro perfil…", close_list:"Cerrar lista",
-  k_mode:"Modo", v_foot:"A pie", v_vehicle:"En vehículo", mode_help:"(F lo cambia al subir/bajar; B o estos botones lo corrigen)", lay_2:"Siempre", lay_0:"A pie", lay_1:"En vehículo",
-  layers_help:"Este perfil tiene teclas distintas a pie y en vehículo. F (subir/bajar) cambia de modo; si se desincroniza, apretá B.",
-  g_inuse:"En uso ahora", g_templates:"Plantillas", g_games:"Juegos (A–Z)", legend:"★ = perfil por defecto para juegos que no reconozco · • = modificado por vos",
+  k_mode:"Modo", v_foot:"A pie", v_vehicle:"En vehículo", v_bike:"En bici", v_air:"En el aire", mode_help:"(F: a pie ↔ vehículo al subir/bajar; B cambia de modo; o estos botones)", lay_2:"Siempre", lay_0:"A pie", lay_1:"En vehículo", lay_3:"En bici", lay_4:"En el aire",
+  layers_help:"Este perfil tiene teclas distintas según el modo. F (subir/bajar) pasa de a pie a vehículo y vuelve; B cambia de modo (en GTA: a pie → auto → bici → aire).",
+  g_inuse:"En uso ahora", g_templates:"Plantillas", g_games:"Juegos (A–Z)", legend:"★ = perfil por defecto para juegos que no reconozco · • = modificado por vos · ✎ = importado (personalizado)",
+  h_share:"Compartir e importar perfiles", share_help:"Exportá un perfil para guardarlo o pasárselo a otro jugador, o importá uno (archivo .json o texto pegado). Los perfiles importados se guardan en la PS5 (/data/ps5-kbm/profiles) y no hace falta recompilar nada.",
+  btn_export:"Exportar «{n}»", btn_dl:"Descargar .json", btn_copy:"Copiar", copied:"Copiado", import_h:"Importar un perfil", import_ph:"Pegá acá el JSON del perfil…",
+  btn_import:"Importar", imported:"Perfil importado: {n}", import_empty:"Pegá un perfil o elegí un archivo .json",
+  btn_del_custom:"Borrar este perfil importado", btn_del_override:"Quitar mi versión importada (volver a la de fábrica)", confirm_del:"¿Borrar el perfil importado «{n}»?",
+  src_custom:"Perfil importado para este juego (Title ID)",
   notes:"Notas de la investigación de teclas (en inglés)",
   s_sens:"Sensibilidad", s_yratio:"Vertical (% de X)", s_ads:"Sensibilidad al apuntar (ADS)", s_smooth:"Suavizado", s_dz:"Zona muerta del juego (F10 la mide)", s_curve:"Impulso a movimientos chicos",
   feel_h:"¿Se siente pesado o con retraso?", feel_game:"Para este juego: ",
@@ -261,14 +283,14 @@ en: {
   opt_openpage:"When opening the \"PS5 KBM Bridge\" icon, show this page on the PS5",
   idle_label:"Turn off when idle", idle_0:"Never (recommended with autostart)", idle_15:"After 15 min", idle_30:"After 30 min", idle_60:"After 60 min",
   saved_at:"Settings saved on the PS5: /data/ps5-kbm/config.ini", btn_stop:"Stop bridge",
-  st_waiting:"Waiting for keyboard and mouse", st_active:"Active", st_native:"Native game: keyboard/mouse on the PS5", st_released:"Receiver released", st_stopped:"Stopped", st_diag:"Diagnostics (no virtual controller)",
-  k_status:"Status", k_game:"Game", k_profile:"Profile in use", k_receiver:"Receiver", k_vda:"Virtual controller", k_inject:"Injection", k_lat:"Latency p50 / p95", k_reports:"Reports 5 s (kbd/mouse)", k_mouse:"Mouse",
+  st_waiting:"Waiting for keyboard and mouse", st_active:"Active", st_native:"Native game: keyboard/mouse on the PS5", st_released:"Keyboard and mouse handed back to the PS5", st_stopped:"Stopped", st_diag:"Diagnostics (no virtual controller)",
+  k_status:"Status", k_game:"Game", k_profile:"Profile in use", k_receiver:"Keyboard and mouse", k_vda:"Virtual controller", k_inject:"Injection", k_lat:"Latency p50 / p95", k_reports:"Reports 5 s (kbd/mouse)", k_mouse:"Mouse",
   v_menu:"None (menu)", v_native:"Native", v_rx_bridge:"Held by the bridge", v_rx_ps5:"On the PS5", v_connected:"Connected", v_no:"No", v_cursor:"Cursor (pointer mode)", v_camera:"Camera", v_dpad:"Moves the D-pad (menu)",
   ptr_to_cam:"Use mouse as camera", ptr_to_cur:"Use mouse as cursor",
   no_game:"No game is open: you're in the PS5 menu and the \"PS5 menu\" profile is in use (WASD/arrows or moving the mouse = D-pad, Enter/F/E/click = ✕, Esc/right click = ○, Space = Options). When you open a game, I recognise it by its Title ID and apply its profile.",
   edit_menu:"Edit the menu profile", src_menu:"PS5 menu", g_menu:"PS5 menu",
   unknown_game:"Unrecognised game", t_auto:"Automatic: ", t_native:"Native (game's own keyboard/mouse)", t_other:"Other game…", t_hide:"Hide list", t_games_az:"Game profiles (A–Z)",
-  sug_native:"According to the database, the PS5 version of this game <b>supports keyboard and mouse</b>. If you'd rather use that, tap <b>Native</b>: the bridge hands the receiver to the game while it is open.",
+  sug_native:"According to the database, the PS5 version of this game <b>supports keyboard and mouse</b>. If you'd rather use that, tap <b>Native</b>: the bridge hands the keyboard and mouse to the game while it is open.",
   game_help:"Your choice is remembered for this game and applied right away. \"Automatic\" uses the profile the bridge ships for this game.",
   use_in:"Use this profile in ",
   src_game:"This game's profile (PC version keys)", src_template:"Genre template (this game has no profile of its own yet)",
@@ -278,9 +300,14 @@ en: {
   src_overlay_auto:"PS5 menu over the game: menu profile. It goes back to the game's profile by itself when the game is on screen again",
   conf3:"Keys verified against sources", conf2:"Some keys inferred: check them in game", conf1:"Unverified", conf0:"Generic template",
   native_badge:"Native keyboard/mouse on PS5", edit_other:"Edit another profile…", close_list:"Close list",
-  k_mode:"Mode", v_foot:"On foot", v_vehicle:"In vehicle", mode_help:"(F switches it when you get in/out; B or these buttons fix it)", lay_2:"Always", lay_0:"On foot", lay_1:"In vehicle",
-  layers_help:"This profile has different keys on foot and in vehicles. F (enter/exit) switches mode; if it gets out of sync, press B.",
-  g_inuse:"In use now", g_templates:"Templates", g_games:"Games (A–Z)", legend:"★ = default profile for games I don't recognise · • = changed by you",
+  k_mode:"Mode", v_foot:"On foot", v_vehicle:"In vehicle", v_bike:"On a bike", v_air:"In the air", mode_help:"(F: on foot ↔ vehicle when you get in/out; B changes mode; or these buttons)", lay_2:"Always", lay_0:"On foot", lay_1:"In vehicle", lay_3:"On a bike", lay_4:"In the air",
+  layers_help:"This profile has different keys per mode. F (enter/exit) goes from on foot to vehicle and back; B changes mode (GTA: foot → car → bike → air).",
+  g_inuse:"In use now", g_templates:"Templates", g_games:"Games (A–Z)", legend:"★ = default profile for games I don't recognise · • = changed by you · ✎ = imported (custom)",
+  h_share:"Share and import profiles", share_help:"Export a profile to keep it or give it to another player, or import one (a .json file or pasted text). Imported profiles are saved on the PS5 (/data/ps5-kbm/profiles); nothing needs rebuilding.",
+  btn_export:"Export “{n}”", btn_dl:"Download .json", btn_copy:"Copy", copied:"Copied", import_h:"Import a profile", import_ph:"Paste the profile JSON here…",
+  btn_import:"Import", imported:"Profile imported: {n}", import_empty:"Paste a profile or pick a .json file",
+  btn_del_custom:"Delete this imported profile", btn_del_override:"Remove my imported version (back to factory)", confirm_del:"Delete the imported profile “{n}”?",
+  src_custom:"Imported profile for this game (Title ID)",
   notes:"Key research notes",
   s_sens:"Sensitivity", s_yratio:"Vertical (% of X)", s_ads:"Aiming sensitivity (ADS)", s_smooth:"Smoothing", s_dz:"Game dead zone (F10 measures it)", s_curve:"Small-movement boost",
   feel_h:"Feels heavy or laggy?", feel_game:"For this game: ",
@@ -310,10 +337,10 @@ const KEYNAMES = {
 const OUTNAMES = {
   es: {CROSS:"✕",CIRCLE:"○",SQUARE:"□",TRIANGLE:"△",L1:"L1",R1:"R1",L2:"L2",R2:"R2",L3:"L3",R3:"R3",
     OPTIONS:"Options",TOUCHPAD:"Touchpad",PS:"Botón PS",DPAD_UP:"Cruceta ↑",DPAD_DOWN:"Cruceta ↓",DPAD_LEFT:"Cruceta ←",
-    DPAD_RIGHT:"Cruceta →",LS_UP:"Stick izq. ↑",LS_DOWN:"Stick izq. ↓",LS_LEFT:"Stick izq. ←",LS_RIGHT:"Stick izq. →",MODE:"modo a pie ↔ vehículo"},
+    DPAD_RIGHT:"Cruceta →",LS_UP:"Stick izq. ↑",LS_DOWN:"Stick izq. ↓",LS_LEFT:"Stick izq. ←",LS_RIGHT:"Stick izq. →",MODE_TOGGLE:"modo a pie ↔ vehículo",MODE_CYCLE:"siguiente modo"},
   en: {CROSS:"✕",CIRCLE:"○",SQUARE:"□",TRIANGLE:"△",L1:"L1",R1:"R1",L2:"L2",R2:"R2",L3:"L3",R3:"R3",
     OPTIONS:"Options",TOUCHPAD:"Touchpad",PS:"PS button",DPAD_UP:"D-pad ↑",DPAD_DOWN:"D-pad ↓",DPAD_LEFT:"D-pad ←",
-    DPAD_RIGHT:"D-pad →",LS_UP:"Left stick ↑",LS_DOWN:"Left stick ↓",LS_LEFT:"Left stick ←",LS_RIGHT:"Left stick →",MODE:"on foot ↔ vehicle mode"}};
+    DPAD_RIGHT:"D-pad →",LS_UP:"Left stick ↑",LS_DOWN:"Left stick ↓",LS_LEFT:"Left stick ←",LS_RIGHT:"Left stick →",MODE_TOGGLE:"on foot ↔ vehicle mode",MODE_CYCLE:"next mode"}};
 
 const t = (k, vars) => { let s = (STR[L] && STR[L][k]) || STR.es[k] || k; if (vars) for (const v in vars) s = s.replace("{" + v + "}", vars[v]); return s; };
 const kn = k => k ? (KEYNAMES[L][k] || k) : "—";
@@ -379,7 +406,8 @@ function renderRuntime(){
     [t("k_reports"), r.kb_reports_5s + " / " + r.mouse_reports_5s],
     [t("k_mouse"), r.pointer_mode ? t("v_cursor") : r.mouse_dpad ? t("v_dpad") : t("v_camera")],
   ];
-  if (r.has_layers) items.splice(3, 0, [t("k_mode"), r.layer ? t("v_vehicle") : t("v_foot")]);
+  const MODES = {0: "v_foot", 1: "v_vehicle", 3: "v_bike", 4: "v_air"};
+  if (r.has_layers) items.splice(3, 0, [t("k_mode"), t(MODES[r.layer] || "v_foot")]);
   setHTML($("stats"), items.map(([k,v]) => `<div class="stat"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join(""));
   /* Only rebuild interactive parts when they change: on the PS5 browser a node
    * replaced between press and release (or while a picker is open) loses the click. */
@@ -405,7 +433,7 @@ function renderRuntime(){
     const other = showOther ? `<div class="plist"><h3>${esc(t("t_games_az"))}</h3><div class="targets">${games.map(p => btn(p.id, pnameOf(p))).join("")}</div></div>` : "";
     const sug = r.native_suggested ? `<p class="note">${t("sug_native")}</p>` : "";
     const modeRow = r.has_layers && !r.overlay ? `<div class="row" style="margin-top:8px"><span class="muted">${esc(t("k_mode"))}:</span>
-        ${[[0, t("v_foot")], [1, t("v_vehicle")]].map(([v, txt]) => `<button class="small ${r.layer === v ? "on" : ""}" data-layer="${v}">${r.layer === v ? "✓ " : ""}${esc(txt)}</button>`).join("")}
+        ${[0, 1, 3, 4].filter(v => v === 0 || (r.has_layers & (1 << v))).map(v => [v, t(MODES[v])]).map(([v, txt]) => `<button class="small ${r.layer === v ? "on" : ""}" data-layer="${v}">${r.layer === v ? "✓ " : ""}${esc(txt)}</button>`).join("")}
         <span class="muted">${esc(t("mode_help"))}</span></div>` : "";
     const html = `<div class="gname">${esc(r.title_name || t("unknown_game"))}</div>
       <div class="row"><span class="chip">${esc(r.title)}</span><span class="muted">${esc(r.title_source ? t("src_" + r.title_source + (r.title_source === "overlay" && r.focus_auto ? "_auto" : "")) : "")}</span></div>
@@ -431,7 +459,12 @@ function renderConfig(){
   const c = S.config;
   const p = profile();
   if(!sel) sel = p.id;
-  const star = id => (id === c.default_profile ? " ★" : "") + (pinfo(id) && pinfo(id).mod ? " •" : "");
+  const star = id => (id === c.default_profile ? " ★" : "") + (pinfo(id) && pinfo(id).mod ? " •" : "") + (pinfo(id) && pinfo(id).custom ? " ✎" : "");
+  $("btnExport").textContent = t("btn_export", {n: p.id ? pnameOf(p) : ""});
+  const dc = $("btnDelCustom");
+  dc.style.display = p.custom ? "" : "none";
+  dc.textContent = t(p.overrides ? "btn_del_override" : "btn_del_custom");
+  $("importText").placeholder = t("import_ph");
   const ck = p.kind === "template" ? 0 : p.conf;
   $("pcur").innerHTML = `<div class="row"><b style="font-size:17px">${esc(p.id ? pnameOf(p) : "")}${star(p.id)}</b>
       <span class="badge ${CONF[ck] || ""}">${esc(t("conf" + (ck || 0)))}</span>${p.native?`<span class="badge ok">${esc(t("native_badge"))}</span>`:""}
@@ -465,7 +498,7 @@ function renderConfig(){
 
   const cap = S.runtime.capture;
   /* profiles with vehicle keys: group rows as Always / On foot / In vehicle */
-  const order = p.layers ? [2, 0, 1] : [null];
+  const order = p.layers ? [2, 0, 1, 3, 4] : [null];
   const rows = [];
   order.forEach(L => {
     const list = p.actions.filter(a => L === null || (a.layer || 0) === L);
@@ -540,6 +573,52 @@ async function refresh(force){
 $("btnDefault").onclick = () => call("/api/global", {default_profile: profile().id});
 $("btnUseGame").onclick = () => { if (S.runtime.title) call("/api/title", {tid: S.runtime.title, target: profile().id}); };
 $("btnReset").onclick = () => { if(confirm(t("confirm_reset"))) call("/api/reset", {profile: profile().id}); };
+let exportName = "profile.json";
+$("btnExport").onclick = async () => {
+  try {
+    const r = await fetch(API + "/api/export?id=" + encodeURIComponent(profile().id), {cache: "no-store"});
+    const txt = await r.text();
+    if (!r.ok) { toast(t("err") + r.status); return; }
+    exportName = profile().id + ".json";
+    $("exportText").value = txt; $("exportBox").style.display = "";
+  } catch (e) { toast(t("noconn")); }
+};
+$("btnDl").onclick = () => {
+  const u = URL.createObjectURL(new Blob([$("exportText").value], {type: "application/json"}));
+  const a = document.createElement("a"); a.href = u; a.download = exportName; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(u); a.remove(); }, 1000);
+};
+$("btnCopy").onclick = async () => {
+  const ta = $("exportText");
+  try { await navigator.clipboard.writeText(ta.value); } catch (e) { ta.select(); try { document.execCommand("copy"); } catch (e2) {} }
+  toast(t("copied"));
+};
+$("importFile").onchange = e => {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => { $("importText").value = String(rd.result || ""); };
+  rd.readAsText(f);
+};
+$("btnImport").onclick = async () => {
+  const body = $("importText").value.trim();
+  if (!body) { toast(t("import_empty")); return; }
+  try {
+    const r = await fetch(API + "/api/import", {method: "POST", headers: {"Content-Type": "text/plain"}, body});
+    let j = null; try { j = await r.json(); } catch (e) {}
+    if (!j || !j.ok) { toast(t("err") + ((j && j.error) || r.status)); return; }
+    sel = j.id; $("importText").value = ""; $("importFile").value = "";
+    await refresh(true);
+    toast(t("imported", {n: pname(j.id)}) + (j.message ? " — " + j.message : ""));
+  } catch (e) { toast(t("noconn")); }
+};
+$("btnDelCustom").onclick = () => {
+  const p = profile();
+  if (!confirm(t("confirm_del", {n: pnameOf(p)}))) return;
+  if (!p.overrides) sel = "";            /* it disappears: go back to the profile in use */
+  $("exportBox").style.display = "none";
+  call("/api/delete_profile", {id: p.id});
+};
 $("hz").onchange = e => call("/api/global", {inject_hz: e.target.value});
 $("auto").onchange = e => call("/api/global", {auto_activate: e.target.checked?1:0});
 $("nat").onchange = e => call("/api/global", {native_switch: e.target.checked?1:0});

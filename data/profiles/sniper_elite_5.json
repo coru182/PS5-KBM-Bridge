@@ -1,0 +1,180 @@
+{
+  "id": "sniper_elite_5",
+  "name": "Sniper Elite 5",
+  "template": "tps",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No source confirms keyboard/mouse on PS5. Rebellion's accessibility page mentions KBM bindings without naming platforms, and no console guide mentions KBM. Believed to be controller-only; unconfirmed.",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PS5 (Classic layout): hyperx, outsidergaming and samurai-gamers agree. PC: defkey and samurai-gamers. Both are community lists, and both list LCtrl for crouch and also for aim toggle, and C for crouch, prone, pacify and carry, so C is used as primary crouch/prone (tap/hold Circle). Empty Lung on PC is Space while aiming; on PS5 it is L3 (or R1) while scoped, so LShift (L3) gives empty lung when scoped and Space only vaults. Swap shoulder: PC middle click (gamertweak), PS5 hold Triangle (outsidergaming). Mouse wheel zoom maps to D-pad Up/Down, which outside the scope also equips the rifle / tags. Pacify (Square during takedown), ammo quick-switch (G) and items 4-0 are not mapped. PC Esc for pause is assumed (standard).",
+  "sources": [
+    "https://defkey.com/sniper-elite-5-shortcuts",
+    "https://samurai-gamers.com/sniper-elite-5/game-controls-45/",
+    "https://blog.hyperx.com/article/12801/sniper-elite-5-ps4-ps5-and-xbox-controls",
+    "https://outsidergaming.com/sniper-elite-5-complete-controls-guide-for-ps4-ps5-xbox-one-xbox-series-xs-and-gameplay-tips-for-beginners/",
+    "https://gamertweak.com/switch-shoulders-sniper-elite-5",
+    "https://rebellion.com/accessibility/sniper-elite-5-accessibility"
+  ],
+  "actions": [
+    {
+      "label": "Disparar",
+      "ps5": "R2",
+      "pc": [
+        "MOUSE1",
+        ""
+      ]
+    },
+    {
+      "label": "Apuntar",
+      "ps5": "L2",
+      "pc": [
+        "MOUSE2",
+        ""
+      ]
+    },
+    {
+      "label": "Recargar",
+      "ps5": "SQUARE",
+      "pc": [
+        "R",
+        ""
+      ]
+    },
+    {
+      "label": "Correr / pulmón vacío (con mira)",
+      "ps5": "L3",
+      "pc": [
+        "LSHIFT",
+        ""
+      ]
+    },
+    {
+      "label": "Saltar obstáculo / trepar / cubrirse",
+      "ps5": "CROSS",
+      "pc": [
+        "SPACE",
+        ""
+      ]
+    },
+    {
+      "label": "Agacharse / cuerpo a tierra (mantener)",
+      "ps5": "CIRCLE",
+      "pc": [
+        "C",
+        "LCTRL"
+      ]
+    },
+    {
+      "label": "Interactuar / remate",
+      "ps5": "TRIANGLE",
+      "pc": [
+        "E",
+        ""
+      ]
+    },
+    {
+      "label": "Cambiar hombro (mantener)",
+      "ps5": "TRIANGLE",
+      "pc": [
+        "MOUSE3",
+        ""
+      ]
+    },
+    {
+      "label": "Binoculares",
+      "ps5": "R3",
+      "pc": [
+        "B",
+        ""
+      ]
+    },
+    {
+      "label": "Concentración (mantener)",
+      "ps5": "R3",
+      "pc": [
+        "LALT",
+        ""
+      ]
+    },
+    {
+      "label": "Usar / lanzar objeto",
+      "ps5": "R1",
+      "pc": [
+        "F",
+        ""
+      ]
+    },
+    {
+      "label": "Menú radial (mantener)",
+      "ps5": "L1",
+      "pc": [
+        "Q",
+        ""
+      ]
+    },
+    {
+      "label": "Rifle",
+      "ps5": "DPAD_UP",
+      "pc": [
+        "1",
+        ""
+      ]
+    },
+    {
+      "label": "Arma secundaria",
+      "ps5": "DPAD_RIGHT",
+      "pc": [
+        "2",
+        ""
+      ]
+    },
+    {
+      "label": "Pistola",
+      "ps5": "DPAD_LEFT",
+      "pc": [
+        "3",
+        ""
+      ]
+    },
+    {
+      "label": "Marcar / chat rápido",
+      "ps5": "DPAD_DOWN",
+      "pc": [
+        "T",
+        ""
+      ]
+    },
+    {
+      "label": "Zoom + (con mira)",
+      "ps5": "DPAD_UP",
+      "pc": [
+        "WHEEL_UP",
+        ""
+      ]
+    },
+    {
+      "label": "Zoom - (con mira)",
+      "ps5": "DPAD_DOWN",
+      "pc": [
+        "WHEEL_DOWN",
+        ""
+      ]
+    },
+    {
+      "label": "Mapa / objetivos",
+      "ps5": "TOUCHPAD",
+      "pc": [
+        "M",
+        "TAB"
+      ]
+    },
+    {
+      "label": "Pausa",
+      "ps5": "OPTIONS",
+      "pc": [
+        "ESC",
+        ""
+      ]
+    }
+  ]
+}

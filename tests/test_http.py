@@ -22,8 +22,23 @@ def api(path):
         s, h, b = e.code, dict(e.headers), e.read()
     return s, json.loads(b)
 
-srv = subprocess.Popen([os.path.join(here, "host_server"), str(PORT), cfg_out], stdout=subprocess.PIPE, text=True)
+import tempfile, shutil
+pdir = tempfile.mkdtemp(prefix="kbm_profiles_")
+env = dict(os.environ, KBM_PROFILES_DIR=pdir)
+
+def post(path, body):
+    req = urllib.request.Request(BASE + path, data=body, method="POST", headers={"Content-Type": "text/plain"})
+    try:
+        with urllib.request.urlopen(req, timeout=3) as r:
+            return r.status, json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        b = e.read()
+        try: return e.code, json.loads(b)
+        except ValueError: return e.code, b
+
+srv = subprocess.Popen([os.path.join(here, "host_server"), str(PORT), cfg_out], stdout=subprocess.PIPE, text=True, env=env)
 try:
+    assert "custom profiles loaded: 0" in srv.stdout.readline()
     assert "listening" in srv.stdout.readline()
     s, h, body = get("/")
     assert s == 200 and b"PS5 KBM Bridge" in body and h["Access-Control-Allow-Origin"] == "*"
@@ -82,7 +97,7 @@ try:
     assert [p for p in st["config"]["profiles"] if p["id"] == "generic"][0]["name_en"] == "Generic (all buttons)"
     # vehicle layers: a key only moves off actions that are active at the same time
     g = api("/api/state?edit=gta_trilogy_de")[1]["config"]["edit"]
-    assert g["layers"] == 1 and {a["id"]: a["layer"] for a in g["actions"]}["accelerate"] == 1
+    assert g["layers"] == 26 and {a["id"]: a["layer"] for a in g["actions"]}["accelerate"] == 1   # car|bike|air bits
     r = api("/api/bind?profile=gta_trilogy_de&action=car_fire&slot=1&key=Q")[1]
     assert r["ok"] and r.get("moved_from") == "look_left", r
     k = {a["id"]: a["keys"] for a in api("/api/state?edit=gta_trilogy_de")[1]["config"]["edit"]["actions"]}
@@ -92,7 +107,7 @@ try:
     assert api("/api/layer?l=1")[1]["ok"] is False
     assert api("/api/global?notify_mode=1")[1]["ok"] and api("/api/state")[1]["config"]["notify_mode"] == 1
     g5 = api("/api/state?edit=gta5")[1]["config"]["edit"]
-    assert g5["layers"] == 1 and any(a["id"] == "veh_fire" and a["out"] == "L1+R1" and a["layer"] == 1 for a in g5["actions"])
+    assert g5["layers"] == 26 and any(a["id"] == "veh_fire" and a["out"] == "L1+R1" and a["layer"] == 1 for a in g5["actions"])
     assert api("/api/global?lang=bogus")[1]["ok"] and api("/api/state")[1]["config"]["lang"] == "auto"
     assert api("/api/global?inject_hz=120&auto_activate=0&default_profile=generic")[1]["ok"]
     c = api("/api/state")[1]["config"]
@@ -127,6 +142,43 @@ try:
     assert "lang=auto" in ini and "idle_exit_min=0" in ini and "ads_pct=220" in ini and "pointer_sens=50" in ini
     assert "PPSA04289=requiem" in ini and "[profile.re2r]" not in ini and "[profile.requiem]" in ini and "[profile.elden_ring]" not in ini and "key.heal=Q,H" in ini and "inject_hz=120" in ini
 
+    # custom profiles: export a built-in, change it, import it back; import a new one; delete
+    s, h, raw = get("/api/export?id=gta5")
+    ex = json.loads(raw)
+    assert s == 200 and ex["format"] == "ps5-kbm-profile" and ex["id"] == "gta5" and ex["no_auto_move"] is True
+    assert any(a["ps5"] == "TRIANGLE+MODE_TOGGLE" and a["pc"][0] == "F" for a in ex["actions"]), ex["actions"]
+    for pid in [p["id"] for p in api("/api/state")[1]["config"]["profiles"]]:
+        s, h, raw = get("/api/export?id=" + pid)
+        assert s == 200 and json.loads(raw)["id"] == pid
+    ex["sens"] = 31
+    ex["name"] = "GTA V (mío)"
+    s, r = post("/api/import", json.dumps(ex, ensure_ascii=False).encode())
+    assert s == 200 and r["ok"] and r["id"] == "gta5", r
+    g = prof("gta5")
+    assert g["sens"] == 31 and g["custom"] == 1 and g["overrides"] == 1 and g["mod"] == 0 and g["name"] == "GTA V (mío)"
+    new = {"id": "my_game", "name": "Mi juego", "title_ids": ["PPSA04289"],
+           "actions": [{"id": "jump", "label": "Saltar", "label_en": "Jump", "ps5": "CROSS", "pc": ["SPACE"]}]}
+    s, r = post("/api/import", json.dumps(new).encode())
+    assert r["ok"] and r["id"] == "my_game"
+    assert api("/api/title?tid=PPSA04289&target=")[1]["ok"]          # drop the rule so the Title ID applies
+    rt = api("/api/state")[1]["runtime"]
+    assert rt["profile"] == "my_game" and rt["title_source"] == "custom", rt
+    mg = prof("my_game")
+    assert [a["id"] for a in mg["actions"]] == ["move_up", "move_down", "move_left", "move_right", "jump", "ps"] and mg["title_ids"] == ["PPSA04289"]
+    assert sorted(os.listdir(pdir)) == ["gta5.json", "my_game.json"]
+    assert json.load(open(os.path.join(pdir, "my_game.json")))["actions"][4]["label_en"] == "Jump"
+    s, r = post("/api/import", b'{"id":"x","actions":[{"ps5":"CROSS","pc":["F10"]}]}')
+    assert s == 400 and not r["ok"] and "reserved" in r["error"]
+    s, r = post("/api/import", b"{" + b" " * 40000 + b"}")
+    assert s == 413
+    s, r = post("/api/state", b"{}")
+    assert s == 404
+    assert api("/api/delete_profile?id=re2r")[1]["ok"] is False      # built-in, not custom
+    assert api("/api/delete_profile?id=gta5")[1]["ok"]
+    g = prof("gta5")
+    assert g["custom"] == 0 and g["sens"] != 31 and sorted(os.listdir(pdir)) == ["my_game.json"]
+    assert api("/api/bind?profile=my_game&action=jump&slot=1&key=J")[1]["ok"]
+
     # robustness: garbage requests must not kill the server
     import socket
     for junk in [b"\x00\xff\xfe\r\n\r\n", b"GET\r\n\r\n", b"POST / HTTP/1.1\r\n\r\n", b"GET /api/bind?" + b"a=" * 3000 + b" HTTP/1.0\r\n\r\n"]:
@@ -138,6 +190,14 @@ try:
 
     assert api("/api/stop")[1]["ok"]
     srv.wait(timeout=5)
-    print("PASS: HTTP API (state, profile, bind+move, capture, titles, global, idle, autostart, reset, 404, junk, stop, INI persisted)")
+    # restart: the custom profile file is loaded again
+    srv = subprocess.Popen([os.path.join(here, "host_server"), str(PORT), "-", "PPSA04289"], stdout=subprocess.PIPE, text=True, env=env)
+    assert "custom profiles loaded: 1" in srv.stdout.readline()
+    assert "listening" in srv.stdout.readline()
+    assert api("/api/state")[1]["runtime"]["profile"] == "my_game"
+    assert api("/api/stop")[1]["ok"]
+    srv.wait(timeout=5)
+    print("PASS: HTTP API (state, profile, bind+move, capture, titles, global, idle, autostart, reset, custom profiles export/import/delete, 404, junk, stop, INI persisted)")
 finally:
     if srv.poll() is None: srv.kill()
+    shutil.rmtree(pdir, ignore_errors=True)

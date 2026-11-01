@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
-MAX_ACTIONS = 48
+MAX_ACTIONS = 64
 AUTO_ACTIONS = 5          # 4 movement + PS button, added to every profile
 LABEL_MAX = 47            # bytes, KbmAction.label is 48
 
@@ -23,7 +23,7 @@ BTN = {"L3": 0x2, "R3": 0x4, "OPTIONS": 0x8, "DPAD_UP": 0x10, "DPAD_RIGHT": 0x20
        "DPAD_LEFT": 0x80, "L2": 0x100, "R2": 0x200, "L1": 0x400, "R1": 0x800, "TRIANGLE": 0x1000,
        "CIRCLE": 0x2000, "CROSS": 0x4000, "SQUARE": 0x8000, "PS": 0x10000, "TOUCHPAD": 0x100000,
        "LS_UP": 1 << 32, "LS_DOWN": 1 << 33, "LS_LEFT": 1 << 34, "LS_RIGHT": 1 << 35,
-       "MODE_TOGGLE": 1 << 36, "NONE": 0}
+       "MODE_TOGGLE": 1 << 36, "MODE_CYCLE": 1 << 37, "NONE": 0}
 RESERVED = {"F8", "F9", "F10", "F11", "F12"}
 
 
@@ -91,7 +91,7 @@ def key_code(name, where):
     return KEYS[name]
 
 
-LAYERS = {"foot": 0, "vehicle": 1, "both": 2}
+LAYERS = {"foot": 0, "vehicle": 1, "car": 1, "both": 2, "bike": 3, "air": 4}
 
 
 def load_profile(path, kind):
@@ -130,7 +130,7 @@ def load_profile(path, kind):
             die(f"{where}: layer must be foot, vehicle or both")
         out.append((aid, lab, out_mask(a.get("ps5", ""), where), key_code(pc[0], where), key_code(pc[1], where), layer))
     # one key -> one action per layer ('both' counts for each layer)
-    for L in (0, 1):
+    for L in (0, 1, 3, 4):
         seen = {}
         for aid, _, _, k1, k2, lay in out:
             if lay not in (L, 2) or aid.startswith("move_"):
@@ -139,7 +139,7 @@ def load_profile(path, kind):
                 if k and seen.setdefault(k, aid) != aid:
                     die(f"{path}: key 0x{k:02x} used by '{seen[k]}' and '{aid}' in the same layer")
     # arrows are a secondary movement key, unless the PC version uses them on foot for something else
-    taken = {k for (aid, _, _, k1, k2, lay) in out if not aid.startswith("move_") and lay != 1 for k in (k1, k2) if k}
+    taken = {k for (aid, _, _, k1, k2, lay) in out if not aid.startswith("move_") and lay in (0, 2) for k in (k1, k2) if k}
     out = [(aid, lab, m, k1, 0 if (aid.startswith("move_") and k2 in taken) else k2, lay) for (aid, lab, m, k1, k2, lay) in out]
     if any(k in taken for k in ((KEYS["LGUI"], KEYS["RGUI"]) + (() if d.get("no_auto_move") else (KEYS["W"], KEYS["A"], KEYS["S"], KEYS["D"])))):
         die(f"{path}: uses W/A/S/D on foot or the Windows keys (reserved for movement / PS button)")

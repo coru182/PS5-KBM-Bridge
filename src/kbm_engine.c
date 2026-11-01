@@ -27,7 +27,24 @@ void kbm_init(KbmEngine *e) {
 }
 
 static const uint64_t *layer_table(const KbmEngine *e) {
-    return (e->map.has_layers && e->layer == KBM_LAYER_VEHICLE) ? e->map.out_veh : e->map.out;
+    if (!e->map.has_layers) return e->map.out;
+    switch (e->layer) {
+    case KBM_LAYER_VEHICLE: return e->map.out_veh;
+    case KBM_LAYER_BIKE:    return e->map.out_bike;
+    case KBM_LAYER_AIR:     return e->map.out_air;
+    default:                return e->map.out;
+    }
+}
+
+static int next_mode(const KbmEngine *e) {
+    static const int order[4] = {KBM_LAYER_FOOT, KBM_LAYER_VEHICLE, KBM_LAYER_BIKE, KBM_LAYER_AIR};
+    int i = 0;
+    while (i < 4 && order[i] != e->layer) ++i;
+    for (int k = 1; k <= 4; ++k) {
+        int l = order[(i + k) % 4];
+        if (l == KBM_LAYER_FOOT || (e->map.layers & KBM_LAYER_BIT(l))) return l;
+    }
+    return KBM_LAYER_FOOT;
 }
 
 static void press_edge(KbmEngine *e, uint8_t code, int now_down) {
@@ -47,8 +64,13 @@ static void press_edge(KbmEngine *e, uint8_t code, int now_down) {
         e->suppress[code] = 1;   /* the captured press must not reach the game */
         return;
     }
-    if (!was && e->map.has_layers && (layer_table(e)[code] & KBM_OUT_MODE_TOGGLE))
-        e->layer = e->layer == KBM_LAYER_VEHICLE ? KBM_LAYER_FOOT : KBM_LAYER_VEHICLE;
+    if (!was && e->map.has_layers) {
+        uint64_t m = layer_table(e)[code];
+        if (m & KBM_OUT_MODE_TOGGLE)
+            e->layer = e->layer == KBM_LAYER_FOOT ? KBM_LAYER_VEHICLE : KBM_LAYER_FOOT;
+        else if (m & KBM_OUT_MODE_CYCLE)
+            e->layer = next_mode(e);
+    }
     if (!was && !e->pointer_mode && (layer_table(e)[code] & KBM_BTN_PS)) ++e->ps_presses;
 }
 
@@ -60,7 +82,9 @@ void kbm_calib_start(KbmEngine *e, uint64_t t_ns) {
 }
 
 void kbm_set_layer(KbmEngine *e, int layer) {
-    e->layer = (e->map.has_layers && layer == KBM_LAYER_VEHICLE) ? KBM_LAYER_VEHICLE : KBM_LAYER_FOOT;
+    int ok = e->map.has_layers && layer != KBM_LAYER_FOOT && layer != KBM_LAYER_BOTH &&
+             layer >= 0 && layer <= KBM_LAYER_AIR && (e->map.layers & KBM_LAYER_BIT(layer));
+    e->layer = ok ? layer : KBM_LAYER_FOOT;
 }
 
 int kbm_keyboard(KbmEngine *e, int owner, const uint8_t *r, size_t n) {

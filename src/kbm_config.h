@@ -9,8 +9,8 @@
 #include <stdint.h>
 #include "kbm_engine.h"
 
-#define KBM_MAX_ACTIONS  48
-#define KBM_MAX_PROFILES 96
+#define KBM_MAX_ACTIONS  64
+#define KBM_MAX_PROFILES 128
 #define KBM_MAX_TITLES   64
 #define KBM_ID_LEN       24
 
@@ -27,13 +27,27 @@ typedef struct {
     uint8_t layer;                  /* KBM_LAYER_FOOT / VEHICLE / BOTH */
 } KbmAction;
 
+typedef struct {               /* what "Restore factory keys" goes back to */
+    int sens, yratio, smooth_ms, deadzone, invert_y, ads_pct, curve;
+    uint8_t key[KBM_MAX_ACTIONS][2];
+} KbmProfileDefaults;
+
+#define KBM_MAX_PROFILE_TIDS 8
+
 typedef struct {
     char id[KBM_ID_LEN];
-    const char *name, *name_en;     /* built-in strings (Spanish / English) */
+    const char *name, *name_en;     /* built-in or custom-pool strings (Spanish / English) */
     int sens, yratio, smooth_ms, deadzone, invert_y;
     int curve;            /* 0..100 small-movement boost (0 = linear) */
     int ads_pct;          /* sensitivity % while aiming (L2 held) */
-    int builtin;          /* index into KBM_BUILTIN */
+    int builtin;          /* index into KBM_BUILTIN, -1 = custom profile that adds a new id */
+    int custom;           /* loaded from /data/ps5-kbm/profiles/<id>.json */
+    uint8_t kind;         /* 0 game, 1 template, 2 PS5 menu */
+    uint8_t conf, native, mouse_dpad;
+    const char *tmpl, *notes, *tips, *tips_en;
+    int n_tids;           /* custom profiles: Title IDs they apply to automatically */
+    char tids[KBM_MAX_PROFILE_TIDS][12];
+    KbmProfileDefaults def;
     int n;
     KbmAction a[KBM_MAX_ACTIONS];
 } KbmProfile;
@@ -59,6 +73,8 @@ typedef struct {
     KbmTitleRule titles[KBM_MAX_TITLES];
     int n_profiles;
     KbmProfile p[KBM_MAX_PROFILES];
+    size_t pool_len;      /* strings of custom profiles (never compacted; restart frees) */
+    char pool[64 * 1024];
 } KbmConfig;
 
 /* What the title database knows about a Title ID. */
@@ -115,8 +131,23 @@ void kbm_profile_to_mapping(const KbmProfile *p, KbmMapping *m);
 void kbm_profile_clamp(KbmProfile *p);
 int  kbm_profile_has_layers(const KbmProfile *p);   /* has vehicle-layer actions */
 
+/* Custom profiles (kbm_custom.c). JSON format = the export format:
+ * {"id","name","name_en","template","title_ids":[...],"sens",...,"mouse":"camera|dpad",
+ *  "actions":[{"id","label","label_en","ps5":"CROSS+L1","pc":["F","ENTER"],"layer":"foot|vehicle|both|bike|air"}]}
+ * Actions are taken literally (include movement and the PS button). An id that
+ * matches a built-in profile replaces it. Returns the profile index or -1 + err. */
+int  kbm_custom_load(KbmConfig *c, const char *json, size_t len, char *err, size_t errn);
+/* Delete a custom profile: a replaced built-in comes back, a new one disappears. */
+int  kbm_custom_delete(KbmConfig *c, const char *id);
+/* Profile as JSON in the same format (current keys and settings). -1 if too small. */
+int  kbm_profile_export(const KbmConfig *c, const KbmProfile *p, char *buf, size_t n);
+
 int  kbm_valid_title_id(const char *s);
-int  kbm_valid_profile_id(const char *s);
+int  kbm_valid_profile_id(const KbmConfig *c, const char *s);
+uint64_t kbm_out_parse(const char *s);           /* "CROSS+L1" -> bits, 0 = invalid */
+const char *kbm_kind_name(int kind);             /* "game" | "template" | "menu" */
+void kbm_profile_snapshot_defaults(KbmProfile *p);   /* current settings become "factory" */
+void kbm_profile_restore_builtin(KbmProfile *p);     /* back to the built-in it came from */
 /* "LS_DOWN+CIRCLE" */
 const char *kbm_out_describe(uint64_t out, char *buf, size_t n);
 

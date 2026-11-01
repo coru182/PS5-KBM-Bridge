@@ -3,24 +3,123 @@
   "name": "Marvel Rivals",
   "template": "tps",
   "native_kbm_ps5": false,
-  "native_kbm_note": "Not confirmed. No source was found during this research (web search limit reached), and Wikipedia mentions only cross-play, not console keyboard/mouse. Believed to be controller-only on PS5; check this before relying on it.",
+  "native_kbm_note": "The PS5 version is controller-only. In January 2025 NetEase said console players who use keyboard/mouse adapters (XIM, Cronus Zen, Titan Two, KayMander, Brook and 'any similar emulation tool') will be penalized, up to permanent suspension (gfinityesports, esports.gg). This bridge counts as such an adapter, so there is a real ban risk in online play.",
   "ads_pct": 100,
   "confidence": "low",
-  "notes": "PC keys are sourced from magicgameworld (LMB primary, RMB secondary, R reload, V melee, E ability 1, LShift ability 2, F ability 3, Q ultimate, Z/X/C team-ups, Space jump/ascend, LCtrl descend, H change hero, Tab scoreboard). The PS5 buttons were NOT verified from a source; they come from general knowledge of the default controller layout and must be checked in-game. Ability 3 (F), descend (LCtrl) and team-ups (Z/X/C) were left out because their PS5 buttons could not be confirmed. Abilities differ per hero, but the slot bindings are shared.",
+  "notes": "PC keys: magicgameworld + boosting-ground (both agree). PS5 sourced only loosely: R2 primary attack, Square reload, R3 melee, Triangle ultimate, Cross jump and L1 secondary ability come from bittopup (low-quality guide); D-pad Up hero profile / D-pad Right Chrono Vision from boosting-ground and esports.gg. UNVERIFIED (inferred from the Overwatch-style layout and earlier draft; bittopup contradicts it): secondary attack L2, Ability 1 (E) R1, Ability 3 (F) Circle (techradar only says Circle is used for abilities on some heroes), scoreboard Touchpad. Abilities vary per hero, but the slots (E / Shift / F / Q) are shared; console allows per-hero remaps. Omitted, PS5 button unknown: team-ups Z/X/C, descend (LCtrl), change hero (H), weapons 1/2, ping (D-pad Down on PS5, but the PC key is unsourced).",
   "sources": [
     "https://www.magicgameworld.com/marvel-rivals-pc-keyboard-controls-guide/",
-    "https://en.wikipedia.org/wiki/Marvel_Rivals"
+    "https://boosting-ground.com/marvel-rivals/guides/beginner-academy/controls-and-keybind-guide",
+    "https://bittopup.com/article/Marvel-Rivals-Controller-Setup-Complete-Guide-Settings",
+    "https://esports.gg/guides/marvel-rivals/best-controller-settings-for-marvel-rivals",
+    "https://www.techradar.com/gaming/marvel-rivals-best-controller-settings",
+    "https://www.gfinityesports.com/article/marvel-rivals-will-using-mouse-and-keyboard-on-console-get-you-banned",
+    "https://esports.gg/news/marvel-rivals/marvel-rivals-to-issue-penalties-for-console-players-using-mouse-and-keyboard/"
   ],
   "actions": [
-    {"label": "Ataque principal", "ps5": "R2", "pc": ["MOUSE1", ""]},
-    {"label": "Ataque secundario", "ps5": "L2", "pc": ["MOUSE2", ""]},
-    {"label": "Recargar", "ps5": "SQUARE", "pc": ["R", ""]},
-    {"label": "Saltar / Ascender", "ps5": "CROSS", "pc": ["SPACE", ""]},
-    {"label": "Cuerpo a cuerpo", "ps5": "R3", "pc": ["V", ""]},
-    {"label": "Habilidad 1", "ps5": "R1", "pc": ["E", ""]},
-    {"label": "Habilidad 2", "ps5": "L1", "pc": ["LSHIFT", ""]},
-    {"label": "Definitiva", "ps5": "TRIANGLE", "pc": ["Q", ""]},
-    {"label": "Tabla de puntajes", "ps5": "TOUCHPAD", "pc": ["TAB", ""]},
-    {"label": "Menú / Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+    {
+      "label": "Ataque principal",
+      "ps5": "R2",
+      "pc": [
+        "MOUSE1",
+        ""
+      ]
+    },
+    {
+      "label": "Ataque secundario",
+      "ps5": "L2",
+      "pc": [
+        "MOUSE2",
+        ""
+      ]
+    },
+    {
+      "label": "Recargar",
+      "ps5": "SQUARE",
+      "pc": [
+        "R",
+        ""
+      ]
+    },
+    {
+      "label": "Cuerpo a cuerpo",
+      "ps5": "R3",
+      "pc": [
+        "V",
+        ""
+      ]
+    },
+    {
+      "label": "Habilidad 1 (E)",
+      "ps5": "R1",
+      "pc": [
+        "E",
+        ""
+      ]
+    },
+    {
+      "label": "Habilidad 2 (Shift)",
+      "ps5": "L1",
+      "pc": [
+        "LSHIFT",
+        ""
+      ]
+    },
+    {
+      "label": "Habilidad 3 (F)",
+      "ps5": "CIRCLE",
+      "pc": [
+        "F",
+        ""
+      ]
+    },
+    {
+      "label": "Definitiva",
+      "ps5": "TRIANGLE",
+      "pc": [
+        "Q",
+        ""
+      ]
+    },
+    {
+      "label": "Saltar / ascender",
+      "ps5": "CROSS",
+      "pc": [
+        "SPACE",
+        ""
+      ]
+    },
+    {
+      "label": "Perfil del héroe",
+      "ps5": "DPAD_UP",
+      "pc": [
+        "F1",
+        ""
+      ]
+    },
+    {
+      "label": "Visión cronológica",
+      "ps5": "DPAD_RIGHT",
+      "pc": [
+        "B",
+        ""
+      ]
+    },
+    {
+      "label": "Tabla de puntajes",
+      "ps5": "TOUCHPAD",
+      "pc": [
+        "TAB",
+        ""
+      ]
+    },
+    {
+      "label": "Menú / pausa",
+      "ps5": "OPTIONS",
+      "pc": [
+        "ESC",
+        ""
+      ]
+    }
   ]
 }

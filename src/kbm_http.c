@@ -2,12 +2,15 @@
 #include "kbm_http.h"
 #include "kbm_webui_gen.h"
 
+#include <ctype.h>
 #include <errno.h>
+#include <stdlib.h>
 #include <netinet/in.h>
 #include <poll.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <unistd.h>
@@ -21,6 +24,8 @@ static volatile int g_http_run = 0;
 static KbmApi *g_api;
 static char g_body[48 * 1024];   /* only the server thread touches these */
 static char g_req[4096];
+static char g_post[32 * 1024 + 1];
+#define KBM_POST_MAX (sizeof(g_post) - 1)
 
 static void send_all(int fd, const char *p, size_t n) {
     while (n > 0) {
@@ -33,10 +38,10 @@ static void send_all(int fd, const char *p, size_t n) {
 static void respond(int fd, int status, const char *ctype, const char *body, size_t len) {
     char hdr[384];
     const char *reason = status == 200 ? "OK" : status == 204 ? "No Content" :
-                         status == 400 ? "Bad Request" : status == 404 ? "Not Found" : "Error";
+                         status == 400 ? "Bad Request" : status == 404 ? "Not Found" : status == 413 ? "Payload Too Large" : "Error";
     int h = snprintf(hdr, sizeof(hdr),
         "HTTP/1.0 %d %s\r\nContent-Type: %s\r\nContent-Length: %zu\r\n"
-        "Access-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: GET, OPTIONS\r\n"
+        "Access-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: GET, POST, OPTIONS\r\nAccess-Control-Allow-Headers: Content-Type\r\n"
         "Cache-Control: no-store\r\nConnection: close\r\n\r\n",
         status, reason, ctype, len);
     send_all(fd, hdr, (size_t)h);
@@ -63,10 +68,37 @@ static void handle(int fd) {
     char method[8] = {0}, target[2048] = {0};
     if (sscanf(g_req, "%7s %2047s", method, target) != 2) { respond(fd, 400, "text/plain", "bad request", 11); return; }
     if (!strcmp(method, "OPTIONS")) { respond(fd, 204, "text/plain", "", 0); return; }
-    if (strcmp(method, "GET")) { respond(fd, 400, "text/plain", "GET only", 8); return; }
-
     char *qs = strchr(target, '?');
     if (qs) *qs++ = 0;
+    if (!strcmp(method, "POST")) {
+        if (strcmp(target, "/api/import")) { respond(fd, 404, "text/plain", "not found", 9); return; }
+        char *hend = strstr(g_req, "\r\n\r\n");
+        size_t hlen = hend ? (size_t)(hend - g_req) + 4 : 0;
+        if (!hend) { hend = strstr(g_req, "\n\n"); hlen = hend ? (size_t)(hend - g_req) + 2 : 0; }
+        if (!hend) { respond(fd, 400, "text/plain", "bad request", 11); return; }
+        long clen = -1;
+        for (char *l = strchr(g_req, '\n'); l && l < g_req + hlen; l = strchr(l, '\n')) {
+            ++l;
+            if (!strncasecmp(l, "Content-Length:", 15)) clen = strtol(l + 15, NULL, 10);
+        }
+        if (clen < 0) { respond(fd, 400, "text/plain", "Content-Length required", 23); return; }
+        if ((size_t)clen > KBM_POST_MAX) { respond(fd, 413, "text/plain", "profile too large (max 32 KB)", 29); return; }
+        size_t have = got > hlen ? got - hlen : 0;
+        if (have > (size_t)clen) have = (size_t)clen;
+        memcpy(g_post, g_req + hlen, have);
+        while (have < (size_t)clen) {
+            ssize_t r = recv(fd, g_post + have, (size_t)clen - have, 0);
+            if (r < 0 && errno == EINTR) continue;
+            if (r <= 0) break;
+            have += (size_t)r;
+        }
+        if (have < (size_t)clen) { respond(fd, 400, "text/plain", "incomplete body", 15); return; }
+        g_post[have] = 0;
+        int st = kbm_api_import(g_api, g_post, have, g_body, sizeof(g_body));
+        respond(fd, st, "application/json", g_body, strlen(g_body));
+        return;
+    }
+    if (strcmp(method, "GET")) { respond(fd, 400, "text/plain", "GET or POST only", 16); return; }
     if (!strcmp(target, "/") || !strcmp(target, "/index.html")) {
         respond(fd, 200, "text/html; charset=utf-8", KBM_WEBUI_HTML, sizeof(KBM_WEBUI_HTML) - 1);
     } else if (!strcmp(target, "/api/state")) {

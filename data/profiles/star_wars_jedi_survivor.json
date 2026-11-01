@@ -1,0 +1,35 @@
+{
+  "id": "star_wars_jedi_survivor",
+  "name": "Star Wars Jedi: Survivor",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No source reports keyboard/mouse gameplay support on PS5; shacknews and primagames list DualSense buttons only for PS5.",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "PC and PS5 from shacknews (full table) and primagames, which agree. Force combos: LCTRL (Focus) = R1, so Ctrl+F / Ctrl+Space / Ctrl+left click produce R1+Triangle (Lift) / R1+Cross (Slam) / R1+Square (companion assist). Confuse is Ctrl+Z on PC; Z is mapped directly to R1+Circle. Slow (key 4) = L3+R3. Interact (E) and Target (middle mouse) both map to R3 on PS5. PS5 menu: primagames says Options, shacknews says right side of touchpad; Options is used here. Navigation contexts (swimming, ziplines) reuse buttons and are not listed. The second L2 'locked' basic action (PC E) is omitted because E already handles interact.",
+  "sources": [
+    "https://www.shacknews.com/article/135288/star-wars-jedi-survivor-controls",
+    "https://primagames.com/tips/jedi-survivor-controls-guide-all-platforms"
+  ],
+  "actions": [
+    {"label": "Atacar", "ps5": "SQUARE", "pc": ["MOUSE1", ""]},
+    {"label": "Bloquear / parry", "ps5": "L1", "pc": ["MOUSE2", ""]},
+    {"label": "Ataque especial", "ps5": "TRIANGLE", "pc": ["F", ""]},
+    {"label": "Saltar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Esquivar / soltarse", "ps5": "CIRCLE", "pc": ["TAB", ""]},
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Concentración (Fuerza)", "ps5": "R1", "pc": ["LCTRL", ""]},
+    {"label": "Empuje de la Fuerza", "ps5": "R2", "pc": ["2", ""]},
+    {"label": "Atracción de la Fuerza", "ps5": "L2", "pc": ["3", ""]},
+    {"label": "Confusión", "ps5": "R1+CIRCLE", "pc": ["Z", ""]},
+    {"label": "Ralentizar", "ps5": "L3+R3", "pc": ["4", ""]},
+    {"label": "Interactuar", "ps5": "R3", "pc": ["E", ""]},
+    {"label": "Fijar objetivo", "ps5": "R3", "pc": ["MOUSE3", ""]},
+    {"label": "Curarse", "ps5": "DPAD_UP", "pc": ["Q", ""]},
+    {"label": "Activar BD-1", "ps5": "DPAD_DOWN", "pc": ["R", ""]},
+    {"label": "Postura 1", "ps5": "DPAD_LEFT", "pc": ["X", ""]},
+    {"label": "Postura 2", "ps5": "DPAD_RIGHT", "pc": ["C", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Menú / pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

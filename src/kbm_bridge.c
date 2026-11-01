@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later
- * PS5 KBM Bridge — Logitech receiver (046d:c534) boot keyboard + mouse
+ * PS5 KBM Bridge — any USB boot-protocol keyboard + mouse (one receiver or two devices)
  * -> configurable mapping -> Ghostcontrol virtual DualSense.
  *
  * EXPERIMENTAL. Built as part of Ghostcontrol, not standalone.
@@ -14,6 +14,7 @@
  */
 #include "kbm_bridge.h"
 #include "kbm_api.h"
+#include "kbm_profiles_io.h"
 #include "kbm_config.h"
 #include "kbm_engine.h"
 #include "kbm_http.h"
@@ -44,7 +45,7 @@
 #ifndef KBM_DIAG_ONLY
 #define KBM_DIAG_ONLY 0
 #endif
-#define KBM_VERSION "0.11"
+#define KBM_VERSION "0.12"
 
 extern void ghostpad_status_log(const char *fmt, ...);
 #define KLOG(...) ghostpad_status_log("[KBM] " __VA_ARGS__)
@@ -109,12 +110,17 @@ static void focus_probe(int big_app) {
 #define KBM_BUS_MAX 2
 #define KBM_DEV_MIN 2
 #define KBM_DEV_MAX 31
-#define TARGET_VID 0x046d
-#define TARGET_PID 0xc534
-#define MAX_WORKERS 1
+/* Any USB keyboard / mouse that offers the HID boot protocol: a combo
+ * receiver (one device, both interfaces) or a keyboard and a mouse on two
+ * devices. Tested receiver: Logitech 046d:c534. */
+#define KBM_LOGITECH_VID 0x046d
+#define KBM_LOGITECH_PID 0xc534
+#define KBM_SONY_VID     0x054c   /* never touch PlayStation controllers */
+#define MAX_WORKERS 2
 #define KBM_POLL_MS 2
 #define KBM_CFG_DIR  "/data/ps5-kbm"
 #define KBM_CFG_PATH "/data/ps5-kbm/config.ini"
+#define KBM_PROFILES_DIR "/data/ps5-kbm/profiles"
 #define KBM_CAPTURE_TIMEOUT_S 10
 /* etaHEN starts <dir>/<name>.elf at load when <name>.elf.auto_start exists. */
 #define KBM_AUTOSTART_ELF    "/data/etaHEN/payloads/ps5-kbm-bridge.elf"
@@ -122,8 +128,10 @@ static void focus_probe(int big_app) {
 
 typedef struct {
     int active;
+    int idx;                 /* engine owner id */
     char path[32];
-    HidBootLayout layout;
+    uint16_t vid, pid;
+    HidBootLayout layout;    /* only the interfaces this worker took (-1 = not used) */
 } KbmWorker;
 
 /* ---- shared state: everything below is guarded by g_lock unless noted ---- */
@@ -136,7 +144,12 @@ static int g_cfg_dirty = 0;
 static uint64_t g_capture_started_ns = 0;
 static uint64_t g_pending_evt_ns = 0;
 
-static KbmWorker g_worker;               /* guarded by g_lock */
+static KbmWorker g_workers[MAX_WORKERS];  /* guarded by g_lock */
+static int workers_busy_locked(void) {
+    int n = 0;
+    for (int i = 0; i < MAX_WORKERS; ++i) n += g_workers[i].active;
+    return n;
+}
 static kbm_inject_cb g_inject;
 static kbm_notify_cb g_notify;
 static volatile int g_injection_enabled = 0;
@@ -203,7 +216,7 @@ static void apply_profile_locked(const char *title) {
     m.pointer_sens = g_cfg.pointer_sens;
     g_engine.map = m;
     kbm_set_layer(&g_engine, g_engine.layer);   /* back to on foot if this profile has no layers */
-    g_rt.has_layers = m.has_layers;
+    g_rt.has_layers = m.has_layers ? (int)m.layers : 0;
     g_rt.layer = g_engine.layer;
     g_rt.hz = kbm_config_effective_hz(&g_cfg);
 }
@@ -242,9 +255,13 @@ static void save_config(void) {
         KLOG("config save failed errno=%d\n", errno);
 }
 
+static void log_line(void *u, const char *m) { (void)u; KLOG("%s\n", m); }
+
 static void load_config(void) {
     static char buf[32768];
     kbm_config_defaults(&g_cfg);
+    int ncustom = kbm_profiles_load_dir(&g_cfg, KBM_PROFILES_DIR, log_line, NULL);   /* before the INI: its tweaks apply on top */
+    if (ncustom) KLOG("%d custom profile(s) from %s\n", ncustom, KBM_PROFILES_DIR);
     int fd = open(KBM_CFG_PATH, O_RDONLY);
     if (fd < 0) { KLOG("no %s yet: using defaults (PC-style RE keys)\n", KBM_CFG_PATH); g_cfg_dirty = 1; return; }
     ssize_t n = read(fd, buf, sizeof(buf) - 1);
@@ -275,12 +292,15 @@ static void set_pointer_locked(int on, const char *why) {
     g_pointer_notify = on;
     KLOG("pointer mode %s (%s)\n", on ? "ON" : "off", why);
 }
+static const char *layer_name(int l) {
+    return l == KBM_LAYER_VEHICLE ? "car" : l == KBM_LAYER_BIKE ? "bike" : l == KBM_LAYER_AIR ? "aircraft" : "on foot";
+}
 static void api_set_pointer(void *u, int on) { (void)u; set_pointer_locked(on, "web UI"); }
 static void api_set_layer(void *u, int layer) {   /* lock held */
     (void)u;
     kbm_set_layer(&g_engine, layer);
     g_rt.layer = g_engine.layer;
-    KLOG("MODE -> %s (web UI)\n", g_engine.layer ? "vehicle" : "on foot");
+    KLOG("MODE -> %s (web UI)\n", layer_name(g_engine.layer));
 }
 static void api_stop(void *u) { (void)u; g_stop_requested = 1; KLOG("stop requested from web UI\n"); }
 
@@ -378,7 +398,7 @@ static void *inject_thread(void *unused) {
 }
 
 /* ---------------------------------------------------------------- probe */
-static int probe_boot_device(const char *path, HidBootLayout *layout, int quiet) {
+static int probe_boot_device(const char *path, HidBootLayout *layout, uint16_t *vid_out, uint16_t *pid_out) {
     int fd = open(path, O_RDONLY | O_NONBLOCK);
     if (fd < 0) return 0;
     uint8_t data[2048];
@@ -388,38 +408,37 @@ static int probe_boot_device(const char *path, HidBootLayout *layout, int quiet)
     ugd.ugd_maxlen = sizeof(data);
     struct usb_device_descriptor dev;
     memset(&dev, 0, sizeof(dev));
-    int known = ioctl(fd, USB_GET_DEVICE_DESC, &dev) == 0 &&
-                UGETW(dev.idVendor) == TARGET_VID && UGETW(dev.idProduct) == TARGET_PID;
-    int ok = known && ioctl(fd, USB_GET_FULL_DESC, &ugd) == 0 &&
+    int have = ioctl(fd, USB_GET_DEVICE_DESC, &dev) == 0 && UGETW(dev.idVendor) != KBM_SONY_VID;
+    int ok = have && ioctl(fd, USB_GET_FULL_DESC, &ugd) == 0 &&
              ugd.ugd_actlen <= sizeof(data) &&
-             hid_boot_find(data, ugd.ugd_actlen, layout) &&
-             layout->keyboard_ep >= 0 && layout->mouse_ep >= 0;
-    if (ok && !quiet) KLOG("matched Logitech receiver at %s keyboard ep=0x%x mouse ep=0x%x\n",
-                           path, layout->keyboard_ep, layout->mouse_ep);
+             hid_boot_find(data, ugd.ugd_actlen, layout);
+    if (vid_out) *vid_out = have ? UGETW(dev.idVendor) : 0;
+    if (pid_out) *pid_out = have ? UGETW(dev.idProduct) : 0;
     close(fd);
     return ok;
 }
 
 /* After a release: does the PS5 own the interfaces again? (0 = driver attached) */
 static void log_native_driver_state(void) {
+    int found = 0;
     for (int bus = KBM_BUS_MIN; bus <= KBM_BUS_MAX; bus++) {
         for (int dev = KBM_DEV_MIN; dev <= KBM_DEV_MAX; dev++) {
             char path[32];
             HidBootLayout l;
             snprintf(path, sizeof(path), "/dev/ugen%d.%d", bus, dev);
-            if (!probe_boot_device(path, &l, 1)) continue;
+            if (!probe_boot_device(path, &l, NULL, NULL)) continue;
             int fd = open(path, O_RDONLY | O_NONBLOCK);
             if (fd < 0) continue;
             int a = l.keyboard_iface, b = l.mouse_iface;
-            int ka = ioctl(fd, USB_IFACE_DRIVER_ACTIVE, &a) == 0;
-            int ma = ioctl(fd, USB_IFACE_DRIVER_ACTIVE, &b) == 0;
+            int ka = a >= 0 && ioctl(fd, USB_IFACE_DRIVER_ACTIVE, &a) == 0;
+            int ma = b >= 0 && ioctl(fd, USB_IFACE_DRIVER_ACTIVE, &b) == 0;
             close(fd);
             KLOG("RELEASE check %s: PS5 driver keyboard=%s mouse=%s\n", path,
-                 ka ? "ATTACHED" : "none", ma ? "ATTACHED" : "none");
-            return;
+                 l.keyboard_iface < 0 ? "-" : ka ? "ATTACHED" : "none", l.mouse_iface < 0 ? "-" : ma ? "ATTACHED" : "none");
+            found = 1;
         }
     }
-    KLOG("RELEASE check: receiver not visible yet (still re-enumerating?)\n");
+    if (!found) KLOG("RELEASE check: no keyboard/mouse visible yet (still re-enumerating?)\n");
 }
 
 static int set_boot_protocol(int fd, int iface) {
@@ -452,6 +471,7 @@ static int g_take_count = 0;
 
 /* ---------------------------------------------------------------- report sink */
 typedef struct {
+    int owner;               /* worker index */
     unsigned mouse_logged, kb_logged;
     int f8_was, f9_was, f10_was, f11_was, f12_was;
 } KbmSinkCtx;
@@ -462,11 +482,11 @@ static int on_report(void *user, int kind, const uint8_t *buf, uint32_t len, uin
     char moved[64] = {0};
     pthread_mutex_lock(&g_lock);
     int layer_before = g_engine.layer;
-    ok = kind == KBM_KIND_KEYBOARD ? kbm_keyboard(&g_engine, 0, buf, len)
-                                   : kbm_mouse(&g_engine, 0, buf, len, t_ns);
+    ok = kind == KBM_KIND_KEYBOARD ? kbm_keyboard(&g_engine, c->owner, buf, len)
+                                   : kbm_mouse(&g_engine, c->owner, buf, len, t_ns);
     if (g_engine.layer != layer_before) {
         g_rt.layer = g_engine.layer;
-        KLOG("MODE -> %s (mode key%s)\n", g_engine.layer ? "vehicle" : "on foot", g_engine.pointer_mode ? ", pointer mode on" : "");
+        KLOG("MODE -> %s (mode key%s)\n", layer_name(g_engine.layer), g_engine.pointer_mode ? ", pointer mode on" : "");
     }
     if (g_engine.ps_presses != g_ps_seen) {          /* PS key: game <-> PS5 menu (only if focus can't be read) */
         g_ps_seen = g_engine.ps_presses;
@@ -590,15 +610,19 @@ static void log_window(KbmUsbFs *u, const char *path, uint32_t pr, uint32_t pi, 
 static void *device_thread(void *arg) {
     KbmWorker *w = (KbmWorker *)arg;
     HidBootLayout *l = &w->layout;
-    static KbmUsbFs usb;
-    static KbmSinkCtx ctx;
-    KbmUsbFs *u = &usb;
+    static KbmUsbFs usb[MAX_WORKERS];
+    static KbmSinkCtx ctxs[MAX_WORKERS];
+    KbmUsbFs *u = &usb[w->idx];
+    KbmSinkCtx *ctxp = &ctxs[w->idx];
+#define ctx (*ctxp)
     int fd = -1, have_fs = 0, sleep_mode = 0, release = 0;
     uint32_t pr = 0, pi = 0, pl = 0, pe = 0, spurious = 0;
 
     memset(&ctx, 0, sizeof(ctx));
-    KLOG("worker %s keyboard=%d/0x%x mouse=%d/0x%x\n", w->path,
-         l->keyboard_iface, l->keyboard_ep, l->mouse_iface, l->mouse_ep);
+    ctx.owner = w->idx;
+    KLOG("worker %d %s %04x:%04x%s keyboard=%d/0x%x mouse=%d/0x%x\n", w->idx, w->path, w->vid, w->pid,
+         (w->vid == KBM_LOGITECH_VID && w->pid == KBM_LOGITECH_PID) ? " (Logitech receiver)" : "",
+         l->keyboard_iface, l->keyboard_ep & 0xff, l->mouse_iface, l->mouse_ep & 0xff);
     fd = open(w->path, O_RDWR);
     if (fd < 0) { KLOG("open %s errno=%d\n", w->path, errno); goto done; }
     if (l->keyboard_iface >= 0) {
@@ -613,23 +637,28 @@ static void *device_thread(void *arg) {
     }
     if (kbm_usbfs_init(u, fd, sys_ioctl, on_report, &ctx) != 0) { KLOG("FS_INIT errno=%d\n", errno); goto done; }
     have_fs = 1;
-    if (set_boot_protocol(fd, l->keyboard_iface) != 0) { KLOG("SET_PROTOCOL kb errno=%d\n", errno); goto done; }
-    if (set_boot_protocol(fd, l->mouse_iface) != 0) { KLOG("SET_PROTOCOL mouse errno=%d\n", errno); goto done; }
+    if (l->keyboard_iface >= 0 && set_boot_protocol(fd, l->keyboard_iface) != 0) { KLOG("SET_PROTOCOL kb errno=%d\n", errno); goto done; }
+    if (l->mouse_iface >= 0 && set_boot_protocol(fd, l->mouse_iface) != 0) { KLOG("SET_PROTOCOL mouse errno=%d\n", errno); goto done; }
     {
         int a = l->keyboard_iface, b = l->mouse_iface;
-        int kd = ioctl(fd, USB_IFACE_DRIVER_ACTIVE, &a) == 0;
-        int md = ioctl(fd, USB_IFACE_DRIVER_ACTIVE, &b) == 0;
+        int kd = a >= 0 && ioctl(fd, USB_IFACE_DRIVER_ACTIVE, &a) == 0;
+        int md = b >= 0 && ioctl(fd, USB_IFACE_DRIVER_ACTIVE, &b) == 0;
         ++g_take_count;
         KLOG("TAKE %d: PS5 driver after detach kb=%s mouse=%s; protocol kb=%d mouse=%d (0=boot)\n", g_take_count,
              kd ? "STILL-ATTACHED" : "none", md ? "STILL-ATTACHED" : "none",
-             get_protocol(fd, l->keyboard_iface), get_protocol(fd, l->mouse_iface));
+             l->keyboard_iface >= 0 ? get_protocol(fd, l->keyboard_iface) : -2,
+             l->mouse_iface >= 0 ? get_protocol(fd, l->mouse_iface) : -2);
     }
-    if (kbm_usbfs_open_ep(u, 0, (uint8_t)l->keyboard_ep, KBM_KIND_KEYBOARD) != 0) { KLOG("FS_OPEN kb errno=%d\n", errno); goto done; }
-    if (kbm_usbfs_open_ep(u, 1, (uint8_t)l->mouse_ep, KBM_KIND_MOUSE) != 0) { KLOG("FS_OPEN mouse errno=%d\n", errno); goto done; }
+    {
+        int idx = 0;
+        if (l->keyboard_ep >= 0 && kbm_usbfs_open_ep(u, idx++, (uint8_t)l->keyboard_ep, KBM_KIND_KEYBOARD) != 0) { KLOG("FS_OPEN kb errno=%d\n", errno); goto done; }
+        if (l->mouse_ep >= 0 && kbm_usbfs_open_ep(u, idx++, (uint8_t)l->mouse_ep, KBM_KIND_MOUSE) != 0) { KLOG("FS_OPEN mouse errno=%d\n", errno); goto done; }
+    }
     for (int i = 0; i < u->n_ep; ++i)
         if (kbm_usbfs_arm(u, i) < 0) { KLOG("initial arm %d errno=%d\n", i, errno); goto done; }
-    KLOG("USB boot HID v" KBM_VERSION " ready: %s kb req=%u mouse req=%u%s\n", w->path,
-         u->ep[0].req_len, u->ep[1].req_len, KBM_DIAG_ONLY ? " [DIAG: no virtual pad]" : "");
+    KLOG("USB boot HID v" KBM_VERSION " ready: %s%s%s req=%u/%u%s\n", w->path,
+         l->keyboard_ep >= 0 ? " keyboard" : "", l->mouse_ep >= 0 ? " mouse" : "",
+         u->ep[0].req_len, u->n_ep > 1 ? u->ep[1].req_len : 0, KBM_DIAG_ONLY ? " [DIAG: no virtual pad]" : "");
     pthread_mutex_lock(&g_lock);
     g_rt.receiver = 1;
     refresh_status_locked();
@@ -664,8 +693,8 @@ static void *device_thread(void *arg) {
 done:
     if (have_fs) kbm_usbfs_teardown(u);
     pthread_mutex_lock(&g_lock);
-    kbm_disconnect(&g_engine, 0);            /* release every key/button */
-    g_rt.receiver = 0;
+    kbm_disconnect(&g_engine, w->idx);       /* release every key/button of this device */
+    g_rt.receiver = workers_busy_locked() > 1;   /* other devices still held? (this one is leaving) */
     if (g_rt.capture_active) { g_rt.capture_active = 0; snprintf(g_rt.cap_result, sizeof(g_rt.cap_result), "cancelled"); }
     refresh_status_locked();
     pthread_mutex_unlock(&g_lock);
@@ -684,8 +713,9 @@ done:
     w->active = 0;
     w->path[0] = '\0';
     pthread_mutex_unlock(&g_lock);
-    KLOG("worker stopped (release=%d)\n", release);
+    KLOG("worker %d stopped (release=%d)\n", w->idx, release);
     return NULL;
+#undef ctx
 }
 
 static void *scanner_thread(void *unused) {
@@ -694,7 +724,7 @@ static void *scanner_thread(void *unused) {
         uint64_t now = mono_ns();
         if (g_diag_release_until && now >= g_diag_release_until) {
             pthread_mutex_lock(&g_lock);
-            int busy = g_worker.active;
+            int busy = workers_busy_locked();
             pthread_mutex_unlock(&g_lock);
             if (!busy) {
                 g_diag_release_until = 0;
@@ -702,24 +732,48 @@ static void *scanner_thread(void *unused) {
                 NOTIFY("%s", kbm_tr("KBM diag: retomando teclado/mouse", "KBM diag: taking keyboard/mouse back"));
             }
         }
+        /* which roles are already covered, which devices are already in use */
         pthread_mutex_lock(&g_lock);
-        int can = !g_worker.active && g_want_capture && !g_diag_release_until;
+        int can = g_want_capture && !g_diag_release_until;
+        int have_kb = 0, have_mouse = 0, free_slot = -1;
+        char used[MAX_WORKERS][32];
+        for (int i = 0; i < MAX_WORKERS; ++i) {
+            used[i][0] = 0;
+            if (g_workers[i].active) {
+                have_kb |= g_workers[i].layout.keyboard_ep >= 0;
+                have_mouse |= g_workers[i].layout.mouse_ep >= 0;
+                snprintf(used[i], sizeof(used[i]), "%s", g_workers[i].path);
+            } else if (free_slot < 0) free_slot = i;
+        }
         pthread_mutex_unlock(&g_lock);
+        can = can && free_slot >= 0 && !(have_kb && have_mouse);
         for (int bus = KBM_BUS_MIN; can && bus <= KBM_BUS_MAX; bus++) {
             for (int dev = KBM_DEV_MIN; can && dev <= KBM_DEV_MAX; dev++) {
                 char path[32];
                 HidBootLayout layout;
+                uint16_t vid = 0, pid = 0;
                 snprintf(path, sizeof(path), "/dev/ugen%d.%d", bus, dev);
-                if (!probe_boot_device(path, &layout, 0)) continue;
+                int in_use = 0;
+                for (int i = 0; i < MAX_WORKERS; ++i) in_use |= !strcmp(used[i], path);
+                if (in_use || !probe_boot_device(path, &layout, &vid, &pid)) continue;
+                /* take only the roles still missing */
+                if (have_kb) layout.keyboard_iface = layout.keyboard_ep = -1;
+                if (have_mouse) layout.mouse_iface = layout.mouse_ep = -1;
+                if (layout.keyboard_ep < 0 && layout.mouse_ep < 0) continue;
+                KLOG("matched USB %04x:%04x at %s:%s%s\n", vid, pid, path,
+                     layout.keyboard_ep >= 0 ? " keyboard" : "", layout.mouse_ep >= 0 ? " mouse" : "");
                 pthread_mutex_lock(&g_lock);
-                g_worker.layout = layout;
-                snprintf(g_worker.path, sizeof(g_worker.path), "%s", path);
-                g_worker.active = 1;
+                KbmWorker *w = &g_workers[free_slot];
+                w->idx = free_slot;
+                w->layout = layout;
+                w->vid = vid; w->pid = pid;
+                snprintf(w->path, sizeof(w->path), "%s", path);
+                w->active = 1;
                 pthread_mutex_unlock(&g_lock);
                 pthread_t tid;
-                if (pthread_create(&tid, NULL, device_thread, &g_worker) == 0) pthread_detach(tid);
-                else { pthread_mutex_lock(&g_lock); g_worker.active = 0; pthread_mutex_unlock(&g_lock); }
-                can = 0;
+                if (pthread_create(&tid, NULL, device_thread, w) == 0) pthread_detach(tid);
+                else { pthread_mutex_lock(&g_lock); w->active = 0; pthread_mutex_unlock(&g_lock); }
+                can = 0;   /* one new device per pass; the next pass looks for what's still missing */
             }
         }
         sleep_ns(1000000000ull);
@@ -874,7 +928,9 @@ static void *watch_thread(void *unused) {
         pthread_mutex_unlock(&g_lock);
         if (mode_msg >= 0)
             NOTIFY("%s", mode_msg == KBM_LAYER_VEHICLE ? kbm_tr("KBM: modo vehiculo", "KBM: vehicle mode")
-                                                       : kbm_tr("KBM: modo a pie", "KBM: on-foot mode"));
+                       : mode_msg == KBM_LAYER_BIKE ? kbm_tr("KBM: modo bici", "KBM: bike mode")
+                       : mode_msg == KBM_LAYER_AIR ? kbm_tr("KBM: modo aire", "KBM: aircraft mode")
+                                                   : kbm_tr("KBM: modo a pie", "KBM: on-foot mode"));
         if (calib >= 0) {
             KLOG("dead-zone finder: %d -> profile %s deadzone=%d\n", calib, calib_prof, calib_dz);
             NOTIFY2("KBM: zona muerta = %d (perfil %s). Ajustable en la pagina", "KBM: dead zone = %d (profile %s). Adjustable on the page", calib_dz, calib_prof);
@@ -979,6 +1035,7 @@ int kbm_bridge_start(kbm_inject_cb inject, kbm_notify_cb notify) {
     g_api.set_autostart = api_set_autostart;
     g_api.set_pointer = api_set_pointer;
     g_api.set_layer = api_set_layer;
+    g_api.profiles_dir = KBM_PROFILES_DIR;
     /* Single instance: the settings port doubles as a lock. If it is taken,
      * another bridge (e.g. autostarted by etaHEN) already owns the receiver. */
     if (kbm_http_start(KBM_HTTP_PORT, &g_api) != 0) {
@@ -1030,7 +1087,7 @@ void kbm_bridge_shutdown(void) {
     /* wait for the worker to tear down (and hand the receiver back) */
     for (int i = 0; i < 30; ++i) {
         pthread_mutex_lock(&g_lock);
-        int busy = g_worker.active;
+        int busy = workers_busy_locked();
         pthread_mutex_unlock(&g_lock);
         if (!busy) break;
         sleep_ns(100000000ull);

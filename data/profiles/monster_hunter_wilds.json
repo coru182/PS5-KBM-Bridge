@@ -1,0 +1,36 @@
+{
+  "id": "monster_hunter_wilds",
+  "name": "Monster Hunter Wilds",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No source reports keyboard/mouse gameplay support on PS5; console control guides (primagames, dotesports, gamewith) list controller only, and keyboard binding is described as a PC feature.",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "Mapping assumes a MELEE weapon. PC and PS5 lists from primagames and dotesports. The pairing left click = Triangle and right click = Circle is inferred: PS5 has two standard attacks (Triangle, Circle) plus R2 special/guard, and PC has left click (standard attack/ready weapon), right click (special attack) and R (guard/special action = R2). Triangle readies the weapon on PS5, like left click on PC. Ranged weapons differ (PC left click fires = PS5 R2; R reloads = Triangle), so they need their own profile. Context-dependent: LSHIFT is dash when sheathed and focus strike in focus mode (both R1 on PS5). R2 is shared by guard (R), slinger fire (MOUSE3) and Seikret slow down (Z). On PC, right click aims the slinger when sheathed; here aiming uses MOUSE4/LALT (L2) because MOUSE2 is Circle. PC 'target camera' (B) is mapped to PS5 R3 (switch target); the match is approximate. Item-bar cycling (mouse wheel on PC) and the radial menu (V) are omitted because their PS5 inputs could not be confirmed.",
+  "sources": [
+    "https://primagames.com/tips/monster-hunter-wilds-complete-controls-pc-controller",
+    "https://dotesports.com/monster-hunter/news/all-controls-and-keybinds-in-monster-hunter-wilds-pc-and-console",
+    "https://www.magicgameworld.com/?p=109019",
+    "https://destructoid.com/how-to-change-weapons-in-monster-hunter-wilds"
+  ],
+  "actions": [
+    {"label": "Ataque / desenvainar", "ps5": "TRIANGLE", "pc": ["MOUSE1", ""]},
+    {"label": "Ataque 2 / especial", "ps5": "CIRCLE", "pc": ["MOUSE2", ""]},
+    {"label": "Guardia / acción especial", "ps5": "R2", "pc": ["R", ""]},
+    {"label": "Modo enfoque / apuntar honda", "ps5": "L2", "pc": ["MOUSE4", "LALT"]},
+    {"label": "Golpe de enfoque / correr", "ps5": "R1", "pc": ["LSHIFT", ""]},
+    {"label": "Disparar honda", "ps5": "R2", "pc": ["MOUSE3", ""]},
+    {"label": "Usar objeto / envainar", "ps5": "SQUARE", "pc": ["E", ""]},
+    {"label": "Interactuar / recolectar", "ps5": "CIRCLE", "pc": ["F", ""]},
+    {"label": "Esquivar / agacharse", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Barra de objetos", "ps5": "L1", "pc": ["LCTRL", ""]},
+    {"label": "Llamar Seikret (auto)", "ps5": "DPAD_UP", "pc": ["TAB", ""]},
+    {"label": "Llamar Seikret (manual)", "ps5": "DPAD_DOWN", "pc": ["Q", ""]},
+    {"label": "Bolsa del Seikret", "ps5": "DPAD_LEFT", "pc": ["N", ""]},
+    {"label": "Cambiar de arma", "ps5": "DPAD_RIGHT", "pc": ["X", ""]},
+    {"label": "Seikret: frenar", "ps5": "R2", "pc": ["Z", ""]},
+    {"label": "Cambiar objetivo", "ps5": "R3", "pc": ["B", ""]},
+    {"label": "Mapa", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Menú", "ps5": "OPTIONS", "pc": ["ESC", "H"]}
+  ]
+}

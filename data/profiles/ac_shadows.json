@@ -1,0 +1,39 @@
+{
+  "id": "ac_shadows",
+  "name": "Assassin's Creed Shadows",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No consta soporte de teclado/mouse en PS5: las guías de controles de PS5 (magicgameworld, primagames) solo listan el DualSense; teclado/mouse figura solo para PC.",
+  "ads_pct": 100,
+  "confidence": "high",
+  "notes": "PC: magicgameworld (lista de teclas por defecto) + primagames. PS5: guía PS5 de magicgameworld, coincide con primagames (Triángulo interactuar, Cuadrado agacharse, R1 ataque/asesinar, R2 pesado/disparar, L1 parada/gancho, cruceta). Ataque pesado en PC es Shift+clic izq. (no representable): se mapea MOUSE4 a R2. OJO: en PS5 el arco/arma a distancia dispara con R2, no con R1: apuntá con clic der. y dispará con MOUSE4 (clic izq. hace R1 = lanzamiento rápido). En PC mantener C = cuerpo a tierra y también desmontar; en PS5 desmontar es mantener Círculo, así que en la montura mantené LCTRL (=Círculo) para bajarte. Alt en PC también cambia de postura; en PS5 eso va en Cuadrado (no mapeado aparte). Omitidos por no poder confirmar el orden/slot en PS5: herramientas 1-4 (L2+cruceta), habilidades 1-3 (R1/R2+botón), aliados 5-6 (L2+Triángulo/Cruz), maestría Y, códice P, auto-movimiento Z, modo foto F3.",
+  "sources": [
+    "https://www.magicgameworld.com/assassins-creed-shadows-pc-keyboard-controls/",
+    "https://magicgameworld.com/?p=109149",
+    "https://primagames.com/tips/assassins-creed-shadows-complete-controls-for-pc-controller",
+    "https://www.gamepressure.com/assassins-creed-shadows/is-there-an-eagle-vision/z711858",
+    "https://www.gamepressure.com/assassins-creed-shadows/how-to-heal/z011833"
+  ],
+  "actions": [
+    {"label": "Parkour / saltar / nadar arriba", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Correr / embestir / galopar", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Agacharse / cuerpo a tierra", "ps5": "SQUARE", "pc": ["C", ""]},
+    {"label": "Bajar / zambullirse / desmontar", "ps5": "CIRCLE", "pc": ["LCTRL", ""]},
+    {"label": "Esquivar / rodar", "ps5": "CIRCLE", "pc": ["LALT", ""]},
+    {"label": "Ataque ligero", "ps5": "R1", "pc": ["MOUSE1", ""]},
+    {"label": "Ataque pesado / disparar", "ps5": "R2", "pc": ["MOUSE4", ""]},
+    {"label": "Apuntar / observar", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Parada / desvío / gancho / bloqueo", "ps5": "L1", "pc": ["Q", ""]},
+    {"label": "Interactuar", "ps5": "TRIANGLE", "pc": ["E", ""]},
+    {"label": "Asesinar", "ps5": "R1", "pc": ["F", ""]},
+    {"label": "Fijar objetivo", "ps5": "R3", "pc": ["MOUSE3", ""]},
+    {"label": "Visión de águila (Naoe)", "ps5": "R3", "pc": ["V", ""]},
+    {"label": "Cambiar arma / envainar", "ps5": "DPAD_RIGHT", "pc": ["R", ""]},
+    {"label": "Curarse", "ps5": "DPAD_UP", "pc": ["H", ""]},
+    {"label": "Silbar / llamar montura", "ps5": "DPAD_DOWN", "pc": ["X", ""]},
+    {"label": "Ayudas de objetivo / Pathfinder", "ps5": "DPAD_LEFT", "pc": ["TAB", ""]},
+    {"label": "Mapa del mundo", "ps5": "TOUCHPAD", "pc": ["M", ""]},
+    {"label": "Inventario / menú", "ps5": "OPTIONS", "pc": ["I", "ESC"]},
+    {"label": "Objetivos (mantener)", "ps5": "OPTIONS", "pc": ["O", ""]}
+  ]
+}

@@ -64,6 +64,7 @@ typedef struct {
     int  (*set_autostart)(void *user, int on, char *msg, size_t n);
     void (*set_pointer)(void *user, int on);             /* lock held */
     void (*set_layer)(void *user, int layer);            /* lock held: 0 on foot, 1 vehicle */
+    const char *profiles_dir;   /* custom profile files; NULL = import/delete not saved to disk */
 } KbmApi;
 
 /* Full state: {"runtime":{...},"config":{...},"keys":[...]}. Takes the lock.
@@ -73,6 +74,9 @@ int kbm_api_state_json(KbmApi *api, const char *edit, char *buf, size_t n);
 void kbm_runtime_set_title(KbmRuntime *rt, const KbmConfig *c, const char *tid);
 /* path like "/api/bind". Writes a JSON reply into out. Returns HTTP status. */
 int kbm_api_command(KbmApi *api, const char *path, const KbmQuery *q, char *out, size_t n);
+/* POST /api/import: body = a profile JSON (export format). Saves it to
+ * profiles_dir and applies it. Reply {"ok":true,"id":...} or an error. */
+int kbm_api_import(KbmApi *api, const char *body, size_t len, char *out, size_t n);
 
 /* Assign key code to profile/action/slot. Removes the same key from other
  * actions of that profile (writes that action's id into moved_from). 0 ok, -1 err. */

@@ -19,6 +19,14 @@ static void copy_str(char *dst, size_t n, const char *src) {
     dst[i] = 0;
 }
 
+void kbm_profile_snapshot_defaults(KbmProfile *p) {
+    KbmProfileDefaults *d = &p->def;
+    d->sens = p->sens; d->yratio = p->yratio; d->smooth_ms = p->smooth_ms; d->deadzone = p->deadzone;
+    d->invert_y = p->invert_y; d->ads_pct = p->ads_pct; d->curve = p->curve;
+    memset(d->key, 0, sizeof(d->key));
+    for (int i = 0; i < p->n; ++i) { d->key[i][0] = p->a[i].key[0]; d->key[i][1] = p->a[i].key[1]; }
+}
+
 static void profile_from_builtin(KbmProfile *p, int bi) {
     const KbmBuiltinProfile *d = &KBM_BUILTIN[bi];
     memset(p, 0, sizeof(*p));
@@ -31,6 +39,8 @@ static void profile_from_builtin(KbmProfile *p, int bi) {
     p->curve = m.curve;
     p->ads_pct = d->ads_pct;
     p->builtin = bi;
+    p->kind = d->kind; p->conf = d->confidence; p->native = d->native; p->mouse_dpad = d->mouse_dpad;
+    p->tmpl = d->tmpl; p->notes = d->notes; p->tips = d->tips; p->tips_en = d->tips_en;
     p->n = d->n < KBM_MAX_ACTIONS ? d->n : KBM_MAX_ACTIONS;
     for (int i = 0; i < p->n; ++i) {
         copy_str(p->a[i].id, sizeof(p->a[i].id), d->a[i].id);
@@ -41,6 +51,7 @@ static void profile_from_builtin(KbmProfile *p, int bi) {
         p->a[i].key[0] = kbm_key_reserved(d->a[i].k1) ? 0 : d->a[i].k1;
         p->a[i].key[1] = kbm_key_reserved(d->a[i].k2) ? 0 : d->a[i].k2;
     }
+    kbm_profile_snapshot_defaults(p);
 }
 
 void kbm_config_defaults(KbmConfig *c) {
@@ -62,17 +73,23 @@ void kbm_config_defaults(KbmConfig *c) {
 int kbm_profile_reset(KbmConfig *c, const char *id) {
     KbmProfile *p = kbm_config_profile(c, id);
     if (!p) return -1;
-    profile_from_builtin(p, p->builtin);
+    const KbmProfileDefaults *d = &p->def;
+    p->sens = d->sens; p->yratio = d->yratio; p->smooth_ms = d->smooth_ms; p->deadzone = d->deadzone;
+    p->invert_y = d->invert_y; p->ads_pct = d->ads_pct; p->curve = d->curve;
+    for (int i = 0; i < p->n; ++i) { p->a[i].key[0] = d->key[i][0]; p->a[i].key[1] = d->key[i][1]; }
     return 0;
 }
 
+void kbm_profile_restore_builtin(KbmProfile *p) {
+    if (p->builtin >= 0 && p->builtin < KBM_BUILTIN_COUNT) profile_from_builtin(p, p->builtin);
+}
+
 int kbm_profile_modified(const KbmProfile *p) {
-    KbmProfile d;
-    profile_from_builtin(&d, p->builtin);
-    if (p->sens != d.sens || p->yratio != d.yratio || p->smooth_ms != d.smooth_ms || p->deadzone != d.deadzone || p->curve != d.curve ||
-        p->invert_y != d.invert_y || p->ads_pct != d.ads_pct || p->n != d.n) return 1;
+    const KbmProfileDefaults *d = &p->def;
+    if (p->sens != d->sens || p->yratio != d->yratio || p->smooth_ms != d->smooth_ms || p->deadzone != d->deadzone || p->curve != d->curve ||
+        p->invert_y != d->invert_y || p->ads_pct != d->ads_pct) return 1;
     for (int i = 0; i < p->n; ++i)
-        if (p->a[i].key[0] != d.a[i].key[0] || p->a[i].key[1] != d.a[i].key[1]) return 1;
+        if (p->a[i].key[0] != d->key[i][0] || p->a[i].key[1] != d->key[i][1]) return 1;
     return 0;
 }
 
@@ -135,10 +152,7 @@ int kbm_valid_title_id(const char *s) {
     for (int i = 4; i < 9; ++i) if (s[i] < '0' || s[i] > '9') return 0;
     return 1;
 }
-int kbm_valid_profile_id(const char *s) {
-    for (int i = 0; s && i < KBM_BUILTIN_COUNT; ++i) if (!strcmp(KBM_BUILTIN[i].id, s)) return 1;
-    return 0;
-}
+int kbm_valid_profile_id(const KbmConfig *c, const char *s) { return kbm_config_profile_c(c, s) != NULL; }
 
 const char *kbm_config_title_target(const KbmConfig *c, const char *tid) {
     if (!tid || !*tid) return NULL;
@@ -149,7 +163,7 @@ const char *kbm_config_title_target(const KbmConfig *c, const char *tid) {
 int kbm_config_set_title(KbmConfig *c, const char *tid, const char *target) {
     if (!kbm_valid_title_id(tid)) return -1;
     int remove = !target || !*target || !strcmp(target, "default") || !strcmp(target, "auto");
-    if (!remove && strcmp(target, "native") && !kbm_valid_profile_id(target)) return -1;
+    if (!remove && strcmp(target, "native") && !kbm_valid_profile_id(c, target)) return -1;
     for (int i = 0; i < c->n_titles; ++i) {
         if (!strcmp(c->titles[i].tid, tid)) {
             if (remove) { c->titles[i] = c->titles[--c->n_titles]; return 0; }
@@ -169,10 +183,14 @@ void kbm_config_resolve(const KbmConfig *c, const char *tid, KbmResolved *r) {
     memset(r, 0, sizeof(*r));
     kbm_title_lookup(tid, &r->info);
     const KbmProfile *ap = NULL;
-    const char *asrc;
-    if (r->info.builtin >= 0 && r->info.builtin < c->n_profiles) {
+    const char *asrc = "none";
+    for (int i = 0; tid && *tid && !ap && i < c->n_profiles; ++i)      /* custom profile made for this Title ID */
+        for (int t = 0; t < c->p[i].n_tids; ++t)
+            if (!strcmp(c->p[i].tids[t], tid)) { ap = &c->p[i]; asrc = "custom"; break; }
+    if (ap) {
+    } else if (r->info.builtin >= 0 && r->info.builtin < c->n_profiles) {
         ap = &c->p[r->info.builtin];
-        asrc = KBM_BUILTIN[r->info.builtin].kind == 0 ? "game" : "template";
+        asrc = ap->kind == 0 ? "game" : "template";
     } else if (!tid || !*tid) {
         /* no game running: PS5 home screen, library, store... */
         ap = kbm_config_profile_c(c, "ps_menu");
@@ -230,29 +248,36 @@ void kbm_profile_to_mapping(const KbmProfile *p, KbmMapping *m) {
     m->deadzone = p->deadzone; m->invert_y = p->invert_y;
     m->curve = p->curve;
     m->ads_pct = p->ads_pct;
-    m->mouse_dpad = KBM_BUILTIN[p->builtin].mouse_dpad;
-    static uint64_t spec[2][256], both[256];
-    static uint8_t bound[2][256];
+    m->mouse_dpad = p->mouse_dpad;
+    static uint64_t spec[5][256], both[256];   /* index = layer (2 unused: BOTH) */
+    static uint8_t bound[5][256];
     memset(spec, 0, sizeof(spec)); memset(both, 0, sizeof(both)); memset(bound, 0, sizeof(bound));
     for (int i = 0; i < p->n; ++i) {
         const KbmAction *a = &p->a[i];
-        if (a->layer == KBM_LAYER_VEHICLE) m->has_layers = 1;
+        int L = a->layer <= KBM_LAYER_AIR ? a->layer : KBM_LAYER_FOOT;
+        if (L != KBM_LAYER_FOOT && L != KBM_LAYER_BOTH) { m->has_layers = 1; m->layers |= KBM_LAYER_BIT(L); }
         for (int s = 0; s < 2; ++s) {
             uint8_t k = a->key[s];
             if (!k || kbm_key_reserved(k)) continue;
-            if (a->layer == KBM_LAYER_BOTH) both[k] |= a->out;
-            else { int L = a->layer == KBM_LAYER_VEHICLE; spec[L][k] |= a->out; bound[L][k] = 1; }
+            if (L == KBM_LAYER_BOTH) both[k] |= a->out;
+            else { spec[L][k] |= a->out; bound[L][k] = 1; }
         }
     }
     for (int k = 0; k < 256; ++k) {
-        m->out[k] = bound[0][k] ? spec[0][k] : both[k];
-        m->out_veh[k] = bound[1][k] ? spec[1][k] : both[k];
+        m->out[k]      = bound[KBM_LAYER_FOOT][k]    ? spec[KBM_LAYER_FOOT][k]    : both[k];
+        m->out_veh[k]  = bound[KBM_LAYER_VEHICLE][k] ? spec[KBM_LAYER_VEHICLE][k] : both[k];
+        m->out_bike[k] = bound[KBM_LAYER_BIKE][k]    ? spec[KBM_LAYER_BIKE][k]    : both[k];
+        m->out_air[k]  = bound[KBM_LAYER_AIR][k]     ? spec[KBM_LAYER_AIR][k]     : both[k];
     }
 }
 
-int kbm_profile_has_layers(const KbmProfile *p) {
-    for (int i = 0; i < p->n; ++i) if (p->a[i].layer == KBM_LAYER_VEHICLE) return 1;
-    return 0;
+int kbm_profile_has_layers(const KbmProfile *p) {   /* KBM_LAYER_BIT() mask of vehicle modes, 0 = none */
+    unsigned m = 0;
+    for (int i = 0; i < p->n; ++i) {
+        int L = p->a[i].layer;
+        if (L == KBM_LAYER_VEHICLE || L == KBM_LAYER_BIKE || L == KBM_LAYER_AIR) m |= KBM_LAYER_BIT(L);
+    }
+    return (int)m;
 }
 
 /* ------------------------------------------------------------------ out names */
@@ -262,8 +287,25 @@ static const struct { uint64_t bit; const char *name; } OUTS[] = {
     {KBM_BTN_L1,"L1"},{KBM_BTN_R1,"R1"},{KBM_BTN_L2,"L2"},{KBM_BTN_R2,"R2"},{KBM_BTN_L3,"L3"},{KBM_BTN_R3,"R3"},
     {KBM_BTN_OPTIONS,"OPTIONS"},{KBM_BTN_TOUCH,"TOUCHPAD"},{KBM_BTN_PS,"PS"},
     {KBM_BTN_UP,"DPAD_UP"},{KBM_BTN_DOWN,"DPAD_DOWN"},{KBM_BTN_LEFT,"DPAD_LEFT"},{KBM_BTN_RIGHT,"DPAD_RIGHT"},
-    {KBM_OUT_MODE_TOGGLE,"MODE"},
+    {KBM_OUT_MODE_TOGGLE,"MODE_TOGGLE"},{KBM_OUT_MODE_CYCLE,"MODE_CYCLE"},
 };
+/* "CROSS+L1" -> bits. 0 if any part is unknown (or empty). */
+uint64_t kbm_out_parse(const char *s) {
+    uint64_t m = 0;
+    char part[24];
+    while (s && *s) {
+        size_t n = strcspn(s, "+");
+        if (!n || n >= sizeof(part)) return 0;
+        memcpy(part, s, n); part[n] = 0;
+        uint64_t bit = 0;
+        for (size_t i = 0; i < sizeof(OUTS) / sizeof(OUTS[0]) && !bit; ++i) if (!strcmp(OUTS[i].name, part)) bit = OUTS[i].bit;
+        if (!bit && !strcmp(part, "MODE")) bit = KBM_OUT_MODE_TOGGLE;
+        if (!bit) return 0;
+        m |= bit;
+        s += n; if (*s == '+') ++s;
+    }
+    return m;
+}
 const char *kbm_out_describe(uint64_t out, char *buf, size_t n) {
     size_t len = 0;
     if (n) buf[0] = 0;
@@ -333,7 +375,7 @@ int kbm_config_parse(KbmConfig *c, const char *text) {
             else if (!strcmp(k, "open_settings_on_launch")) c->open_settings_on_launch = iv ? 1 : 0;
             else if (!strcmp(k, "lang")) c->lang = !strcmp(v, "es") ? KBM_LANG_ES : !strcmp(v, "en") ? KBM_LANG_EN : KBM_LANG_AUTO;
             else if (!strcmp(k, "pointer_sens")) c->pointer_sens = iv < 1 ? 1 : (iv > 50 ? 50 : iv);
-            else if (!strcmp(k, "default_profile") && kbm_valid_profile_id(v))
+            else if (!strcmp(k, "default_profile") && kbm_valid_profile_id(c, v))
                 copy_str(c->default_profile, sizeof(c->default_profile), v);
             else continue;
             ++applied;
@@ -416,21 +458,24 @@ void kbm_json_fmt(KbmJson *j, const char *fmt, ...) {
     kbm_json_raw(j, t);
 }
 
-static const char *kind_name(int bi) {
-    return KBM_BUILTIN[bi].kind == 0 ? "game" : KBM_BUILTIN[bi].kind == 2 ? "menu" : "template";
+const char *kbm_kind_name(int kind) {
+    return kind == 0 ? "game" : kind == 2 ? "menu" : "template";
 }
 
 static void profile_detail(KbmJson *j, const KbmProfile *p) {
-    const KbmBuiltinProfile *b = &KBM_BUILTIN[p->builtin];
     kbm_json_raw(j, "{\"id\":"); kbm_json_str(j, p->id);
     kbm_json_raw(j, ",\"name\":"); kbm_json_str(j, p->name);
     kbm_json_raw(j, ",\"name_en\":"); kbm_json_str(j, p->name_en);
-    kbm_json_raw(j, ",\"kind\":"); kbm_json_str(j, kind_name(p->builtin));
-    kbm_json_raw(j, ",\"tmpl\":"); kbm_json_str(j, b->tmpl);
-    kbm_json_raw(j, ",\"notes\":"); kbm_json_str(j, b->notes);
-    kbm_json_raw(j, ",\"tips\":"); kbm_json_str(j, b->tips);
-    kbm_json_raw(j, ",\"tips_en\":"); kbm_json_str(j, b->tips_en);
-    kbm_json_fmt(j, ",\"conf\":%d,\"native\":%d,\"mod\":%d,\"layers\":%d", b->confidence, b->native, kbm_profile_modified(p), kbm_profile_has_layers(p));
+    kbm_json_raw(j, ",\"kind\":"); kbm_json_str(j, kbm_kind_name(p->kind));
+    kbm_json_raw(j, ",\"tmpl\":"); kbm_json_str(j, p->tmpl);
+    kbm_json_raw(j, ",\"notes\":"); kbm_json_str(j, p->notes);
+    kbm_json_raw(j, ",\"tips\":"); kbm_json_str(j, p->tips);
+    kbm_json_raw(j, ",\"tips_en\":"); kbm_json_str(j, p->tips_en);
+    kbm_json_fmt(j, ",\"conf\":%d,\"native\":%d,\"mod\":%d,\"layers\":%d,\"custom\":%d,\"overrides\":%d",
+                 p->conf, p->native, kbm_profile_modified(p), kbm_profile_has_layers(p), p->custom, p->custom && p->builtin >= 0);
+    kbm_json_raw(j, ",\"title_ids\":[");
+    for (int t = 0; t < p->n_tids; ++t) { if (t) jput(j, ','); kbm_json_str(j, p->tids[t]); }
+    jput(j, ']');
     kbm_json_fmt(j, ",\"sens\":%d,\"yratio\":%d,\"smooth_ms\":%d,\"deadzone\":%d,\"curve\":%d,\"invert_y\":%d,\"ads_pct\":%d,\"actions\":[",
                  p->sens, p->yratio, p->smooth_ms, p->deadzone, p->curve, p->invert_y, p->ads_pct);
     for (int a = 0; a < p->n; ++a) {
@@ -477,14 +522,13 @@ int kbm_config_json(const KbmConfig *c, const char *edit, char *buf, size_t n) {
     kbm_json_raw(&j, "],\"profiles\":[");
     for (int i = 0; i < c->n_profiles; ++i) {
         const KbmProfile *p = &c->p[i];
-        const KbmBuiltinProfile *b = &KBM_BUILTIN[p->builtin];
         if (i) jput(&j, ',');
         kbm_json_raw(&j, "{\"id\":"); kbm_json_str(&j, p->id);
         kbm_json_raw(&j, ",\"name\":"); kbm_json_str(&j, p->name);
         kbm_json_raw(&j, ",\"name_en\":"); kbm_json_str(&j, p->name_en);
-        kbm_json_raw(&j, ",\"kind\":"); kbm_json_str(&j, kind_name(p->builtin));
-        kbm_json_raw(&j, ",\"tmpl\":"); kbm_json_str(&j, b->tmpl);
-        kbm_json_fmt(&j, ",\"conf\":%d,\"native\":%d,\"mod\":%d}", b->confidence, b->native, kbm_profile_modified(p));
+        kbm_json_raw(&j, ",\"kind\":"); kbm_json_str(&j, kbm_kind_name(p->kind));
+        kbm_json_raw(&j, ",\"tmpl\":"); kbm_json_str(&j, p->tmpl);
+        kbm_json_fmt(&j, ",\"conf\":%d,\"native\":%d,\"mod\":%d,\"custom\":%d}", p->conf, p->native, kbm_profile_modified(p), p->custom);
     }
     kbm_json_raw(&j, "],\"edit\":");
     const KbmProfile *e = edit ? kbm_config_profile_c(c, edit) : NULL;

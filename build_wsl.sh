@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# PS5 KBM Bridge v0.11 — build on WSL Ubuntu / Linux.
-#   out/ps5-kbm-diag-v011.elf             read+measure only, NEVER creates a virtual pad (5 min, F10 = release test)
-#   out/ps5-kbm-bridge-v011.elf           the bridge (auto-activates, settings on :8099)
+# PS5 KBM Bridge v0.12 — build on WSL Ubuntu / Linux.
+#   out/ps5-kbm-diag-v012.elf             read+measure only, NEVER creates a virtual pad (5 min, F10 = release test)
+#   out/ps5-kbm-bridge-v012.elf           the bridge (auto-activates, settings on :8099)
 #   out/etaHEN/payloads/ps5-kbm-bridge.elf (+ .auto_start)  copy to /data/etaHEN/payloads/ = starts with etaHEN
+#   out/release/PS5-KBM-Bridge-v0.12.zip  everything above + install notes, for a GitHub Release
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -45,7 +46,7 @@ if [[ ! -d "$UPSTREAM/payload" ]]; then
   git clone --depth 1 https://github.com/srbraboo/Ghostcontrol-PS5-USB-Controller-Patcher.git "$UPSTREAM"
 fi
 if [[ -f "$UPSTREAM/payload/kbm_bridge.h" ]]; then
-  echo "Ghostcontrol ya tiene un parche anterior: lo deshago y aplico el de v0.11."
+  echo "Ghostcontrol ya tiene un parche anterior: lo deshago y aplico el de v0.12."
   python3 "$ROOT/tools/apply_to_ghostcontrol.py" --reapply "$UPSTREAM"
 else
   python3 "$ROOT/tools/apply_to_ghostcontrol.py" "$UPSTREAM"
@@ -53,15 +54,15 @@ fi
 
 mkdir -p "$OUT"
 printf '\n[5/7] Compilando ELF de DIAGNOSTICO y ELF BRIDGE...\n'
-make -C "$UPSTREAM/payload" clean all TARGET=ps5-kbm-diag-v011.elf KBM_CFLAGS=-DKBM_DIAG_ONLY=1
-cp "$UPSTREAM/payload/ps5-kbm-diag-v011.elf" "$OUT/"
-make -C "$UPSTREAM/payload" clean all TARGET=ps5-kbm-bridge-v011.elf KBM_CFLAGS=-DKBM_DIAG_ONLY=0
-cp "$UPSTREAM/payload/ps5-kbm-bridge-v011.elf" "$OUT/"
+make -C "$UPSTREAM/payload" clean all TARGET=ps5-kbm-diag-v012.elf KBM_CFLAGS=-DKBM_DIAG_ONLY=1
+cp "$UPSTREAM/payload/ps5-kbm-diag-v012.elf" "$OUT/"
+make -C "$UPSTREAM/payload" clean all TARGET=ps5-kbm-bridge-v012.elf KBM_CFLAGS=-DKBM_DIAG_ONLY=0
+cp "$UPSTREAM/payload/ps5-kbm-bridge-v012.elf" "$OUT/"
 
 printf '\n[6/7] Armando carpeta para el autoarranque de etaHEN...\n'
 rm -rf "$OUT/homebrew" "$OUT/etaHEN"
 mkdir -p "$OUT/etaHEN/payloads"
-cp "$OUT/ps5-kbm-bridge-v011.elf" "$OUT/etaHEN/payloads/ps5-kbm-bridge.elf"
+cp "$OUT/ps5-kbm-bridge-v012.elf" "$OUT/etaHEN/payloads/ps5-kbm-bridge.elf"
 : > "$OUT/etaHEN/payloads/ps5-kbm-bridge.elf.auto_start"
 
 printf '\n[7/7] Icono para ShadowMountPlus (app lanzadora PPSA51258)...\n'
@@ -70,7 +71,7 @@ if [[ "${KBM_SKIP_LAUNCHER:-0}" == "1" ]]; then
 elif command -v clang-18 >/dev/null && { command -v ld.lld-18 >/dev/null || command -v ld.lld >/dev/null; }; then
   export PATH="$HOME/.local/bin:$PATH"
   command -v ninja >/dev/null || { echo "Falta ninja: pip install --user ninja   (o sudo apt install ninja-build)" >&2; exit 1; }
-  cp "$OUT/ps5-kbm-bridge-v011.elf" "$ROOT/launcher/ps5-kbm-bridge.elf"
+  cp "$OUT/ps5-kbm-bridge-v012.elf" "$ROOT/launcher/ps5-kbm-bridge.elf"
   # Shared download cache: every new version reuses it (no copying .deps by hand).
   CACHE="${KBM_LAUNCHER_DEPS:-$HOME/.cache/ps5-kbm/launcher-deps}"
   mkdir -p "$CACHE"
@@ -93,4 +94,5 @@ fi
 echo
 ls -l "$OUT"/*.elf
 (cd "$OUT" && sha256sum *.elf etaHEN/payloads/ps5-kbm-bridge.elf | tee SHA256SUMS.txt)
+python3 "$ROOT/tools/make_release.py" 0.12
 printf '\nCopiar a Windows:\n  mkdir -p /mnt/c/Users/Public/PS5 && cp -r "%s"/* /mnt/c/Users/Public/PS5/\n' "$OUT"

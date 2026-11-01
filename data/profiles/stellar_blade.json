@@ -1,0 +1,34 @@
+{
+  "id": "stellar_blade",
+  "name": "Stellar Blade",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No source reports keyboard/mouse gameplay support on PS5; PS5 control guides (game8, samurai-gamers) list DualSense only, and game8 notes PS5 remapping is only possible via the system's Custom Button Assignments.",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PS5 side from samurai-gamers and game8; PC side from game8 only. Lock-on on PC is listed by game8 only as 'mouse button click' (assumed middle mouse = MOUSE3). Beta Skills on PC are keys 1-4 (PS5: hold L1 + face button); the order 1=Square, 2=Triangle, 3=Cross, 4=Circle is inferred, not sourced. Burst Skills on PC are LALT+1..4 (PS5: R1 + face button); omitted because a single-key mapping is not possible without conflicting with the Beta Skill keys. In Ranged Mode the PC fires with left click, but here MOUSE1 maps to Square (light attack), so fire ranged ammo with F (R2). Dodge and sprint share LSHIFT on PC (tap = dodge, hold = sprint), which matches Circle (tap = dodge, hold = dash) on PS5. game8 lists potion/item as D-pad Left then Up/Down; samurai-gamers lists D-pad Up/Down directly; D-pad Up/Down used here.",
+  "sources": [
+    "https://game8.co/games/Stellar-Blade/archives/455005",
+    "https://samurai-gamers.com/stellar-blade/sblade-game-controls/",
+    "https://www.gamepressure.com/stellar-blade/controls/z011374",
+    "https://samurai-gamers.com/stellar-blade/sblade-how-to-lock-on/"
+  ],
+  "actions": [
+    {"label": "Ataque rápido", "ps5": "SQUARE", "pc": ["MOUSE1", ""]},
+    {"label": "Ataque fuerte", "ps5": "TRIANGLE", "pc": ["MOUSE2", ""]},
+    {"label": "Saltar", "ps5": "CROSS", "pc": ["SPACE", ""]},
+    {"label": "Esquivar / correr (mantener)", "ps5": "CIRCLE", "pc": ["LSHIFT", ""]},
+    {"label": "Bloquear / parry", "ps5": "L1", "pc": ["E", ""]},
+    {"label": "Habilidad Beta 1", "ps5": "L1+SQUARE", "pc": ["1", ""]},
+    {"label": "Habilidad Beta 2", "ps5": "L1+TRIANGLE", "pc": ["2", ""]},
+    {"label": "Habilidad Beta 3", "ps5": "L1+CROSS", "pc": ["3", ""]},
+    {"label": "Habilidad Beta 4", "ps5": "L1+CIRCLE", "pc": ["4", ""]},
+    {"label": "Modo a distancia", "ps5": "L2", "pc": ["LCTRL", ""]},
+    {"label": "Interactuar / disparar munición", "ps5": "R2", "pc": ["F", ""]},
+    {"label": "Fijar objetivo", "ps5": "R3", "pc": ["MOUSE3", ""]},
+    {"label": "Usar poción", "ps5": "DPAD_UP", "pc": ["Q", ""]},
+    {"label": "Usar objeto", "ps5": "DPAD_DOWN", "pc": ["R", ""]},
+    {"label": "Escanear", "ps5": "TOUCHPAD", "pc": ["TAB", ""]},
+    {"label": "Menú", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

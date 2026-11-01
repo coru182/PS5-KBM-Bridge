@@ -2,6 +2,7 @@
 #include "kbm_api.h"
 #include "kbm_keys.h"
 #include "kbm_builtin_gen.h"
+#include "kbm_profiles_io.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -98,7 +99,7 @@ void kbm_runtime_set_title(KbmRuntime *rt, const KbmConfig *c, const char *tid) 
     snprintf(rt->auto_profile, sizeof(rt->auto_profile), "%s", r.auto_p->id);
     rt->lang = kbm_lang_effective(c, rt->sys_lang);
     rt->has_layers = kbm_profile_has_layers(r.p);
-    rt->mouse_dpad = KBM_BUILTIN[r.p->builtin].mouse_dpad;
+    rt->mouse_dpad = r.p->mouse_dpad;
     if (!rt->has_layers) rt->layer = 0;
 }
 
@@ -246,20 +247,33 @@ int kbm_api_command(KbmApi *api, const char *path, const KbmQuery *q, char *out,
         if (get_int(q, "open_settings_on_launch", &v)) c->open_settings_on_launch = v ? 1 : 0;
         if (get_int(q, "pointer_sens", &v)) c->pointer_sens = v < 1 ? 1 : (v > 50 ? 50 : v);
         const char *dp = kbm_query_get(q, "default_profile");
-        if (dp && kbm_valid_profile_id(dp)) snprintf(c->default_profile, sizeof(c->default_profile), "%s", dp);
+        if (dp && kbm_valid_profile_id(c, dp)) snprintf(c->default_profile, sizeof(c->default_profile), "%s", dp);
         api->config_changed(api->user);
         code = reply(out, n, 1, NULL, NULL, NULL);
     } else if (!strcmp(path, "/api/layer")) {
         int l = 0;
         get_int(q, "l", &l);
         if (!api->rt->has_layers) { code = reply(out, n, 0, "this profile has no vehicle mode", NULL, NULL); goto done; }
-        if (api->set_layer) api->set_layer(api->user, l ? 1 : 0);
+        if (l != 0 && !(api->rt->has_layers & (1 << l))) { code = reply(out, n, 0, "this profile has no such mode", NULL, NULL); goto done; }
+        if (api->set_layer) api->set_layer(api->user, l);
         code = reply(out, n, 1, NULL, NULL, NULL);
     } else if (!strcmp(path, "/api/pointer")) {
         int on = 0;
         get_int(q, "on", &on);
         if (api->set_pointer) api->set_pointer(api->user, on ? 1 : 0);
         code = reply(out, n, 1, NULL, NULL, NULL);
+    } else if (!strcmp(path, "/api/export")) {
+        const KbmProfile *p = kbm_config_profile(c, pid);
+        if (!p) { code = reply(out, n, 0, "unknown profile", NULL, NULL); goto done; }
+        if (kbm_profile_export(c, p, out, n) < 0) { code = 500; reply(out, n, 0, "too large", NULL, NULL); goto done; }
+        code = 200;
+    } else if (!strcmp(path, "/api/delete_profile")) {
+        char id[KBM_ID_LEN];
+        snprintf(id, sizeof(id), "%s", pid ? pid : "");
+        if (kbm_custom_delete(c, id) != 0) { code = reply(out, n, 0, "not a custom profile", NULL, NULL); goto done; }
+        if (api->profiles_dir) kbm_profile_file_delete(api->profiles_dir, id);
+        api->config_changed(api->user);
+        code = reply(out, n, 1, NULL, "id", id);
     } else if (!strcmp(path, "/api/reset")) {
         if (kbm_profile_reset(c, pid ? pid : "") != 0) { code = reply(out, n, 0, "unknown profile", NULL, NULL); goto done; }
         api->config_changed(api->user);
@@ -271,4 +285,20 @@ int kbm_api_command(KbmApi *api, const char *path, const KbmQuery *q, char *out,
 done:
     api->unlock(api->user);
     return code;
+}
+
+int kbm_api_import(KbmApi *api, const char *body, size_t len, char *out, size_t n) {
+    static char file[40 * 1024];
+    char err[128], id[KBM_ID_LEN];
+    api->lock(api->user);
+    int idx = kbm_custom_load(api->cfg, body, len, err, sizeof(err));
+    if (idx < 0) { api->unlock(api->user); return reply(out, n, 0, err, NULL, NULL); }
+    const KbmProfile *p = &api->cfg->p[idx];
+    snprintf(id, sizeof(id), "%s", p->id);
+    int fl = kbm_profile_export(api->cfg, p, file, sizeof(file));
+    int saved = !api->profiles_dir || (fl > 0 && kbm_profile_file_save(api->profiles_dir, id, file, (size_t)fl) == 0);
+    api->config_changed(api->user);
+    api->unlock(api->user);
+    if (!saved) return reply(out, n, 1, "applied, but could not save the file (lost on restart)", "id", id);
+    return reply(out, n, 1, NULL, "id", id);
 }

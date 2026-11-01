@@ -15,7 +15,7 @@ FILE_NAMES = ["hid_boot.c", "hid_boot.h", "kbm_engine.c", "kbm_engine.h",
               "kbm_usbfs.c", "kbm_usbfs.h", "kbm_keys.c", "kbm_keys.h",
               "kbm_config.c", "kbm_config.h", "kbm_builtin_gen.c", "kbm_builtin_gen.h", "kbm_api.c", "kbm_api.h",
               "kbm_http.c", "kbm_http.h", "kbm_webui_gen.h",
-              "kbm_bridge.c", "kbm_bridge.h"]
+              "kbm_bridge.c", "kbm_bridge.h", "kbm_custom.c", "kbm_profiles_io.c", "kbm_profiles_io.h"]
 
 
 def replace_once(text: str, old: str, new: str, filename: str) -> str:
@@ -56,7 +56,7 @@ static void kbm_forward(const ScePadData *pad) { inject_pad(0, pad); }
     b = main.find('    /* Keep-alive */', a)
     if a < 0 or b < 0 or b <= a or 'controller_manager_thread' not in main[a:b]:
         raise ValueError("gc_main.c: controller manager anchor changed")
-    replacement = '''    /* KBM v0.11. The DualSense is created only after the Logitech receiver has
+    replacement = '''    /* KBM v0.12. The DualSense is created only after the USB keyboard and mouse have
      * produced BOTH keyboard and mouse input (automatically, or F8 if
      * auto-activation is off in the settings). -DKBM_DIAG_ONLY=1 never creates
      * one and exits after 5 minutes. Ghostcontrol's controller manager stays off. */
@@ -64,10 +64,10 @@ static void kbm_forward(const ScePadData *pad) { inject_pad(0, pad); }
 #define KBM_DIAG_ONLY 0
 #endif
 #if KBM_DIAG_ONLY
-#define KBM_TAG "KBM v0.11 DIAG"
+#define KBM_TAG "KBM v0.12 DIAG"
 #define KBM_DIAG_TICKS 1500      /* 5 min @ 200 ms */
 #else
-#define KBM_TAG "KBM v0.11"
+#define KBM_TAG "KBM v0.12"
 #define KBM_DIAG_TICKS 0
 #endif
 /* Optional idle exit (web UI: General). Default 0 = never: when etaHEN
@@ -139,7 +139,7 @@ def patched_makefile(mk: str) -> str:
                       'CFLAGS  += $(KBM_CFLAGS) -D__PROSPERO__', 'Makefile')
     mk = replace_once(mk,
             'SRC := gc_main.c shellui_pad.c usb_helpers.c controller_nintendo.c controller_xbox.c',
-            'SRC := gc_main.c shellui_pad.c usb_helpers.c controller_nintendo.c controller_xbox.c kbm_engine.c hid_boot.c kbm_usbfs.c kbm_keys.c kbm_config.c kbm_builtin_gen.c kbm_api.c kbm_http.c kbm_bridge.c',
+            'SRC := gc_main.c shellui_pad.c usb_helpers.c controller_nintendo.c controller_xbox.c kbm_engine.c hid_boot.c kbm_usbfs.c kbm_keys.c kbm_config.c kbm_builtin_gen.c kbm_api.c kbm_http.c kbm_bridge.c kbm_custom.c kbm_profiles_io.c',
             'Makefile')
     mk = replace_once(mk, 'LDFLAGS += -lScePad -lSceUserService',
                       'LDFLAGS += -lScePad -lSceUserService -lSceSystemService', 'Makefile')

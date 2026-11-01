@@ -1,0 +1,37 @@
+{
+  "id": "kcd2",
+  "name": "Kingdom Come: Deliverance II",
+  "template": "melee",
+  "native_kbm_ps5": false,
+  "native_kbm_note": "No consta soporte de teclado/mouse en PS5: las guías de consola (magicgameworld, primagames, dotesports) solo listan mando; teclado/mouse solo en PC.",
+  "ads_pct": 100,
+  "confidence": "medium",
+  "notes": "PC: magicgameworld + primagames (coinciden). PS5: magicgameworld PS guide + primagames (Círculo saltar, Cruz usar, R2 atacar, L2 bloquear, L1 respuesta rápida, cruceta, Triángulo caballo/perro, touchpad saltar tiempo), dotesports (R3 agacharse y fijar enemigo), gamesradar (asesinato sigiloso = mantener L2, noqueo = tocar L2, rematar con R2). En PC F hace derribo/asesinato sigiloso pero también 'ataque especial' en combate: en PS5 se mapea a L2 (sigilo), así que en combate F solo bloquea; no se encontró el botón PS5 del ataque especial. Arco: en PS5 se tensa con L2 y se suelta con R2 (en PC mantener clic izq.): mantené clic der. y tocá clic izq. Omitidos por no tener equivalente PS5 confirmado: armas 1-4 y consumibles 5-8 (en PS5 son menús rápidos en cruceta izq./der.; en PC el menú es B), tirar piedra G, acariciar V, siguiente/anterior enemigo (rueda), mirada libre (clic central), diario J, cancelar ataque.",
+  "sources": [
+    "https://www.magicgameworld.com/kingdom-come-deliverance-2-pc-keyboard-controls/",
+    "https://www.magicgameworld.com/?p=108691",
+    "https://primagames.com/tips/kingdom-come-deliverance-2-complete-controls-pc-controller",
+    "https://dotesports.com/kingdom-come/news/all-kingdom-come-deliverance-2-controls-pc-and-console-keybinds",
+    "https://gamesradar.com/games/action-rpg/kingdom-come-deliverance-2-stealth-kill",
+    "https://www.gamepressure.com/kingdom-come-deliverance-2/how-to-knock-someone-out/z01180f"
+  ],
+  "actions": [
+    {"label": "Saltar / esquivar", "ps5": "CIRCLE", "pc": ["SPACE", ""]},
+    {"label": "Correr", "ps5": "L3", "pc": ["LSHIFT", ""]},
+    {"label": "Agacharse (alternar)", "ps5": "R3", "pc": ["C", ""]},
+    {"label": "Fijar enemigo", "ps5": "R3", "pc": ["TAB", ""]},
+    {"label": "Usar / hablar / agarrar", "ps5": "CROSS", "pc": ["E", "ENTER"]},
+    {"label": "Atacar / soltar flecha", "ps5": "R2", "pc": ["MOUSE1", ""]},
+    {"label": "Bloquear / tensar arco", "ps5": "L2", "pc": ["MOUSE2", ""]},
+    {"label": "Asesinato / noqueo sigiloso", "ps5": "L2", "pc": ["F", ""]},
+    {"label": "Respuesta rápida", "ps5": "L1", "pc": ["Q", ""]},
+    {"label": "Antorcha (mantener)", "ps5": "DPAD_DOWN", "pc": ["R", ""]},
+    {"label": "Inventario", "ps5": "DPAD_DOWN", "pc": ["I", ""]},
+    {"label": "Mapa", "ps5": "DPAD_UP", "pc": ["M", ""]},
+    {"label": "Visera del yelmo (mantener)", "ps5": "DPAD_UP", "pc": ["Z", ""]},
+    {"label": "Saltar tiempo / ayuda", "ps5": "TOUCHPAD", "pc": ["T", ""]},
+    {"label": "Perro / compañero", "ps5": "TRIANGLE", "pc": ["X", ""]},
+    {"label": "Bajarse del caballo", "ps5": "TRIANGLE", "pc": ["Y", ""]},
+    {"label": "Pausa", "ps5": "OPTIONS", "pc": ["ESC", ""]}
+  ]
+}

@@ -15,6 +15,16 @@
 #define KBM_KEY_WHEEL_UP    0xF8
 #define KBM_KEY_WHEEL_DOWN  0xF9
 
+#define KBM_KEY_A     0x04
+#define KBM_KEY_D     0x07
+#define KBM_KEY_S     0x16
+#define KBM_KEY_W     0x1A
+#define KBM_KEY_RIGHT 0x4F
+#define KBM_KEY_LEFT  0x50
+#define KBM_KEY_DOWN  0x51
+#define KBM_KEY_UP    0x52
+#define KBM_KEY_LGUI  0xE3
+#define KBM_KEY_RGUI  0xE7
 #define KBM_KEY_F8   0x41
 #define KBM_KEY_F9   0x42
 #define KBM_KEY_F10  0x43

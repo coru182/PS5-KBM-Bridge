@@ -192,7 +192,7 @@ static void test_config_roundtrip(void) {
 
 static void test_title_db(void) {
     static KbmConfig c;
-    static char buf[8192];
+    static char buf[16384];
     kbm_config_defaults(&c);
     KbmResolved r;
     /* RE2 (2019) PS5 EU: built-in game profile */
@@ -319,11 +319,26 @@ static void test_vehicle_layers(void) {
     uint8_t m0[4] = {0, 0, 0, 0}; kbm_mouse(&e, 0, m0, 4, 7);
     kb(&e, 0, F, 0); kb(&e, 0, 0, 0);                      /* exit vehicle */
     assert(e.layer == KBM_LAYER_FOOT);
-    kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_VEHICLE);   /* manual resync */
-    kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_FOOT);
+    /* B cycles on foot -> car -> bike -> aircraft -> on foot */
+    assert(e.map.layers == (KBM_LAYER_BIT(KBM_LAYER_VEHICLE) | KBM_LAYER_BIT(KBM_LAYER_BIKE) | KBM_LAYER_BIT(KBM_LAYER_AIR)));
+    kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_VEHICLE);
+    kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_BIKE);
+    kb(&e, 0, W, 0); kbm_frame(&e, 20, &f); assert(f.buttons == KBM_BTN_CROSS && f.ly == 128);   /* pedal */
+    kb(&e, 0x02, 0, 0); kbm_frame(&e, 21, &f); assert(f.buttons == KBM_BTN_L1);                 /* bunny hop */
+    kb(&e, 0, 0, 0);
+    kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_AIR);
+    kb(&e, 0, W, 0x52); kbm_frame(&e, 22, &f);                                                  /* W + arrow up */
+    assert((f.buttons & KBM_BTN_R2) && f.ly < 128);                                             /* climb + pitch */
+    kb(&e, 0, 0x14, 0); kbm_frame(&e, 23, &f); assert(f.buttons == KBM_BTN_L1);                 /* Q = rudder left */
+    kb(&e, 0, 0, 0);
+    kb(&e, 0, F, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_FOOT);                         /* F out of any vehicle */
+    kb(&e, 0, B, 0); kb(&e, 0, 0, 0); kb(&e, 0, B, 0); kb(&e, 0, 0, 0);
+    kb(&e, 0, B, 0); kb(&e, 0, 0, 0); kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_FOOT);
+    kbm_set_layer(&e, KBM_LAYER_AIR); assert(e.layer == KBM_LAYER_AIR);
+    kbm_set_layer(&e, KBM_LAYER_BOTH); assert(e.layer == KBM_LAYER_FOOT);
     /* the mode key also works with the browser cursor on (it follows the Triangle press) */
-    e.pointer_mode = 1; kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_VEHICLE);
-    kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_FOOT);
+    e.pointer_mode = 1; kb(&e, 0, F, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_VEHICLE);
+    kb(&e, 0, F, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_FOOT);
     e.pointer_mode = 0;
     /* Classic scheme variant: same keys, classic buttons */
     {
@@ -351,6 +366,21 @@ static void test_vehicle_layers(void) {
         kbm_mouse(&v, 0, both, 4, 7); kbm_frame(&v, 7, &f);
         assert((f.buttons & KBM_BTN_R2) && (f.buttons & KBM_BTN_L2));                  /* on foot: aim + fire */
         kbm_mouse(&v, 0, none, 4, 8);
+        /* v0.12: B cycles on foot -> car -> bike -> air; F always exits to on foot */
+        assert(v.map.layers == (KBM_LAYER_BIT(KBM_LAYER_VEHICLE) | KBM_LAYER_BIT(KBM_LAYER_BIKE) | KBM_LAYER_BIT(KBM_LAYER_AIR)));
+        kb(&v, 0, B, 0); kb(&v, 0, 0, 0); kb(&v, 0, B, 0); kb(&v, 0, 0, 0); assert(v.layer == KBM_LAYER_BIKE);
+        kb(&v, 0, W, 0); kbm_frame(&v, 9, &f); assert(f.buttons == KBM_BTN_CROSS && f.ly == 128);     /* pedal */
+        kb(&v, 0, 0x39, 0); kbm_frame(&v, 10, &f); assert(f.buttons == KBM_BTN_CROSS);                 /* Caps Lock pedals too */
+        kb(&v, 0, 0, 0); kb(&v, LSHIFT_MOD, 0, 0); kbm_frame(&v, 11, &f); assert(f.ly < 128 && !f.buttons); /* lean forward */
+        kb(&v, 0, B, 0); kb(&v, 0, 0, 0); assert(v.layer == KBM_LAYER_AIR);
+        kb(&v, 0, W, 0); kbm_frame(&v, 12, &f); assert(f.buttons == KBM_BTN_R2 && f.ly == 128);        /* throttle */
+        kb(&v, 0, A, 0); kbm_frame(&v, 13, &f); assert(f.buttons == KBM_BTN_L1 && f.lx == 128);        /* rudder, not roll */
+        kb(&v, 0, 0x5c, 0); kbm_frame(&v, 14, &f); assert(f.lx < 128 && !f.buttons);                   /* numpad 4: roll left */
+        kb(&v, 0, 0x0a, 0); kbm_frame(&v, 15, &f); assert(f.buttons == KBM_BTN_L3);                    /* G: landing gear */
+        kb(&v, 0, 0, 0);
+        kb(&v, 0, F, 0); kb(&v, 0, 0, 0); assert(v.layer == KBM_LAYER_FOOT);
+        kb(&v, 0, 0x39, 0); kbm_frame(&v, 16, &f); assert(f.buttons == (KBM_BTN_L3 | KBM_BTN_R3));     /* Caps Lock on foot: special */
+        kb(&v, 0, 0, 0);
     }
     /* profiles without vehicle actions never switch */
     KbmEngine g; kbm_init(&g); load_profile(&g, &c, "re2r");
@@ -466,6 +496,120 @@ static void test_usb_descriptor_parser(void) {
     assert(!hid_boot_find(malformed,sizeof(malformed),&l));
 }
 
+
+static void same_mapping(const KbmProfile *a, const KbmProfile *b) {
+    static KbmMapping ma, mb;
+    kbm_profile_to_mapping(a, &ma); kbm_profile_to_mapping(b, &mb);
+    assert(!memcmp(ma.out, mb.out, sizeof(ma.out)) && !memcmp(ma.out_veh, mb.out_veh, sizeof(ma.out_veh)));
+    assert(!memcmp(ma.out_bike, mb.out_bike, sizeof(ma.out_bike)) && !memcmp(ma.out_air, mb.out_air, sizeof(ma.out_air)));
+    assert(ma.layers == mb.layers && ma.mouse_dpad == mb.mouse_dpad && ma.sens == mb.sens && ma.ads_pct == mb.ads_pct);
+}
+
+static void test_custom_profiles(void) {
+    static KbmConfig c, d;
+    static char buf[40 * 1024], ini[65536];
+    char err[128];
+    kbm_config_defaults(&c);
+    /* every built-in survives export -> import unchanged */
+    for (int i = 0; i < c.n_profiles; ++i) {
+        kbm_config_defaults(&d);
+        int n = kbm_profile_export(&c, &c.p[i], buf, sizeof(buf));
+        assert(n > 0);
+        int idx = kbm_custom_load(&d, buf, (size_t)n, err, sizeof(err));
+        if (idx != i) { fprintf(stderr, "%s: %s\n", c.p[i].id, err); assert(0); }
+        const KbmProfile *q = &d.p[idx];
+        assert(q->custom && q->builtin == i && q->n == c.p[i].n && q->kind == c.p[i].kind && !kbm_profile_modified(q));
+        assert(!strcmp(q->name_en, c.p[i].name_en) && !strcmp(q->a[1].label_en, c.p[i].a[1].label_en) && !strcmp(q->tips, c.p[i].tips));
+        same_mapping(q, &c.p[i]);
+        assert(d.n_profiles == c.n_profiles);
+    }
+    /* a new profile from scratch: movement + PS added, Title ID picks it */
+    kbm_config_defaults(&d);
+    const char *mine = "\xEF\xBB\xBF{ \"id\": \"my_game\", \"name\": \"Mi juego \\u00e1\", \"title_ids\": [\"ppsa99999\"],\n"
+        " \"sens\": 20, \"unknown\": {\"x\": [1, 2, {\"y\": null}]},\n"
+        " \"actions\": [ {\"label\": \"Saltar\", \"ps5\": \"CROSS\", \"pc\": [\"SPACE\"]},\n"
+        "              {\"id\": \"aim\", \"label\": \"Apuntar\", \"label_en\": \"Aim\", \"ps5\": \"L2\", \"pc\": [\"MOUSE2\", \"\"]},\n"
+        "              {\"id\": \"drive\", \"label\": \"Acelerar\", \"ps5\": \"R2\", \"pc\": [\"W\"], \"layer\": \"vehicle\"},\n"
+        "              {\"id\": \"mode\", \"label\": \"Modo\", \"ps5\": \"TRIANGLE+MODE\", \"pc\": \"F\", \"layer\": \"both\"} ] }";
+    int idx = kbm_custom_load(&d, mine, strlen(mine), err, sizeof(err));
+    if (idx < 0) { fprintf(stderr, "%s\n", err); assert(0); }
+    KbmProfile *p = &d.p[idx];
+    assert(idx == c.n_profiles && p->builtin == -1 && p->custom && p->n == 4 + 4 + 1 && p->sens == 20);
+    assert(!strcmp(p->name, "Mi juego \xc3\xa1") && !strcmp(p->name_en, p->name));
+    assert(!strcmp(p->a[0].id, "move_up") && p->a[0].key[0] == KBM_KEY_W && p->a[0].key[1] == KBM_KEY_UP);
+    assert(!strcmp(p->a[4].id, "a1") && !strcmp(p->a[5].label_en, "Aim") && !strcmp(p->a[8].id, "ps"));
+    assert(p->a[7].out == (KBM_BTN_TRIANGLE | KBM_OUT_MODE_TOGGLE) && p->a[6].layer == KBM_LAYER_VEHICLE);
+    assert(kbm_profile_has_layers(p) == (int)KBM_LAYER_BIT(KBM_LAYER_VEHICLE));
+    KbmResolved r;
+    kbm_config_resolve(&d, "PPSA99999", &r);
+    assert(r.p == p && !strcmp(r.source, "custom"));
+    assert(kbm_config_set_title(&d, "PPSA99999", "generic") == 0);
+    kbm_config_resolve(&d, "PPSA99999", &r);
+    assert(!strcmp(r.p->id, "generic") && !strcmp(r.source, "rule") && r.auto_p == p);
+    assert(kbm_config_set_title(&d, "PPSA11111", "my_game") == 0);
+    /* INI tweaks apply on top of the custom file; export carries the current keys + Title IDs */
+    kbm_profile_action(p, "aim")->key[1] = KBM_KEY_MOUSE4;
+    assert(kbm_profile_modified(p));
+    int il = kbm_config_write(&d, ini, sizeof(ini));
+    assert(il > 0 && strstr(ini, "[profile.my_game]") && strstr(ini, "PPSA11111=my_game"));
+    int n = kbm_profile_export(&d, p, buf, sizeof(buf));
+    assert(n > 0 && strstr(buf, "\"title_ids\": [\"PPSA99999\", \"PPSA11111\"]") && strstr(buf, "\"pc\": [\"MOUSE2\", \"MOUSE4\"]"));
+    static char file[40 * 1024];
+    kbm_profile_reset(&d, "my_game");
+    n = kbm_profile_export(&d, p, file, sizeof(file));          /* what the import saved */
+    static KbmConfig e;
+    kbm_config_defaults(&e);
+    assert(kbm_custom_load(&e, file, (size_t)n, err, sizeof(err)) >= 0);
+    kbm_config_parse(&e, ini);
+    assert(kbm_config_profile(&e, "my_game")->a[5].key[1] == KBM_KEY_MOUSE4 && !strcmp(kbm_config_title_target(&e, "PPSA11111"), "my_game"));
+    /* errors */
+    const char *bad[][2] = {
+        {"{\"id\":\"x\",\"actions\":[{\"ps5\":\"CROSS\",\"pc\":[\"NOPE\"]}]}", "unknown key"},
+        {"{\"id\":\"x\",\"actions\":[{\"ps5\":\"CROSS\",\"pc\":[\"F10\"]}]}", "reserved"},
+        {"{\"id\":\"x\",\"actions\":[{\"ps5\":\"CROS\",\"pc\":[\"E\"]}]}", "unknown PS5 button"},
+        {"{\"id\":\"x\",\"actions\":[{\"ps5\":\"CROSS\",\"pc\":[\"E\"]},{\"ps5\":\"CIRCLE\",\"pc\":[\"E\"],\"layer\":\"both\"}]}", "same mode"},
+        {"{\"id\":\"x\",\"actions\":[{\"ps5\":\"CROSS\",\"pc\":[\"E\"],\"layer\":\"boat\"}]}", "layer"},
+        {"{\"actions\":[{\"ps5\":\"CROSS\"}]}", "missing"},
+        {"{\"id\":\"Bad Id\",\"actions\":[{\"ps5\":\"CROSS\"}]}", "id must"},
+        {"{\"id\":\"x\",\"title_ids\":[\"PPSA1\"],\"actions\":[{\"ps5\":\"CROSS\"}]}", "Title ID"},
+        {"{\"id\":\"x\",\"actions\":[{\"ps5\":\"CROSS\"}", "expected"},
+        {"{\"id\":\"x\",\"actions\":[]}", "no actions"},
+        {"not json", "expected an object"},
+        {"{\"id\":\"x\",\"actions\":[{\"ps5\":\"CROSS\"}]} trailing", "extra data"},
+    };
+    for (size_t i = 0; i < sizeof(bad) / sizeof(bad[0]); ++i) {
+        int before = e.n_profiles;
+        assert(kbm_custom_load(&e, bad[i][0], strlen(bad[i][0]), err, sizeof(err)) == -1);
+        if (!strstr(err, bad[i][1])) { fprintf(stderr, "case %zu: '%s'\n", i, err); assert(0); }
+        assert(e.n_profiles == before);
+    }
+    /* the same key in different modes is fine (W walks on foot, accelerates in the car) */
+    const char *ok2 = "{\"id\":\"x2\",\"actions\":[{\"ps5\":\"CROSS\",\"pc\":[\"E\"]},{\"ps5\":\"CIRCLE\",\"pc\":[\"E\"],\"layer\":\"vehicle\"}]}";
+    assert(kbm_custom_load(&e, ok2, strlen(ok2), err, sizeof(err)) >= 0);
+    /* re-importing many times doesn't run out of text space */
+    for (int i = 0; i < 300; ++i) assert(kbm_custom_load(&d, file, (size_t)n, err, sizeof(err)) == idx);
+    size_t pool = d.pool_len;
+    for (int i = 0; i < 50; ++i) kbm_custom_load(&d, file, (size_t)n, err, sizeof(err));
+    assert(d.pool_len == pool);
+    /* delete: a replaced built-in comes back, a new profile goes away with its rules */
+    int gn = kbm_profile_export(&c, kbm_config_profile(&c, "gta5"), buf, sizeof(buf));
+    char *pos = strstr(buf, "\"sens\": ") + 8;                   /* sens -> 30 */
+    char *comma = strchr(pos, ',');
+    memmove(pos + 2, comma, strlen(comma) + 1);
+    pos[0] = '3'; pos[1] = '0';
+    gn = (int)strlen(buf);
+    int gi = kbm_custom_load(&d, buf, (size_t)gn, err, sizeof(err));
+    assert(gi >= 0 && d.p[gi].custom && d.p[gi].sens == 30 && !kbm_profile_modified(&d.p[gi]));
+    assert(!strcmp(p->name, "Mi juego \xc3\xa1"));                /* compaction kept other strings */
+    assert(kbm_custom_delete(&d, "gta5") == 0 && !d.p[gi].custom && d.p[gi].sens == c.p[gi].sens);
+    assert(kbm_custom_delete(&d, "gta5") == -1 && kbm_custom_delete(&d, "generic") == -1);
+    snprintf(d.default_profile, sizeof(d.default_profile), "my_game");
+    assert(kbm_custom_delete(&d, "my_game") == 0 && !kbm_config_profile(&d, "my_game"));
+    assert(d.n_profiles == c.n_profiles && !kbm_config_title_target(&d, "PPSA11111") && !strcmp(d.default_profile, "generic"));
+    kbm_config_resolve(&d, "PPSA99999", &r);
+    assert(!strcmp(r.source, "rule") && !strcmp(r.p->id, "generic"));
+}
+
 int main(void) {
     test_keys();
     test_re2r_defaults();
@@ -479,6 +623,7 @@ int main(void) {
     test_ps_menu();
     test_stick_shaping();
     test_usb_descriptor_parser();
-    puts("PASS: keys, RE2R/Requiem defaults, combos, wheel, rate-independent mouse, capture, config INI/JSON, title DB + auto profile, vehicle layers, PS5 menu profile, stick shaping + dead-zone finder, HID parser");
+    test_custom_profiles();
+    puts("PASS: keys, RE2R/Requiem defaults, combos, wheel, rate-independent mouse, capture, config INI/JSON, title DB + auto profile, vehicle layers, PS5 menu profile, stick shaping + dead-zone finder, HID parser, custom profiles import/export");
     return 0;
 }

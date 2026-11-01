@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include "../src/kbm_http.h"
 #include "../src/kbm_keys.h"
+#include "../src/kbm_profiles_io.h"
 
 static pthread_mutex_t mu = PTHREAD_MUTEX_INITIALIZER;
 static KbmConfig cfg;
@@ -66,6 +67,8 @@ int main(int argc, char **argv) {
     int port = argc > 1 ? atoi(argv[1]) : 18099;
     cfg_path = (argc > 2 && strcmp(argv[2], "-")) ? argv[2] : NULL;
     kbm_config_defaults(&cfg);
+    const char *pdir = getenv("KBM_PROFILES_DIR");   /* custom profile files (tests use a temp dir) */
+    if (pdir) printf("custom profiles loaded: %d\n", kbm_profiles_load_dir(&cfg, pdir, NULL, NULL));
     memset(&rt, 0, sizeof(rt));
     rt.version = "0.9-host";
     {   /* simulated PS5 system language: KBM_SYS_LANG=en|es (default es) */
@@ -79,7 +82,7 @@ int main(int argc, char **argv) {
     rt.kb_reports_5s = 12; rt.mouse_reports_5s = 480; rt.e2i_p50_us = 2100; rt.e2i_p95_us = 3900;
     changed(NULL); changes = 0;
     rt.autostart_avail = 1; rt.etahen = 1;
-    KbmApi api = { &cfg, &rt, NULL, lk, ul, changed, cap_start, cap_cancel, do_stop, fake_autostart, fake_pointer, fake_layer };
+    KbmApi api = { &cfg, &rt, NULL, lk, ul, changed, cap_start, cap_cancel, do_stop, fake_autostart, fake_pointer, fake_layer, pdir };
     if (kbm_http_start(port, &api) != 0) { perror("kbm_http_start"); return 1; }
     printf("host_server listening on %d\n", port); fflush(stdout);
     while (!stop_flag) usleep(100000);

@@ -6,12 +6,13 @@
  "native_kbm_note": "GTA V de PS5 no soporta teclado/mouse para jugar; las listas de controles de PlayStation solo muestran mando (GTA Wiki).",
  "ads_pct": 100,
  "confidence": "medium",
- "notes": "Two key layers like the PC version: on foot and in vehicles. F (enter/exit) switches layer; B switches by hand if out of sync. Vehicle keys (W/S, Space handbrake, RMB aim = L1, LMB fire = L1+R1, E horn, H lights, Q radio wheel, . next station, R cinematic camera) from gtaboom. PC y PlayStation parcialmente de GTA Wiki (Controls for GTA V); el resto son los defaults conocidos de PC (lista de magicgameworld que coincide con GTA V). R en PC recarga y da golpe ligero, igual que Círculo en PS5. Q en PC también es golpe fuerte; se mapea a Cubrirse (R1). Z (ampliar radar) y LALT (rueda de personajes, mantener) comparten la cruceta abajo como en PS5. Las flechas, ENTER y BACKSPACE sirven para manejar el teléfono (cruceta, Cruz y Círculo). M = menú de interacción (solo Online, mantener touchpad). Soltar arma (F9/F10) omitido por teclas reservadas.",
+ "notes": "Two key layers like the PC version: on foot and in vehicles. F (enter/exit) switches layer; B switches by hand if out of sync. Vehicle keys (W/S, Space handbrake, RMB aim = L1, LMB fire = L1+R1, E horn, H lights, Q radio wheel, . next station, R cinematic camera) from gtaboom. PC y PlayStation parcialmente de GTA Wiki (Controls for GTA V); el resto son los defaults conocidos de PC (lista de magicgameworld que coincide con GTA V). R en PC recarga y da golpe ligero, igual que Círculo en PS5. Q en PC también es golpe fuerte; se mapea a Cubrirse (R1). Z (ampliar radar) y LALT (rueda de personajes, mantener) comparten la cruceta abajo como en PS5. Las flechas, ENTER y BACKSPACE sirven para manejar el teléfono (cruceta, Cruz y Círculo). M = menú de interacción (solo Online, mantener touchpad). Soltar arma (F9/F10) omitido por teclas reservadas. v0.12: bicycle and aircraft modes (B cycles on foot → car → bike → air; F exits to on foot). Bike: W/Caps Lock pedal (Cross), S/Q brake (L2; FiveM lists S as rear brake on R2, gtaboom says R2 pedals faster, so the safer L2 is used), Shift/Ctrl lean (left stick), Space handbrake/BMX hop (R1), E bell (L3), RMB/LMB drive-by, mouse wheel next weapon (Square). Aircraft: W/S throttle (R2/L2), A/D rudder (L1/R1), numpad 8/5/4/6 pitch and roll (left stick), numpad 7/9 targets, G landing gear + Shift boost (L3), E countermeasures/VTOL/Cargobob hook (D-pad right), Insert weapon camera (R3), wheel next weapon (D-pad left). Fire is uncertain: Cross per GTA Wiki and FiveM (gtaboom says Square); PC Space per gtaboom, LMB per the wiki, so both Space and LMB fire. PC mouse flight (hold LMB) has no equivalent: the mouse stays on the camera. Sources: FiveM controls table (docs.fivem.net/docs/game-references/controls/), GTA Wiki, gtaboom.",
  "sources": [
   "https://gta.fandom.com/wiki/Controls_for_GTA_V",
   "https://www.magicgameworld.com/?p=123765",
   "https://wiki.gtaboom.com/wiki/first-person-controls-settings-guide",
-  "https://www.gtaboom.com/gta-5-controls-pc-keyboard-playstation-and-xbox/"
+  "https://www.gtaboom.com/gta-5-controls-pc-keyboard-playstation-and-xbox/",
+  "https://docs.fivem.net/docs/game-references/controls/"
  ],
  "actions": [
   {
@@ -94,7 +95,17 @@
     "CAPSLOCK",
     ""
    ],
-   "layer": "both"
+   "layer": "foot"
+  },
+  {
+   "id": "veh_special",
+   "label": "Habilidad especial",
+   "ps5": "L3+R3",
+   "pc": [
+    "CAPSLOCK",
+    ""
+   ],
+   "layer": "vehicle"
   },
   {
    "label": "Cambiar de personaje (mantener)",
@@ -175,7 +186,17 @@
     "G",
     ""
    ],
-   "layer": "both"
+   "layer": "foot"
+  },
+  {
+   "id": "veh_detonate",
+   "label": "Detonar bomba",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "G",
+    ""
+   ],
+   "layer": "vehicle"
   },
   {
    "label": "Acción contextual / parar taxi",
@@ -223,8 +244,8 @@
   },
   {
    "id": "mode",
-   "label": "Cambiar modo a pie / vehículo",
-   "ps5": "MODE_TOGGLE",
+   "label": "Cambiar modo: a pie → auto → bici → aire",
+   "ps5": "MODE_CYCLE",
    "pc": [
     "B",
     ""
@@ -320,6 +341,226 @@
     ""
    ],
    "layer": "vehicle"
+  },
+  {
+   "id": "bike_pedal",
+   "label": "Pedalear (Bloq Mayús repetido = rápido)",
+   "ps5": "CROSS",
+   "pc": [
+    "W",
+    "CAPSLOCK"
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_brake",
+   "label": "Frenar",
+   "ps5": "L2",
+   "pc": [
+    "S",
+    "Q"
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_lean_fwd",
+   "label": "Inclinarse adelante",
+   "ps5": "LS_UP",
+   "pc": [
+    "LSHIFT",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_lean_back",
+   "label": "Inclinarse atrás",
+   "ps5": "LS_DOWN",
+   "pc": [
+    "LCTRL",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_handbrake",
+   "label": "Freno de mano / salto (BMX)",
+   "ps5": "R1",
+   "pc": [
+    "SPACE",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_horn",
+   "label": "Timbre",
+   "ps5": "L3",
+   "pc": [
+    "E",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_aim",
+   "label": "Apuntar desde el vehículo",
+   "ps5": "L1",
+   "pc": [
+    "MOUSE2",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_fire",
+   "label": "Disparar desde el vehículo",
+   "ps5": "L1+R1",
+   "pc": [
+    "MOUSE1",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_weapon",
+   "label": "Cambiar arma",
+   "ps5": "SQUARE",
+   "pc": [
+    "WHEEL_UP",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "air_throttle",
+   "label": "Acelerar / subir",
+   "ps5": "R2",
+   "pc": [
+    "W",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_brake",
+   "label": "Frenar / bajar",
+   "ps5": "L2",
+   "pc": [
+    "S",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_yaw_left",
+   "label": "Timón izq. / objetivo anterior",
+   "ps5": "L1",
+   "pc": [
+    "A",
+    "KP7"
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_yaw_right",
+   "label": "Timón der. / objetivo siguiente",
+   "ps5": "R1",
+   "pc": [
+    "D",
+    "KP9"
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_pitch_down",
+   "label": "Morro abajo",
+   "ps5": "LS_UP",
+   "pc": [
+    "KP8",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_pitch_up",
+   "label": "Morro arriba",
+   "ps5": "LS_DOWN",
+   "pc": [
+    "KP5",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_roll_left",
+   "label": "Alabeo izquierda",
+   "ps5": "LS_LEFT",
+   "pc": [
+    "KP4",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_roll_right",
+   "label": "Alabeo derecha",
+   "ps5": "LS_RIGHT",
+   "pc": [
+    "KP6",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_fire",
+   "label": "Disparar arma del avión",
+   "ps5": "CROSS",
+   "pc": [
+    "SPACE",
+    "MOUSE1"
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_weapon",
+   "label": "Cambiar arma del avión",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "WHEEL_UP",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_gear",
+   "label": "Tren de aterrizaje / turbo",
+   "ps5": "L3",
+   "pc": [
+    "G",
+    "LSHIFT"
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_special",
+   "label": "Contramedidas / VTOL / gancho",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "E",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_camera",
+   "label": "Cámara del arma",
+   "ps5": "R3",
+   "pc": [
+    "INSERT",
+    ""
+   ],
+   "layer": "air"
   }
  ],
  "tips": {

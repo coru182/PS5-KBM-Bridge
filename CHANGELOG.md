@@ -2,6 +2,20 @@
 
 **English** · [Español](CHANGELOG.es.md)
 
+## v0.12: any keyboard and mouse, your own profiles, bikes and aircraft
+
+- **Any USB keyboard and mouse.** The bridge no longer looks only for the Logitech `046d:c534` receiver: it takes any USB device that speaks the HID boot protocol (practically every keyboard and mouse), either one receiver with both or two separate devices (keyboard on one port, mouse on another). Sony devices are left alone. The log says what it found (`matched USB vvvv:pppp at ...: keyboard mouse`). **Not tested on the console yet with two devices: try the diagnostics ELF first.**
+- **Your own profiles, no rebuilding.** New "Share and import profiles" section on the settings page:
+  - **Export** any profile as JSON (download or copy), with its current keys, settings and the games you assigned it to;
+  - **Import** one (paste it or pick a `.json` file). It is checked (keys, buttons, duplicate keys in the same mode) and saved on the PS5 in `/data/ps5-kbm/profiles/`, loaded at every start;
+  - a profile with the id of a built-in one replaces it (delete it to get the factory one back); a new id adds a profile; `"title_ids"` makes it apply automatically to those games.
+  - Format: [`docs/custom-profiles.md`](docs/custom-profiles.md).
+- **Bicycle and aircraft modes.** Modes now cycle on foot → car → bike → air (B in GTA). F always gets you out to "on foot". The mode buttons on the page show only the modes the profile has.
+  - **GTA V**: bike (W/Caps Lock pedal, S/Q brake, Shift/Ctrl lean, Space handbrake/hop, E bell, mouse drive-by) and aircraft (W/S throttle, A/D rudder, numpad 8/5/4/6 pitch and roll, numpad 7/9 targets, Space or left click fire, G landing gear, E countermeasures/VTOL, Insert weapon camera). Car keys unchanged.
+  - **GTA Trilogy** (Modern and Classic): bike and aircraft layers too.
+- **8 new game profiles**, with the PC default keys: Stellar Blade, Monster Hunter Wilds, Star Wars Jedi: Survivor, Assassin's Creed Shadows, Kingdom Come: Deliverance II, Far Cry 6, Ratchet & Clank: Rift Apart, Sniper Elite 5. Marvel Rivals stays unverified (and NetEase penalises keyboard/mouse adapters on console).
+- **Ready-to-use download**: `build_wsl.sh` also packs `out/release/PS5-KBM-Bridge-v0.12.zip` (both ELFs, the icon, etaHEN autostart and install notes) for the GitHub Releases page.
+
 ## v0.11: game ↔ PS5 menu switch is automatic
 
 - The bridge now asks the PS5 which app has focus (`sceSystemServiceGetAppFocusedAppStatus`, checked with the diagnostics ELF on firmware 11.60: the first value is the focused app id). Every 200 ms while a game is running:

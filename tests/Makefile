@@ -1,6 +1,6 @@
 CC ?= cc
 CFLAGS ?= -std=c11 -O2 -Wall -Wextra -Werror -D_DEFAULT_SOURCE
-CORE := ../src/kbm_engine.c ../src/kbm_keys.c ../src/kbm_config.c ../src/kbm_builtin_gen.c
+CORE := ../src/kbm_engine.c ../src/kbm_keys.c ../src/kbm_config.c ../src/kbm_custom.c ../src/kbm_builtin_gen.c
 
 GEN := ../src/kbm_builtin_gen.c ../src/kbm_builtin_gen.h
 
@@ -22,5 +22,5 @@ test: all
 clean:
 	rm -f test_kbm test_usbfs config_test.json host_server host_config.ini ui_*.png
 
-host_server: host_server.c ../src/kbm_http.c ../src/kbm_api.c $(CORE) ../src/kbm_webui_gen.h
-	$(CC) $(CFLAGS) -pthread -o $@ host_server.c ../src/kbm_http.c ../src/kbm_api.c $(CORE)
+host_server: host_server.c ../src/kbm_http.c ../src/kbm_api.c ../src/kbm_profiles_io.c $(CORE) ../src/kbm_webui_gen.h
+	$(CC) $(CFLAGS) -pthread -o $@ host_server.c ../src/kbm_http.c ../src/kbm_api.c ../src/kbm_profiles_io.c $(CORE)
