@@ -239,6 +239,7 @@ int kbm_api_command(KbmApi *api, const char *path, const KbmQuery *q, char *out,
         if (get_int(q, "release_on_exit", &v)) c->release_on_exit = v ? 1 : 0;
         if (get_int(q, "native_switch", &v)) c->native_switch = v ? 1 : 0;
         if (get_int(q, "auto_native", &v)) c->auto_native = v ? 1 : 0;
+        if (get_int(q, "notify_mode", &v)) c->notify_mode = v ? 1 : 0;
         const char *lg = kbm_query_get(q, "lang");
         if (lg) c->lang = !strcmp(lg, "es") ? KBM_LANG_ES : !strcmp(lg, "en") ? KBM_LANG_EN : KBM_LANG_AUTO;
         if (get_int(q, "idle_exit_min", &v)) c->idle_exit_min = v < 0 ? 0 : (v > 240 ? 240 : v);

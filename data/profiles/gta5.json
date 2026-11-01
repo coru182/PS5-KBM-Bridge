@@ -6,11 +6,12 @@
  "native_kbm_note": "GTA V de PS5 no soporta teclado/mouse para jugar; las listas de controles de PlayStation solo muestran mando (GTA Wiki).",
  "ads_pct": 100,
  "confidence": "medium",
- "notes": "PC y PlayStation parcialmente de GTA Wiki (Controls for GTA V); el resto son los defaults conocidos de PC (lista de magicgameworld que coincide con GTA V). R en PC recarga y da golpe ligero, igual que Círculo en PS5. Q en PC también es golpe fuerte; se mapea a Cubrirse (R1). Z (ampliar radar) y LALT (rueda de personajes, mantener) comparten la cruceta abajo como en PS5. Las flechas, ENTER y BACKSPACE sirven para manejar el teléfono (cruceta, Cruz y Círculo). M = menú de interacción (solo Online, mantener touchpad). Soltar arma (F9/F10) omitido por teclas reservadas.",
+ "notes": "Two key layers like the PC version: on foot and in vehicles. F (enter/exit) switches layer; B switches by hand if out of sync. Vehicle keys (W/S, Space handbrake, RMB aim = L1, LMB fire = L1+R1, E horn, H lights, Q radio wheel, . next station, R cinematic camera) from gtaboom. PC y PlayStation parcialmente de GTA Wiki (Controls for GTA V); el resto son los defaults conocidos de PC (lista de magicgameworld que coincide con GTA V). R en PC recarga y da golpe ligero, igual que Círculo en PS5. Q en PC también es golpe fuerte; se mapea a Cubrirse (R1). Z (ampliar radar) y LALT (rueda de personajes, mantener) comparten la cruceta abajo como en PS5. Las flechas, ENTER y BACKSPACE sirven para manejar el teléfono (cruceta, Cruz y Círculo). M = menú de interacción (solo Online, mantener touchpad). Soltar arma (F9/F10) omitido por teclas reservadas.",
  "sources": [
   "https://gta.fandom.com/wiki/Controls_for_GTA_V",
   "https://www.magicgameworld.com/?p=123765",
-  "https://wiki.gtaboom.com/wiki/first-person-controls-settings-guide"
+  "https://wiki.gtaboom.com/wiki/first-person-controls-settings-guide",
+  "https://www.gtaboom.com/gta-5-controls-pc-keyboard-playstation-and-xbox/"
  ],
  "actions": [
   {
@@ -71,11 +72,12 @@
   },
   {
    "label": "Subir / bajar del vehículo",
-   "ps5": "TRIANGLE",
+   "ps5": "TRIANGLE+MODE_TOGGLE",
    "pc": [
     "F",
     ""
-   ]
+   ],
+   "layer": "both"
   },
   {
    "label": "Rueda de armas",
@@ -91,7 +93,8 @@
    "pc": [
     "CAPSLOCK",
     ""
-   ]
+   ],
+   "layer": "both"
   },
   {
    "label": "Cambiar de personaje (mantener)",
@@ -99,7 +102,8 @@
    "pc": [
     "LALT",
     ""
-   ]
+   ],
+   "layer": "both"
   },
   {
    "label": "Ampliar radar",
@@ -107,7 +111,8 @@
    "pc": [
     "Z",
     ""
-   ]
+   ],
+   "layer": "both"
   },
   {
    "label": "Teléfono / arriba",
@@ -115,7 +120,8 @@
    "pc": [
     "UP",
     "MOUSE3"
-   ]
+   ],
+   "layer": "both"
   },
   {
    "label": "Teléfono: abajo",
@@ -123,7 +129,8 @@
    "pc": [
     "DOWN",
     ""
-   ]
+   ],
+   "layer": "both"
   },
   {
    "label": "Teléfono: izquierda",
@@ -131,7 +138,8 @@
    "pc": [
     "LEFT",
     ""
-   ]
+   ],
+   "layer": "both"
   },
   {
    "label": "Teléfono: derecha",
@@ -139,7 +147,8 @@
    "pc": [
     "RIGHT",
     ""
-   ]
+   ],
+   "layer": "both"
   },
   {
    "label": "Aceptar (teléfono/menú)",
@@ -147,7 +156,8 @@
    "pc": [
     "ENTER",
     ""
-   ]
+   ],
+   "layer": "both"
   },
   {
    "label": "Atrás (teléfono/menú)",
@@ -155,7 +165,8 @@
    "pc": [
     "BACKSPACE",
     ""
-   ]
+   ],
+   "layer": "both"
   },
   {
    "label": "Detonar bomba",
@@ -163,7 +174,8 @@
    "pc": [
     "G",
     ""
-   ]
+   ],
+   "layer": "both"
   },
   {
    "label": "Acción contextual / parar taxi",
@@ -179,7 +191,8 @@
    "pc": [
     "C",
     ""
-   ]
+   ],
+   "layer": "both"
   },
   {
    "label": "Cambiar cámara",
@@ -187,7 +200,8 @@
    "pc": [
     "V",
     ""
-   ]
+   ],
+   "layer": "both"
   },
   {
    "label": "Menú de interacción (Online)",
@@ -195,7 +209,8 @@
    "pc": [
     "M",
     ""
-   ]
+   ],
+   "layer": "both"
   },
   {
    "label": "Pausa / mapa",
@@ -203,7 +218,108 @@
    "pc": [
     "ESC",
     "P"
-   ]
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "mode",
+   "label": "Cambiar modo a pie / vehículo",
+   "ps5": "MODE_TOGGLE",
+   "pc": [
+    "B",
+    ""
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "veh_accel",
+   "label": "Acelerar",
+   "ps5": "R2",
+   "pc": [
+    "W",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_brake",
+   "label": "Frenar / Reversa",
+   "ps5": "L2",
+   "pc": [
+    "S",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_handbrake",
+   "label": "Freno de mano",
+   "ps5": "R1",
+   "pc": [
+    "SPACE",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_aim",
+   "label": "Apuntar desde el vehículo",
+   "ps5": "L1",
+   "pc": [
+    "MOUSE2",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_fire",
+   "label": "Disparar desde el vehículo",
+   "ps5": "L1+R1",
+   "pc": [
+    "MOUSE1",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_horn",
+   "label": "Bocina",
+   "ps5": "L3",
+   "pc": [
+    "E",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_lights",
+   "label": "Luces",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "H",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_radio",
+   "label": "Radio (mantener: rueda de radios)",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "Q",
+    "PERIOD"
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_cinema",
+   "label": "Cámara cinemática",
+   "ps5": "CIRCLE",
+   "pc": [
+    "R",
+    ""
+   ],
+   "layer": "vehicle"
   }
  ],
  "tips": {

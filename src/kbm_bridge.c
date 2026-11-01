@@ -44,7 +44,7 @@
 #ifndef KBM_DIAG_ONLY
 #define KBM_DIAG_ONLY 0
 #endif
-#define KBM_VERSION "0.10"
+#define KBM_VERSION "0.10.1"
 
 extern void ghostpad_status_log(const char *fmt, ...);
 #define KLOG(...) ghostpad_status_log("[KBM] " __VA_ARGS__)
@@ -680,7 +680,7 @@ static void update_ip(void) {
 static void *watch_thread(void *unused) {
     (void)unused;
     char last[12] = "";
-    int first = 1, last_app = -2;
+    int first = 1, last_app = -2, last_layer = -1;
     uint64_t launcher_seen_ns = 0, open_browser_at = 0;
     unsigned tick = 0;
     while (g_running && !g_stop_requested) {
@@ -724,6 +724,11 @@ static void *watch_thread(void *unused) {
         }
         pthread_mutex_lock(&g_lock);
         int calib = -1, calib_dz = 0;
+        int mode_msg = -1;                          /* on foot / vehicle switch to announce */
+        if (g_rt.has_layers && g_engine.layer != last_layer) {
+            if (last_layer >= 0 && g_cfg.notify_mode) mode_msg = g_engine.layer;
+            last_layer = g_engine.layer;
+        } else if (!g_rt.has_layers) last_layer = -1;
         char calib_prof[64] = "";
         if (g_engine.calib_result != -1) {           /* dead-zone finder finished */
             calib = g_engine.calib_result;
@@ -772,6 +777,9 @@ static void *watch_thread(void *unused) {
         }
         int dirty = g_cfg_dirty;
         pthread_mutex_unlock(&g_lock);
+        if (mode_msg >= 0)
+            NOTIFY("%s", mode_msg == KBM_LAYER_VEHICLE ? kbm_tr("KBM: modo vehiculo", "KBM: vehicle mode")
+                                                       : kbm_tr("KBM: modo a pie", "KBM: on-foot mode"));
         if (calib >= 0) {
             KLOG("dead-zone finder: %d -> profile %s deadzone=%d\n", calib, calib_prof, calib_dz);
             NOTIFY2("KBM: zona muerta = %d (perfil %s). Ajustable en la pagina", "KBM: dead zone = %d (profile %s). Adjustable on the page", calib_dz, calib_prof);

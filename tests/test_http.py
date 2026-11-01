@@ -88,6 +88,9 @@ try:
     k = {a["id"]: a["keys"] for a in api("/api/state?edit=gta_trilogy_de")[1]["config"]["edit"]["actions"]}
     assert k["car_fire"] == ["MOUSE1", "Q"] and k["look_left"] == ["", ""] and k["swap_phone"][0] == "Q", k
     assert api("/api/reset?profile=gta_trilogy_de")[1]["ok"]
+    assert api("/api/global?notify_mode=1")[1]["ok"] and api("/api/state")[1]["config"]["notify_mode"] == 1
+    g5 = api("/api/state?edit=gta5")[1]["config"]["edit"]
+    assert g5["layers"] == 1 and any(a["id"] == "veh_fire" and a["out"] == "L1+R1" and a["layer"] == 1 for a in g5["actions"])
     assert api("/api/global?lang=bogus")[1]["ok"] and api("/api/state")[1]["config"]["lang"] == "auto"
     assert api("/api/global?inject_hz=120&auto_activate=0&default_profile=generic")[1]["ok"]
     c = api("/api/state")[1]["config"]
@@ -118,7 +121,7 @@ try:
     assert api("/api/nothing")[0] == 404
 
     ini = open(cfg_out).read()
-    assert "curve=40" in ini and "deadzone=24" in ini
+    assert "notify_mode=1" in ini and "curve=40" in ini and "deadzone=24" in ini
     assert "lang=auto" in ini and "idle_exit_min=0" in ini and "ads_pct=220" in ini and "pointer_sens=50" in ini
     assert "PPSA04289=requiem" in ini and "[profile.re2r]" not in ini and "[profile.requiem]" in ini and "[profile.elden_ring]" not in ini and "key.heal=Q,H" in ini and "inject_hz=120" in ini
 

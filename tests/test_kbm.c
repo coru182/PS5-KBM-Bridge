@@ -317,6 +317,25 @@ static void test_vehicle_layers(void) {
     kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_FOOT);
     e.pointer_mode = 1; kb(&e, 0, B, 0); kb(&e, 0, 0, 0); assert(e.layer == KBM_LAYER_FOOT);
     e.pointer_mode = 0;
+    /* GTA V: same idea, PC-style driving */
+    {
+        KbmEngine v; kbm_init(&v); load_profile(&v, &c, "gta5");
+        assert(v.map.has_layers);
+        const uint8_t LSHIFT_MOD = 0x02;                   /* left shift in the modifier byte */
+        kb(&v, 0, W, 0); kbm_frame(&v, 1, &f); assert(f.ly < 128 && !(f.buttons & KBM_BTN_R2));
+        kb(&v, 0, F, 0); kb(&v, 0, 0, 0); assert(v.layer == KBM_LAYER_VEHICLE);
+        kb(&v, 0, W, 0); kbm_frame(&v, 2, &f); assert((f.buttons & KBM_BTN_R2) && f.ly == 128);
+        kb(&v, 0, SPACE, 0); kbm_frame(&v, 3, &f); assert(f.buttons == KBM_BTN_R1);   /* handbrake */
+        kb(&v, LSHIFT_MOD, 0, 0); kbm_frame(&v, 4, &f); assert(f.buttons == 0);        /* no sprint in a car */
+        kb(&v, 0, 0, 0);
+        uint8_t both[4] = {3, 0, 0, 0}; kbm_mouse(&v, 0, both, 4, 5); kbm_frame(&v, 5, &f);
+        assert((f.buttons & KBM_BTN_L1) && (f.buttons & KBM_BTN_R1) && !(f.buttons & (KBM_BTN_L2 | KBM_BTN_R2)));  /* drive-by */
+        uint8_t none[4] = {0, 0, 0, 0}; kbm_mouse(&v, 0, none, 4, 6);
+        kb(&v, 0, F, 0); kb(&v, 0, 0, 0); assert(v.layer == KBM_LAYER_FOOT);
+        kbm_mouse(&v, 0, both, 4, 7); kbm_frame(&v, 7, &f);
+        assert((f.buttons & KBM_BTN_R2) && (f.buttons & KBM_BTN_L2));                  /* on foot: aim + fire */
+        kbm_mouse(&v, 0, none, 4, 8);
+    }
     /* profiles without vehicle actions never switch */
     KbmEngine g; kbm_init(&g); load_profile(&g, &c, "re2r");
     assert(!g.map.has_layers); kbm_set_layer(&g, KBM_LAYER_VEHICLE); assert(g.layer == KBM_LAYER_FOOT);

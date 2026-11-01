@@ -9,7 +9,7 @@
 #include <stdint.h>
 #include "kbm_engine.h"
 
-#define KBM_MAX_ACTIONS  32
+#define KBM_MAX_ACTIONS  48
 #define KBM_MAX_PROFILES 96
 #define KBM_MAX_TITLES   64
 #define KBM_ID_LEN       24
@@ -53,6 +53,7 @@ typedef struct {
     int open_settings_on_launch; /* home-screen icon opens the settings page in the PS5 browser */
     int pointer_sens;     /* cursor speed in pointer mode (PS5 browser), 1..50 */
     int lang;             /* KBM_LANG_AUTO (follow the PS5 system language) / ES / EN */
+    int notify_mode;      /* PS5 notification when switching on foot / vehicle */
     char default_profile[KBM_ID_LEN];   /* for games the database doesn't know */
     int n_titles;
     KbmTitleRule titles[KBM_MAX_TITLES];

@@ -2,6 +2,13 @@
 
 [English](CHANGELOG.md) · **Español**
 
+## v0.10.1: GTA V se maneja como en PC
+
+- **GTA V** ahora tiene las capas de teclas a pie / en vehículo (como el perfil de GTA Trilogy), con las teclas de vehículo de PC: W/S acelerar/frenar, Espacio freno de mano, clic derecho apunta desde el vehículo (L1), clic izquierdo dispara (L1+R1), E bocina, H luces, Q rueda de radios, `.` siguiente radio, R cámara cinemática. **F** cambia de modo al subir o bajar; **B** lo cambia a mano.
+- Opción nueva en General: notificación de la PS5 al cambiar de modo (apagada por defecto).
+- Los perfiles ahora pueden tener hasta 48 acciones.
+- El bridge **no** lee la memoria del juego para saber si estás manejando: haría falta conocer direcciones de memoria por juego y por actualización, y funcionaría como una herramienta de trucos. El cambio sigue a la tecla F.
+
 ## v0.10: más cerca de nativo en todos los juegos
 
 Cada juego trata el stick derecho a su manera: algunos ignoran los movimientos chicos (zona muerta) y aceleran la cámara de a poco. Por eso RE2 Remake se sentía nativo y RE Requiem o GTA V pesados con los mismos ajustes del bridge.

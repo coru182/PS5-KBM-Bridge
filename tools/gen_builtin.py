@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
-MAX_ACTIONS = 32
+MAX_ACTIONS = 48
 AUTO_ACTIONS = 5          # 4 movement + PS button, added to every profile
 LABEL_MAX = 47            # bytes, KbmAction.label is 48
 

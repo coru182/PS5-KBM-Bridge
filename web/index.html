@@ -145,6 +145,7 @@ td.out{color:var(--dim);font-size:13px;white-space:nowrap}
     <label class="check"><input type="checkbox" id="nat"> <span data-i18n="opt_nat"></span></label>
     <label class="check"><input type="checkbox" id="autonat"> <span data-i18n="opt_autonat"></span></label>
     <label class="check"><input type="checkbox" id="rel"> <span data-i18n="opt_rel"></span></label>
+    <label class="check"><input type="checkbox" id="notmode"> <span data-i18n="opt_notmode"></span></label>
     <div id="autostartRow">
     <label class="check"><input type="checkbox" id="autostart"> <span data-i18n="opt_autostart"></span></label>
     <p class="muted" id="autostartNote" style="margin:0 0 8px 26px"></p>
@@ -200,6 +201,7 @@ es: {
   opt_autonat:"Marcar como nativos, sin preguntar, los juegos que según la base de datos ya soportan teclado/mouse en PS5 (Fortnite, Call of Duty, Battlefield 6…)",
   opt_rel:"Al salir (F12), devolver el teclado/mouse a la PS5",
   opt_autostart:"Iniciar automáticamente al cargar etaHEN",
+  opt_notmode:"Avisar con una notificación al pasar de a pie a vehículo (GTA)",
   psens:"Velocidad del cursor y del mouse en el menú",
   ptr_help:"Modo puntero: el mouse mueve el cursor del navegador de la PS5 (clic izq. = ✕, clic der. = ○, rueda = scroll). Se activa solo al abrir esta página desde el ícono o con <b>F11</b> (también en medio de un juego) y se desactiva con el botón PS, al abrir un juego o con F9.",
   opt_openpage:"Al abrir el ícono \"PS5 KBM Bridge\", mostrar esta página en la PS5",
@@ -251,6 +253,7 @@ en: {
   opt_autonat:"Mark as native, without asking, the games that the database says already support keyboard/mouse on PS5 (Fortnite, Call of Duty, Battlefield 6…)",
   opt_rel:"On exit (F12), hand the keyboard/mouse back to the PS5",
   opt_autostart:"Start automatically when etaHEN loads",
+  opt_notmode:"Show a notification when switching between on foot and vehicle (GTA)",
   psens:"Cursor and menu mouse speed",
   ptr_help:"Pointer mode: the mouse moves the PS5 browser cursor (left click = ✕, right click = ○, wheel = scroll). It turns on when you open this page from the icon or with <b>F11</b> (also in the middle of a game) and turns off with the PS button, when a game opens, or with F9.",
   opt_openpage:"When opening the \"PS5 KBM Bridge\" icon, show this page on the PS5",
@@ -494,7 +497,7 @@ function renderConfig(){
   $("idle").value = String([0,15,30,60].includes(c.idle_exit_min) ? c.idle_exit_min : 0);
   $("openpage").checked = !!c.open_settings_on_launch;
   $("psens").value = c.pointer_sens; $("psens_o").textContent = c.pointer_sens;
-  $("auto").checked = !!c.auto_activate; $("nat").checked = !!c.native_switch; $("autonat").checked = !!c.auto_native; $("rel").checked = !!c.release_on_exit;
+  $("auto").checked = !!c.auto_activate; $("nat").checked = !!c.native_switch; $("autonat").checked = !!c.auto_native; $("notmode").checked = !!c.notify_mode; $("rel").checked = !!c.release_on_exit;
   $("hzNote").textContent = t("hz_note", {hz: c.effective_hz});
 
   const T = c.titles;
@@ -533,6 +536,7 @@ $("hz").onchange = e => call("/api/global", {inject_hz: e.target.value});
 $("auto").onchange = e => call("/api/global", {auto_activate: e.target.checked?1:0});
 $("nat").onchange = e => call("/api/global", {native_switch: e.target.checked?1:0});
 $("autonat").onchange = e => call("/api/global", {auto_native: e.target.checked?1:0});
+$("notmode").onchange = e => call("/api/global", {notify_mode: e.target.checked?1:0});
 $("rel").onchange = e => call("/api/global", {release_on_exit: e.target.checked?1:0});
 $("autostart").onchange = e => call("/api/autostart", {on: e.target.checked?1:0});
 $("idle").onchange = e => call("/api/global", {idle_exit_min: e.target.value});

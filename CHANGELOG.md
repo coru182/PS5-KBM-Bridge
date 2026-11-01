@@ -2,6 +2,13 @@
 
 **English** · [Español](CHANGELOG.es.md)
 
+## v0.10.1: GTA V drives like on PC
+
+- **GTA V** now has the on-foot / vehicle key layers (like the GTA Trilogy profile), with the PC vehicle keys: W/S accelerate/brake, Space handbrake, right click aims from the vehicle (L1), left click fires (L1+R1), E horn, H headlights, Q radio wheel, `.` next station, R cinematic camera. **F** switches mode when you get in or out; **B** switches it by hand.
+- New option under General: a PS5 notification when the mode switches (off by default).
+- Profiles can now have up to 48 actions.
+- The bridge does **not** read game memory to know whether you're driving: that would need per-game, per-update memory offsets and would work like a cheat tool. The switch follows the F key instead.
+
 ## v0.10: closer to native in every game
 
 Games handle the right stick differently: some ignore small deflections (dead zone) and speed the camera up gradually (acceleration). That's why RE2 Remake felt native and RE Requiem or GTA V felt heavy with the same bridge settings.
