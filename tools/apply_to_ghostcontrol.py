@@ -16,7 +16,7 @@ FILE_NAMES = ["hid_boot.c", "hid_boot.h", "kbm_engine.c", "kbm_engine.h",
               "kbm_usbfs.c", "kbm_usbfs.h", "kbm_keys.c", "kbm_keys.h",
               "kbm_config.c", "kbm_config.h", "kbm_builtin_gen.c", "kbm_builtin_gen.h", "kbm_api.c", "kbm_api.h",
               "kbm_http.c", "kbm_http.h", "kbm_webui_gen.h",
-              "kbm_bridge.c", "kbm_bridge.h", "kbm_custom.c", "kbm_profiles_io.c", "kbm_profiles_io.h"]
+              "kbm_bridge.c", "kbm_bridge.h", "kbm_custom.c", "kbm_profiles_io.c", "kbm_profiles_io.h", "kbm_pad.c", "kbm_pad.h"]
 
 
 def replace_once(text: str, old: str, new: str, filename: str) -> str:
@@ -65,7 +65,7 @@ static void kbm_forward(const ScePadData *pad) { inject_pad(0, pad); }
     if a < 0 or b < 0 or b <= a or 'controller_manager_thread' not in main[a:b]:
         raise ValueError("gc_main.c: controller manager anchor changed")
     replacement = '''    /* KBM v@VERSION@. The DualSense is created only after the USB keyboard and mouse have
-     * produced BOTH keyboard and mouse input (automatically, or F8 if
+     * produced BOTH keyboard and mouse input, or an Xbox controller button press (automatically, or F8 if
      * auto-activation is off in the settings). -DKBM_DIAG_ONLY=1 never creates
      * one and exits after 5 minutes. Ghostcontrol's controller manager stays off. */
 #ifndef KBM_DIAG_ONLY
@@ -148,7 +148,7 @@ def patched_makefile(mk: str) -> str:
                       'CFLAGS  += $(KBM_CFLAGS) -D__PROSPERO__', 'Makefile')
     mk = replace_once(mk,
             'SRC := gc_main.c shellui_pad.c usb_helpers.c controller_nintendo.c controller_xbox.c',
-            'SRC := gc_main.c shellui_pad.c usb_helpers.c controller_nintendo.c controller_xbox.c kbm_engine.c hid_boot.c kbm_usbfs.c kbm_keys.c kbm_config.c kbm_builtin_gen.c kbm_api.c kbm_http.c kbm_bridge.c kbm_custom.c kbm_profiles_io.c',
+            'SRC := gc_main.c shellui_pad.c usb_helpers.c controller_nintendo.c controller_xbox.c kbm_engine.c hid_boot.c kbm_usbfs.c kbm_keys.c kbm_config.c kbm_builtin_gen.c kbm_api.c kbm_http.c kbm_bridge.c kbm_custom.c kbm_profiles_io.c kbm_pad.c',
             'Makefile')
     mk = replace_once(mk, 'LDFLAGS += -lScePad -lSceUserService',
                       'LDFLAGS += -lScePad -lSceUserService -lSceSystemService', 'Makefile')

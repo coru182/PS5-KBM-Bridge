@@ -23,6 +23,7 @@ Teclado y mouse en cualquier juego de PS5, sin adaptadores ni PC. Un payload par
   - En esa página, el mouse maneja el cursor.
 - **Perfil para el menú de la PS5:** sin juego abierto, WASD/flechas y mover el mouse mueven la selección, Enter/F/E/clic izquierdo seleccionan, Esc/clic derecho vuelven y Espacio abre Options.
 - **A pie, en auto, bici y avión:** un perfil puede usar teclas distintas en cada modo (GTA V y GTA Trilogy: W camina, acelera en el auto, pedalea en la bici o da potencia en el avión, como en PC). F sube o baja; B rota los modos a mano.
+- **También mandos de Xbox por cable:** Xbox One / Series / Elite y Xbox 360 por USB manejan el mismo DualSense virtual, solos o junto con el teclado y el mouse.
 - **Perfiles propios:** exportá cualquier perfil en JSON, cambialo e importalo desde la página de ajustes, o compartilo. Sin recompilar: ver [`docs/custom-profiles.es.md`](docs/custom-profiles.es.md).
 - **En español o en inglés:** la página de ajustes y las notificaciones usan el idioma de tu PS5. Se puede fijar a mano en General.
 - **Juegos con teclado y mouse propios** (Fortnite, Call of Duty, Battlefield 6…): te sugiere devolverle el teclado y el mouse a la PS5 mientras jugás.
@@ -42,6 +43,7 @@ Teclado y mouse en cualquier juego de PS5, sin adaptadores ni PC. Un payload par
 
 - **PS5 con jailbreak.** Probado en firmware **11.60** con elfldr, kstuff, ShadowMountPlus y backpork. Con etaHEN también puede arrancar solo al iniciar.
 - **Un teclado y un mouse USB** con protocolo de arranque HID (casi todos lo tienen): un receptor inalámbrico para los dos, o dos dispositivos en dos puertos. Probado en la consola: receptor Logitech `046d:c534`. Otros dispositivos y el armado con dos dispositivos son nuevos en v0.12 y todavía no se probaron en la consola: probá primero el ELF de diagnóstico.
+- **Opcional: un mando de Xbox por cable** (Xbox One / Series / Elite o Xbox 360, cable USB). Nuevo en v0.14, todavía no probado en la consola.
 - **Para compilar:** Linux o WSL (Ubuntu) con `git`, `python3`, `make`, `gcc` y el [PS5 Payload SDK](https://github.com/ps5-payload-dev/sdk) en `/opt/ps5-payload-sdk`. Para las pruebas de la página, Node y Playwright (opcional).
 
 ## Descargar
@@ -72,8 +74,8 @@ Resultado en `out/`:
 
 | Archivo | Para qué |
 |---|---|
-| `ps5-kbm-bridge-v013.elf` | El bridge |
-| `ps5-kbm-diag-v013.elf` | Diagnóstico: solo lee y mide, **nunca** crea el mando virtual, se cierra a los 5 min |
+| `ps5-kbm-bridge-v014.elf` | El bridge |
+| `ps5-kbm-diag-v014.elf` | Diagnóstico: solo lee y mide, **nunca** crea el mando virtual, se cierra a los 5 min |
 | `homebrew/PPSA51258/` | Ícono para el home (ShadowMountPlus) |
 | `etaHEN/payloads/` | Arranque automático, solo si usás etaHEN |
 
@@ -82,7 +84,7 @@ Resultado en `out/`:
 ## Instalar y usar
 
 1. Copiá `out/homebrew/PPSA51258/` a `/data/homebrew/PPSA51258/` en la PS5 por FTP (por ejemplo con ps5upload). Reiniciá y cargá tus payloads; ShadowMountPlus agrega el ícono **PS5 KBM Bridge** al home.
-   - Sin ShadowMountPlus: mandá `ps5-kbm-bridge-v013.elf` a elfldr (puerto 9021).
+   - Sin ShadowMountPlus: mandá `ps5-kbm-bridge-v014.elf` a elfldr (puerto 9021).
 2. Conectá el teclado y el mouse (o su receptor) y abrí el ícono. Se abre la página de ajustes. Mové el mouse y tocá una tecla: aparece el DualSense virtual.
 3. Abrí un juego. La notificación dice qué juego reconoció y qué perfil aplicó. Para cambiar algo en medio del juego: **F11**. Volvés con el botón PS (o la tecla Windows).
 
@@ -147,6 +149,7 @@ Perfiles de otros jugadores son bienvenidos (issues o pull requests), mejor con 
 | Cambio juego ↔ menú de la PS5 según el foco (v0.11) | La función de foco se verificó con el ELF de diagnóstico en 11.60 (líneas `FOCUS` del log); el cambio automático en sí todavía no se probó en consola |
 | Cualquier teclado/mouse USB, dos dispositivos separados (v0.12) | Compila; pruebas de la lógica en PC. **No probado en consola**: probá primero el ELF de diagnóstico |
 | Perfiles propios: exportar / importar / borrar (v0.12) | Pruebas en PC (motor, servidor HTTP real, página en Chromium). Guardar en `/data/ps5-kbm/profiles/` no se probó en consola |
+| Mandos de Xbox por cable (v0.14) | Pruebas en PC de la detección, el lector de Xbox 360 y la combinación; el arranque y el mapeo del Xbox One son de Ghostcontrol (confirmados por ellos en PS5). **No probado en consola con el bridge** |
 | Modos bici y avión (v0.12) | Pruebas en PC. En GTA V, el botón de disparo de los aviones y el freno de la bici no coinciden entre las fuentes (notas en `data/profiles/gta5.json`) |
 | Arranque automático con etaHEN | Sin probar |
 

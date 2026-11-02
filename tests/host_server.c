@@ -82,6 +82,7 @@ int main(int argc, char **argv) {
     rt.vda = 1; rt.receiver = 1;
     snprintf(rt.title, sizeof(rt.title), "%s", argc > 3 ? argv[3] : "PPSA04289");   /* RE2 (2019), EU */
     snprintf(rt.ip, sizeof(rt.ip), "127.0.0.1");
+    if (getenv("KBM_FAKE_PAD")) snprintf(rt.pad, sizeof(rt.pad), "Xbox One/Series");
     rt.kb_reports_5s = 12; rt.mouse_reports_5s = 480; rt.e2i_p50_us = 2100; rt.e2i_p95_us = 3900;
     changed(NULL); changes = 0;
     rt.autostart_avail = 1; rt.etahen = 1;

@@ -81,6 +81,7 @@ static void rt_json(KbmJson *j, const KbmRuntime *r) {
                  r->e2i_p50_us, r->e2i_p95_us, r->uptime_s, r->idle_s, r->autostart_avail, r->autostart_on, r->etahen, r->pointer_mode);
     kbm_json_str(j, r->ip);
     kbm_json_fmt(j, ",\"sys_lang\":\"%s\",\"lang\":\"%s\"", r->sys_lang ? kbm_lang_code(r->sys_lang) : "", kbm_lang_code(r->lang));
+    kbm_json_raw(j, ",\"pad\":"); kbm_json_str(j, r->pad);
     kbm_json_fmt(j, ",\"capture\":{\"active\":%d,\"profile\":", r->capture_active);
     kbm_json_str(j, r->cap_profile);
     kbm_json_raw(j, ",\"action\":"); kbm_json_str(j, r->cap_action);

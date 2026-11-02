@@ -8,6 +8,7 @@
 #include "../src/kbm_config.h"
 #include "../src/kbm_keys.h"
 #include "../src/hid_boot.h"
+#include "../src/kbm_pad.h"
 
 #define MS(x) ((uint64_t)(x) * 1000000ull)
 
@@ -610,6 +611,46 @@ static void test_custom_profiles(void) {
     assert(!strcmp(r.source, "rule") && !strcmp(r.p->id, "generic"));
 }
 
+static void test_xbox_pad(void) {
+    /* Xbox One S style: interface 0 = GIP (FF/47/D0) with OUT 0x02 + IN 0x82 */
+    const uint8_t one[] = {9,2,64,0,1,1,0,0xa0,0xfa,
+        9,4,0,0,2,0xff,0x47,0xd0,0,
+        7,5,0x02,3,64,0,4,
+        7,5,0x82,3,64,0,4};
+    KbmPadLayout L;
+    assert(kbm_pad_find(one, sizeof(one), &L) && L.type == KBM_PAD_GIP && L.iface == 0 && L.ep_in == 0x82 && L.ep_out == 0x02);
+    assert(!strcmp(kbm_pad_name(L.type), "Xbox One/Series"));
+    /* Xbox 360 wired: XInput interface first, then the headset/security ones (ignored) */
+    const uint8_t x360[] = {9,2,153,0,4,1,0,0xa0,0xfa,
+        9,4,0,0,2,0xff,0x5d,0x01,0,
+        17,0x21,0x00,0x01,0x01,0x25,0x81,0x14,0,0,0,0,0x13,0x01,0x08,0,0,
+        7,5,0x81,3,32,0,4,
+        7,5,0x01,3,32,0,8,
+        9,4,1,0,4,0xff,0x5d,0x03,0,
+        7,5,0x82,3,32,0,2};
+    assert(kbm_pad_find(x360, sizeof(x360), &L) && L.type == KBM_PAD_X360 && L.iface == 0 && L.ep_in == 0x81 && L.ep_out == 0x01);
+    /* a boot keyboard is not a pad, and garbage doesn't crash */
+    const uint8_t kb[] = {9,2,34,0,1,1,0,0xa0,0x32, 9,4,0,0,1,3,1,1,0, 7,5,0x81,3,8,0,10};
+    assert(!kbm_pad_find(kb, sizeof(kb), &L) && L.type == KBM_PAD_NONE && L.ep_in == -1);
+    const uint8_t bad[] = {9,4,0,0,2,0xff,0x47,0xd0,0, 200,5};
+    assert(!kbm_pad_find(bad, sizeof(bad), &L));
+    /* 360 report: A + LB + Start + dpad up, LT full, left stick right/up, right stick centered */
+    uint8_t r[20] = {0x00, 0x14, 0x01 | 0x10, 0x01 | 0x10, 255, 0,
+                     0xff, 0x7f,  0xff, 0x7f,  0x10, 0x00,  0xf0, 0xff};
+    KbmPadState st; memset(&st, 0, sizeof(st));
+    assert(kbm_pad_parse_x360(r, sizeof(r), &st) && st.connected);
+    assert(st.buttons == (KBM_BTN_CROSS | KBM_BTN_L1 | KBM_BTN_OPTIONS | KBM_BTN_UP | KBM_BTN_L2));
+    assert(st.l2 == 255 && st.r2 == 0 && st.lx == 255 && st.ly == 1 && st.rx == 128 && st.ry == 128);
+    r[1] = 0x03; assert(!kbm_pad_parse_x360(r, 3, &st));          /* LED status message: ignored */
+    /* merge: buttons combined, a moving pad stick wins, triggers max, idle pad stick keeps the mouse */
+    KbmFrame f = { KBM_BTN_SQUARE, 128, 128, 200, 60, 0, 40 };
+    KbmPadState p = { 1, KBM_BTN_CROSS, 128, 10, 130, 126, 90, 0 };
+    kbm_pad_merge(&f, &p);
+    assert(f.buttons == (KBM_BTN_SQUARE | KBM_BTN_CROSS) && f.lx == 128 && f.ly == 10 && f.rx == 200 && f.ry == 60 && f.l2 == 90 && f.r2 == 40);
+    p.connected = 0; p.buttons = KBM_BTN_PS; kbm_pad_merge(&f, &p);
+    assert(!(f.buttons & KBM_BTN_PS));
+}
+
 int main(void) {
     test_keys();
     test_re2r_defaults();
@@ -624,6 +665,7 @@ int main(void) {
     test_stick_shaping();
     test_usb_descriptor_parser();
     test_custom_profiles();
-    puts("PASS: keys, RE2R/Requiem defaults, combos, wheel, rate-independent mouse, capture, config INI/JSON, title DB + auto profile, vehicle layers, PS5 menu profile, stick shaping + dead-zone finder, HID parser, custom profiles import/export");
+    test_xbox_pad();
+    puts("PASS: keys, RE2R/Requiem defaults, combos, wheel, rate-independent mouse, capture, config INI/JSON, title DB + auto profile, vehicle layers, PS5 menu profile, stick shaping + dead-zone finder, HID parser, custom profiles import/export, Xbox pads");
     return 0;
 }

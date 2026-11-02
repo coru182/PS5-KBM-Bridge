@@ -1,6 +1,6 @@
 CC ?= cc
 CFLAGS ?= -std=c11 -O2 -Wall -Wextra -Werror -D_DEFAULT_SOURCE
-CORE := ../src/kbm_engine.c ../src/kbm_keys.c ../src/kbm_config.c ../src/kbm_custom.c ../src/kbm_builtin_gen.c
+CORE := ../src/kbm_engine.c ../src/kbm_keys.c ../src/kbm_config.c ../src/kbm_custom.c ../src/kbm_pad.c ../src/kbm_builtin_gen.c
 
 GEN := ../src/kbm_builtin_gen.c ../src/kbm_builtin_gen.h
 

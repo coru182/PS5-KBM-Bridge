@@ -2,6 +2,16 @@
 
 [English](CHANGELOG.md) · **Español**
 
+## v0.14: mandos de Xbox por cable
+
+- **Mandos de Xbox por USB** manejan el mismo DualSense virtual, solos o junto con el teclado y el mouse (los botones se combinan; un stick que movés en el mando le gana al mouse/teclado):
+  - **Xbox One / Series / Elite** y mandos compatibles por cable (protocolo GIP). El arranque del mando y el mapeo de botones son el código de Ghostcontrol, confirmado en PS5 con un Xbox One S (`045e:02ea`); el bridge encuentra el mando por su interfaz USB, así que otros mandos GIP deberían andar también.
+  - Mandos **Xbox 360 por cable** (XInput), con su propio lector.
+  - A ✕ B ○ X □ Y △, LB/RB = L1/R1, LT/RT = L2/R2 (analógicos), View/Back = Create, Menu/Start = Options, botón Xbox = PS.
+- Lo enchufás y apretás un botón: el mando también arranca el DualSense virtual solo (como teclado + mouse). La página muestra "Mando Xbox (USB)" en el estado, y hay una notificación cuando se conecta o se desconecta.
+- El ELF de diagnóstico lee el mando y anota sus primeros reportes, sin crear el mando virtual.
+- **Todavía no probado en la consola.** Inalámbrico (Bluetooth o el adaptador inalámbrico de Xbox) no está soportado: solo por cable USB.
+
 ## v0.13: reconexión más firme, diagnóstico, releases automáticos
 
 - **Reconectar teclado y mouse:** **F8** (con el mando ya activo) o un botón en la página de ajustes suelta el teclado y el mouse y los vuelve a tomar, sin devolvérselos a la PS5. Para cuando uno de los dos deja de responder.

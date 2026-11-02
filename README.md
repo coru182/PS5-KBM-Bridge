@@ -23,6 +23,7 @@ Keyboard and mouse in any PS5 game, with no adapter and no PC. A payload for jai
   - On that page the mouse drives the cursor.
 - **PS5 menu profile:** with no game open, WASD/arrows and mouse movement move the selection, Enter/F/E/left click select, Esc/right click go back and Space opens Options.
 - **On foot, car, bike and aircraft:** a profile can use different keys in each mode (GTA V and GTA Trilogy: W walks, accelerates in a car, pedals on a bike or opens the throttle in a plane, like on PC). F gets in or out; B cycles the modes by hand.
+- **Wired Xbox controllers too:** Xbox One / Series / Elite and Xbox 360 pads over USB drive the same virtual DualSense, alone or together with the keyboard and mouse.
 - **Your own profiles:** export any profile as JSON, edit it and import it back from the settings page, or share it. No rebuilding: see [`docs/custom-profiles.md`](docs/custom-profiles.md).
 - **English or Spanish:** the settings page and notifications follow your PS5's language. You can set it by hand under General.
 - **Games with their own keyboard/mouse support** (Fortnite, Call of Duty, Battlefield 6…): it suggests handing the keyboard and mouse back to the PS5 while you play.
@@ -42,6 +43,7 @@ Keyboard and mouse in any PS5 game, with no adapter and no PC. A payload for jai
 
 - **Jailbroken PS5.** Tested on firmware **11.60** with elfldr, kstuff, ShadowMountPlus and backpork. With etaHEN it can also start automatically.
 - **A USB keyboard and mouse** that speak the HID boot protocol (nearly all do): one wireless receiver for both, or two devices on two ports. Tested on the console: Logitech receiver `046d:c534`. Other devices and the two-device setup are new in v0.12 and not tested on the console yet: try the diagnostics ELF first.
+- **Optional: a wired Xbox controller** (Xbox One / Series / Elite or Xbox 360, USB cable). New in v0.14, not tested on the console yet.
 - **To build:** Linux or WSL (Ubuntu) with `git`, `python3`, `make`, `gcc` and the [PS5 Payload SDK](https://github.com/ps5-payload-dev/sdk) in `/opt/ps5-payload-sdk`. Node and Playwright for the page tests (optional).
 
 ## Download
@@ -72,8 +74,8 @@ Output in `out/`:
 
 | File | Purpose |
 |---|---|
-| `ps5-kbm-bridge-v013.elf` | The bridge |
-| `ps5-kbm-diag-v013.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
+| `ps5-kbm-bridge-v014.elf` | The bridge |
+| `ps5-kbm-diag-v014.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
 | `homebrew/PPSA51258/` | Home screen icon (ShadowMountPlus) |
 | `etaHEN/payloads/` | Automatic start, only if you use etaHEN |
 
@@ -82,7 +84,7 @@ Output in `out/`:
 ## Install and use
 
 1. Copy `out/homebrew/PPSA51258/` to `/data/homebrew/PPSA51258/` on the PS5 over FTP (for example with ps5upload). Reboot and load your payloads; ShadowMountPlus adds the **PS5 KBM Bridge** icon to the home screen.
-   - Without ShadowMountPlus: send `ps5-kbm-bridge-v013.elf` to elfldr (port 9021).
+   - Without ShadowMountPlus: send `ps5-kbm-bridge-v014.elf` to elfldr (port 9021).
 2. Plug in the keyboard and mouse (or their receiver) and open the icon. The settings page opens. Move the mouse and press a key: the virtual DualSense appears.
 3. Open a game. The notification says which game it recognised and which profile it applied. To change something mid-game: **F11**. Go back with the PS button (or the Windows key).
 
@@ -147,6 +149,7 @@ Profiles from other players are welcome (issues or pull requests), ideally with 
 | Game ↔ PS5 menu switch from the PS5 focus (v0.11) | Focus call verified with the diagnostics ELF on 11.60 (`FOCUS` log lines); the automatic switch itself not yet tested on console |
 | Any USB keyboard/mouse, two separate devices (v0.12) | Builds; PC tests of the logic. **Not tested on console**: try the diagnostics ELF first |
 | Custom profiles: export / import / delete (v0.12) | PC tests (engine, real HTTP server, page in Chromium). Saving to `/data/ps5-kbm/profiles/` not tested on console |
+| Wired Xbox controllers (v0.14) | PC tests of detection, Xbox 360 parsing and merging; the Xbox One handshake/mapping is Ghostcontrol's (confirmed by them on PS5). **Not tested on console with the bridge** |
 | Bike and aircraft modes (v0.12) | PC tests. GTA V aircraft fire button and bike brake are uncertain in the sources (notes in `data/profiles/gta5.json`) |
 | Automatic start with etaHEN | Not tested |
 

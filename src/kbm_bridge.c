@@ -21,6 +21,8 @@
 #include "kbm_keys.h"
 #include "kbm_usbfs.h"
 #include "hid_boot.h"
+#include "kbm_pad.h"
+#include "controller_xbox.h"   /* Ghostcontrol: GIP handshake + Xbox One input parsing */
 
 #include <arpa/inet.h>
 #include <errno.h>
@@ -46,7 +48,7 @@
 #ifndef KBM_DIAG_ONLY
 #define KBM_DIAG_ONLY 0
 #endif
-#define KBM_VERSION "0.13"
+#define KBM_VERSION "0.14"
 
 extern void ghostpad_status_log(const char *fmt, ...);
 #define KLOG(...) ghostpad_status_log("[KBM] " __VA_ARGS__)
@@ -117,7 +119,7 @@ static void focus_probe(int big_app) {
 #define KBM_LOGITECH_VID 0x046d
 #define KBM_LOGITECH_PID 0xc534
 #define KBM_SONY_VID     0x054c   /* never touch PlayStation controllers */
-#define MAX_WORKERS 2
+#define MAX_WORKERS 3      /* keyboard, mouse (or one receiver for both) + one Xbox controller */
 #define KBM_POLL_MS 2
 #define KBM_CFG_DIR  "/data/ps5-kbm"
 #define KBM_CFG_PATH "/data/ps5-kbm/config.ini"
@@ -133,6 +135,7 @@ typedef struct {
     char path[32];
     uint16_t vid, pid;
     HidBootLayout layout;    /* only the interfaces this worker took (-1 = not used) */
+    KbmPadLayout pad;        /* pad.type != KBM_PAD_NONE: this worker drives an Xbox controller */
 } KbmWorker;
 
 /* ---- shared state: everything below is guarded by g_lock unless noted ---- */
@@ -151,6 +154,13 @@ static int workers_busy_locked(void) {
     for (int i = 0; i < MAX_WORKERS; ++i) n += g_workers[i].active;
     return n;
 }
+static int kbm_workers_busy_locked(void) {     /* keyboard/mouse workers only */
+    int n = 0;
+    for (int i = 0; i < MAX_WORKERS; ++i) n += g_workers[i].active && g_workers[i].pad.type == KBM_PAD_NONE;
+    return n;
+}
+static KbmPadState g_pad;                 /* latest Xbox controller state, guarded by g_lock */
+static uint32_t g_pad_reports = 0;
 static kbm_inject_cb g_inject;
 static kbm_notify_cb g_notify;
 static volatile int g_injection_enabled = 0;
@@ -199,7 +209,7 @@ static void refresh_status_locked(void) {
     else if (!g_want_capture) set_status("native");
     else if (g_diag_release_until) set_status("released");
     else if (KBM_DIAG_ONLY) set_status("diag");
-    else if (g_rt.vda && g_rt.receiver) set_status("active");
+    else if (g_rt.vda && (g_rt.receiver || g_pad.connected)) set_status("active");
     else set_status("waiting");
 }
 
@@ -328,11 +338,12 @@ static int api_diag_extra(void *u, char *buf, size_t n) {
     pthread_mutex_lock(&g_lock);
     for (int i = 0; i < MAX_WORKERS; ++i) {
         const KbmWorker *w = &g_workers[i];
-        if (w->active) APP("device %d: %s %04x:%04x%s%s\n", i, w->path, w->vid, w->pid,
-                           w->layout.keyboard_ep >= 0 ? " keyboard" : "", w->layout.mouse_ep >= 0 ? " mouse" : "");
+        if (w->active) APP("device %d: %s %04x:%04x%s%s%s%s\n", i, w->path, w->vid, w->pid,
+                           w->layout.keyboard_ep >= 0 ? " keyboard" : "", w->layout.mouse_ep >= 0 ? " mouse" : "",
+                           w->pad.type != KBM_PAD_NONE ? " " : "", kbm_pad_name(w->pad.type));
     }
     pthread_mutex_unlock(&g_lock);
-    APP("reports since last take: keyboard=%u mouse=%u\n", (unsigned)g_kb_since_take, (unsigned)g_mouse_since_take);
+    APP("reports since last take: keyboard=%u mouse=%u; controller reports=%u\n", (unsigned)g_kb_since_take, (unsigned)g_mouse_since_take, (unsigned)g_pad_reports);
     int fd = open(KBM_LOG_PATH, O_RDONLY);
     if (fd >= 0) {
         off_t size = lseek(fd, 0, SEEK_END);
@@ -412,6 +423,7 @@ static void *inject_thread(void *unused) {
         uint64_t now = mono_ns(), evt;
         pthread_mutex_lock(&g_lock);
         kbm_frame(&g_engine, now, &f);
+        kbm_pad_merge(&f, &g_pad);               /* Xbox controller on top of keyboard/mouse */
         /* PS leaves the browser: hand the mouse back to the camera */
         if (g_engine.pointer_mode && (f.buttons & KBM_BTN_PS)) set_pointer_locked(0, "PS button");
         evt = g_pending_evt_ns;
@@ -451,7 +463,13 @@ static void *inject_thread(void *unused) {
 }
 
 /* ---------------------------------------------------------------- probe */
-static int probe_boot_device(const char *path, HidBootLayout *layout, uint16_t *vid_out, uint16_t *pid_out) {
+#define PROBE_BOOT 1
+#define PROBE_PAD  2
+/* Bitmask: PROBE_BOOT = boot keyboard/mouse interfaces, PROBE_PAD = Xbox controller interface. */
+static int probe_device(const char *path, HidBootLayout *layout, KbmPadLayout *pad, uint16_t *vid_out, uint16_t *pid_out) {
+    HidBootLayout dummy;
+    if (!layout) layout = &dummy;
+    if (pad) { memset(pad, 0, sizeof(*pad)); pad->type = KBM_PAD_NONE; pad->iface = pad->ep_in = pad->ep_out = -1; }
     int fd = open(path, O_RDONLY | O_NONBLOCK);
     if (fd < 0) return 0;
     uint8_t data[2048];
@@ -462,13 +480,17 @@ static int probe_boot_device(const char *path, HidBootLayout *layout, uint16_t *
     struct usb_device_descriptor dev;
     memset(&dev, 0, sizeof(dev));
     int have = ioctl(fd, USB_GET_DEVICE_DESC, &dev) == 0 && UGETW(dev.idVendor) != KBM_SONY_VID;
-    int ok = have && ioctl(fd, USB_GET_FULL_DESC, &ugd) == 0 &&
-             ugd.ugd_actlen <= sizeof(data) &&
-             hid_boot_find(data, ugd.ugd_actlen, layout);
+    int desc = have && ioctl(fd, USB_GET_FULL_DESC, &ugd) == 0 && ugd.ugd_actlen <= sizeof(data);
+    int ok = 0;
+    if (desc && hid_boot_find(data, ugd.ugd_actlen, layout)) ok |= PROBE_BOOT;
+    if (desc && pad && kbm_pad_find(data, ugd.ugd_actlen, pad)) ok |= PROBE_PAD;
     if (vid_out) *vid_out = have ? UGETW(dev.idVendor) : 0;
     if (pid_out) *pid_out = have ? UGETW(dev.idProduct) : 0;
     close(fd);
     return ok;
+}
+static int probe_boot_device(const char *path, HidBootLayout *layout, uint16_t *vid_out, uint16_t *pid_out) {
+    return probe_device(path, layout, NULL, vid_out, pid_out) & PROBE_BOOT;
 }
 
 /* After a release: does the PS5 own the interfaces again? (0 = driver attached) */
@@ -795,7 +817,7 @@ done:
     if (have_fs) kbm_usbfs_teardown(u);
     pthread_mutex_lock(&g_lock);
     kbm_disconnect(&g_engine, w->idx);       /* release every key/button of this device */
-    g_rt.receiver = workers_busy_locked() > 1;   /* other devices still held? (this one is leaving) */
+    g_rt.receiver = kbm_workers_busy_locked() > 1;   /* other keyboard/mouse devices still held? (this one is leaving) */
     if (g_rt.capture_active) { g_rt.capture_active = 0; snprintf(g_rt.cap_result, sizeof(g_rt.cap_result), "cancelled"); }
     refresh_status_locked();
     pthread_mutex_unlock(&g_lock);
@@ -818,6 +840,137 @@ done:
     KLOG("worker %d stopped (release=%d)\n", w->idx, release);
     return NULL;
 #undef ctx
+}
+
+/* ---------------------------------------------------------------- Xbox controller worker */
+/* Same USB_FS calls as Ghostcontrol's own Xbox slot (gc_main.c): one IN read at
+ * a time with a 50 ms timeout, OUT for the GIP handshake/ACKs. */
+static void *pad_thread(void *arg) {
+    KbmWorker *w = (KbmWorker *)arg;
+    const KbmPadLayout layout_copy = w->pad;    /* w->pad is cleared when this worker ends */
+    const KbmPadLayout *L = &layout_copy;
+    struct usb_fs_endpoint eps[2];
+    struct usb_fs_init init;
+    struct usb_fs_open op;
+    uint8_t buf[64];
+    void *bufs[1] = { buf };
+    uint32_t lens[1] = { 64 };
+    int fd = -1, inited = 0, in_open = 0, out_open = 0, streaming = 0;
+    uint32_t logged = 0;
+    KLOG("pad worker %d %s %04x:%04x %s\n", w->idx, w->path, w->vid, w->pid, kbm_pad_name(L->type));
+    fd = open(w->path, O_RDWR);
+    if (fd < 0) { KLOG("pad open %s errno=%d\n", w->path, errno); goto done; }
+    { int i = L->iface; int rc = ioctl(fd, USB_IFACE_DRIVER_DETACH, &i); KLOG("pad detach iface=%d rc=%d\n", L->iface, rc); }
+    sleep_ns(120000000ull);                      /* hub settle, as Ghostcontrol does */
+    memset(eps, 0, sizeof(eps)); memset(&init, 0, sizeof(init));
+    init.pEndpoints = eps; init.ep_index_max = 2;
+    if (ioctl(fd, USB_FS_INIT, &init) != 0) { KLOG("pad FS_INIT errno=%d\n", errno); goto done; }
+    inited = 1;
+    memset(&op, 0, sizeof(op)); op.ep_index = 0; op.ep_no = (uint8_t)L->ep_in; op.max_bufsize = 64; op.max_frames = 1;
+    if (ioctl(fd, USB_FS_OPEN, &op) != 0) { KLOG("pad IN 0x%02x errno=%d\n", L->ep_in & 0xff, errno); goto done; }
+    in_open = 1;
+    if (L->ep_out >= 0) {
+        memset(&op, 0, sizeof(op)); op.ep_index = 1; op.ep_no = (uint8_t)L->ep_out; op.max_bufsize = 64; op.max_frames = 1;
+        out_open = ioctl(fd, USB_FS_OPEN, &op) == 0;
+    }
+    KLOG("pad endpoints: in 0x%02x out 0x%02x (%s)\n", L->ep_in & 0xff, L->ep_out & 0xff, out_open ? "open" : "none");
+    eps[0].ppBuffer = bufs; eps[0].pLength = lens; eps[0].nFrames = 1;
+    eps[0].timeout = 50; eps[0].flags = USB_FS_FLAG_SINGLE_SHORT_OK | USB_FS_FLAG_MULTI_SHORT_OK;
+    if (L->type == KBM_PAD_GIP) {
+        if (!out_open) { KLOG("pad: GIP controller without an OUT endpoint, can't wake it up\n"); goto done; }
+        xbox_gip_handshake(fd, eps);
+        eps[0].ppBuffer = bufs; eps[0].pLength = lens; eps[0].nFrames = 1;   /* the handshake reused ep 0 */
+        eps[0].timeout = 50; eps[0].flags = USB_FS_FLAG_SINGLE_SHORT_OK | USB_FS_FLAG_MULTI_SHORT_OK;
+    }
+    while (g_running && !g_stop_requested && !g_retake_req) {
+        memset(buf, 0, sizeof(buf));
+        lens[0] = 64; eps[0].aFrames = 0; eps[0].status = 0;
+        struct usb_fs_start st; memset(&st, 0, sizeof(st)); st.ep_index = 0;
+        if (ioctl(fd, USB_FS_START, &st) != 0) {
+            if (errno == EBUSY) { struct usb_fs_stop sp; memset(&sp, 0, sizeof(sp)); ioctl(fd, USB_FS_STOP, &sp); sleep_ns(5000000ull); continue; }
+            KLOG("pad START errno=%d: controller gone\n", errno);
+            break;
+        }
+        int ok = 0, gone = 0;
+        for (int k = 0; k < 120; ++k) {          /* up to ~60 ms (the transfer itself times out at 50) */
+            struct usb_fs_complete co; memset(&co, 0, sizeof(co)); co.ep_index = 0;
+            if (ioctl(fd, USB_FS_COMPLETE, &co) == 0) { ok = 1; break; }
+            if (errno == ENXIO || errno == ENOTTY || errno == ENODEV) { gone = 1; break; }
+            if (errno != EBUSY) break;
+            sleep_ns(500000ull);
+        }
+        if (gone) { KLOG("pad COMPLETE: controller gone\n"); break; }
+        if (!ok) { struct usb_fs_stop sp; memset(&sp, 0, sizeof(sp)); ioctl(fd, USB_FS_STOP, &sp); continue; }
+        if (eps[0].status != 0 || eps[0].aFrames == 0 || lens[0] == 0) continue;   /* timeout: no change */
+        uint32_t len = lens[0] > 64 ? 64 : lens[0];
+        KbmPadState ns;
+        int got = 0;
+        pthread_mutex_lock(&g_lock);
+        ns = g_pad;
+        pthread_mutex_unlock(&g_lock);
+        if (L->type == KBM_PAD_GIP) {
+            ScePadData sp; memset(&sp, 0, sizeof(sp)); sp.quat.w = 1.0f;
+            int r = xbox_handle_packet(fd, eps, buf, len, &sp);
+            eps[0].ppBuffer = bufs; eps[0].pLength = lens;      /* (an ACK may have touched ep 1 only, but keep ep 0 ours) */
+            if (r > 0 && buf[0] == 0x07) {                      /* Guide packet: only the PS button changes */
+                ns.buttons = (ns.buttons & ~KBM_BTN_PS) | (sp.buttons & KBM_BTN_PS);
+                ns.connected = 1; got = 1;
+            } else if (r > 0) {
+                ns.buttons = (sp.buttons & ~KBM_BTN_PS) | (ns.buttons & KBM_BTN_PS);
+                ns.lx = sp.leftStick.x; ns.ly = sp.leftStick.y; ns.rx = sp.rightStick.x; ns.ry = sp.rightStick.y;
+                ns.l2 = sp.analogButtons.l2; ns.r2 = sp.analogButtons.r2;
+                ns.connected = 1; got = 1;
+            }
+        } else {
+            got = kbm_pad_parse_x360(buf, len, &ns);
+        }
+        if (!got) continue;
+        uint64_t now = mono_ns();
+        int first = 0;
+        pthread_mutex_lock(&g_lock);
+        if (!KBM_DIAG_ONLY) { g_pad = ns; g_pad.connected = 1; }   /* diag: read only, never drive the virtual pad */
+        ++g_pad_reports;
+        if (!streaming) {
+            streaming = first = 1;
+            snprintf(g_rt.pad, sizeof(g_rt.pad), "%s", kbm_pad_name(L->type));
+            refresh_status_locked();
+        }
+        int autoa = g_cfg.auto_activate;
+        pthread_mutex_unlock(&g_lock);
+        g_last_input_ns = now;
+        if (first) {
+            KLOG("%s controller streaming\n", kbm_pad_name(L->type));
+            NOTIFY2("KBM: mando %s conectado", "KBM: %s controller connected", kbm_pad_name(L->type));
+        }
+        if (logged < 8) {
+            ++logged;
+            KLOG("pad sample #%u len=%u cmd=0x%02x buttons=0x%05x L=%u,%u R=%u,%u L2=%u R2=%u\n", logged, (unsigned)len, buf[0],
+                 (unsigned)ns.buttons, ns.lx, ns.ly, ns.rx, ns.ry, ns.l2, ns.r2);
+        }
+        /* a real button press confirms it is a working controller: same gate as keyboard+mouse */
+        if (ns.buttons && !KBM_DIAG_ONLY && !g_activation_requested && autoa) {
+            g_activation_requested = 1;
+            KLOG("%s controller button pressed: auto-activating virtual DualSense\n", kbm_pad_name(L->type));
+        }
+    }
+done:
+    if (in_open) { struct usb_fs_stop sp; memset(&sp, 0, sizeof(sp)); sp.ep_index = 0; ioctl(fd, USB_FS_STOP, &sp);
+                   struct usb_fs_close cl; memset(&cl, 0, sizeof(cl)); cl.ep_index = 0; ioctl(fd, USB_FS_CLOSE, &cl); }
+    if (out_open) { struct usb_fs_close cl; memset(&cl, 0, sizeof(cl)); cl.ep_index = 1; ioctl(fd, USB_FS_CLOSE, &cl); }
+    if (inited) { struct usb_fs_uninit un; memset(&un, 0, sizeof(un)); ioctl(fd, USB_FS_UNINIT, &un); }
+    if (fd >= 0) close(fd);
+    pthread_mutex_lock(&g_lock);
+    memset(&g_pad, 0, sizeof(g_pad));            /* release every button of the controller */
+    if (streaming) g_rt.pad[0] = 0;
+    refresh_status_locked();
+    w->active = 0;
+    w->path[0] = '\0';
+    w->pad.type = KBM_PAD_NONE;
+    pthread_mutex_unlock(&g_lock);
+    if (streaming && !g_stop_requested && !g_retake_req)
+        NOTIFY2("KBM: mando %s desconectado", "KBM: %s controller disconnected", kbm_pad_name(L->type));
+    KLOG("pad worker %d stopped (%u reports)\n", w->idx, (unsigned)g_pad_reports);
+    return NULL;
 }
 
 static void *scanner_thread(void *unused) {
@@ -860,27 +1013,50 @@ static void *scanner_thread(void *unused) {
         pthread_mutex_lock(&g_lock);
         int can = g_want_capture && !g_diag_release_until;
         if (g_released_ns && now - g_released_ns < KBM_RETAKE_SETTLE_NS) can = 0;   /* let the PS5 finish re-attaching first */
-        int have_kb = 0, have_mouse = 0, free_slot = -1;
+        int have_kb = 0, have_mouse = 0, have_pad = 0, free_slot = -1;
         char used[MAX_WORKERS][32];
         for (int i = 0; i < MAX_WORKERS; ++i) {
             used[i][0] = 0;
             if (g_workers[i].active) {
                 have_kb |= g_workers[i].layout.keyboard_ep >= 0;
                 have_mouse |= g_workers[i].layout.mouse_ep >= 0;
+                have_pad |= g_workers[i].pad.type != KBM_PAD_NONE;
                 snprintf(used[i], sizeof(used[i]), "%s", g_workers[i].path);
             } else if (free_slot < 0) free_slot = i;
         }
         pthread_mutex_unlock(&g_lock);
-        can = can && free_slot >= 0 && !(have_kb && have_mouse);
-        for (int bus = KBM_BUS_MIN; can && bus <= KBM_BUS_MAX; bus++) {
-            for (int dev = KBM_DEV_MIN; can && dev <= KBM_DEV_MAX; dev++) {
+        can = can && !(have_kb && have_mouse);           /* still need a keyboard or a mouse */
+        int want_pad = !have_pad && !g_diag_release_until; /* the Xbox controller doesn't care about native games */
+        for (int bus = KBM_BUS_MIN; free_slot >= 0 && (can || want_pad) && bus <= KBM_BUS_MAX; bus++) {
+            for (int dev = KBM_DEV_MIN; free_slot >= 0 && (can || want_pad) && dev <= KBM_DEV_MAX; dev++) {
                 char path[32];
                 HidBootLayout layout;
+                KbmPadLayout pad;
                 uint16_t vid = 0, pid = 0;
                 snprintf(path, sizeof(path), "/dev/ugen%d.%d", bus, dev);
                 int in_use = 0;
                 for (int i = 0; i < MAX_WORKERS; ++i) in_use |= !strcmp(used[i], path);
-                if (in_use || !probe_boot_device(path, &layout, &vid, &pid)) continue;
+                int found = in_use ? 0 : probe_device(path, &layout, &pad, &vid, &pid);
+                if ((found & PROBE_PAD) && want_pad) {
+                    KLOG("matched USB %04x:%04x at %s: %s controller (iface %d, in 0x%02x, out 0x%02x)\n", vid, pid, path,
+                         kbm_pad_name(pad.type), pad.iface, pad.ep_in & 0xff, pad.ep_out & 0xff);
+                    pthread_mutex_lock(&g_lock);
+                    KbmWorker *w = &g_workers[free_slot];
+                    memset(w, 0, sizeof(*w));
+                    w->idx = free_slot;
+                    w->layout.keyboard_iface = w->layout.keyboard_ep = w->layout.mouse_iface = w->layout.mouse_ep = -1;
+                    w->pad = pad;
+                    w->vid = vid; w->pid = pid;
+                    snprintf(w->path, sizeof(w->path), "%s", path);
+                    w->active = 1;
+                    pthread_mutex_unlock(&g_lock);
+                    pthread_t tid;
+                    if (pthread_create(&tid, NULL, pad_thread, w) == 0) pthread_detach(tid);
+                    else { pthread_mutex_lock(&g_lock); w->active = 0; w->pad.type = KBM_PAD_NONE; pthread_mutex_unlock(&g_lock); }
+                    free_slot = -1;   /* one new device per pass */
+                    continue;
+                }
+                if (!can || !(found & PROBE_BOOT)) continue;
                 /* take only the roles still missing */
                 if (have_kb) layout.keyboard_iface = layout.keyboard_ep = -1;
                 if (have_mouse) layout.mouse_iface = layout.mouse_ep = -1;
@@ -891,6 +1067,8 @@ static void *scanner_thread(void *unused) {
                 KbmWorker *w = &g_workers[free_slot];
                 w->idx = free_slot;
                 w->layout = layout;
+                memset(&w->pad, 0, sizeof(w->pad));
+                w->pad.type = KBM_PAD_NONE; w->pad.iface = w->pad.ep_in = w->pad.ep_out = -1;
                 w->vid = vid; w->pid = pid;
                 snprintf(w->path, sizeof(w->path), "%s", path);
                 w->active = 1;
@@ -898,7 +1076,7 @@ static void *scanner_thread(void *unused) {
                 pthread_t tid;
                 if (pthread_create(&tid, NULL, device_thread, w) == 0) pthread_detach(tid);
                 else { pthread_mutex_lock(&g_lock); w->active = 0; pthread_mutex_unlock(&g_lock); }
-                can = 0;   /* one new device per pass; the next pass looks for what's still missing */
+                can = 0; free_slot = -1;   /* one new device per pass; the next pass looks for what's still missing */
             }
         }
         sleep_ns(1000000000ull);

@@ -48,6 +48,7 @@ typedef struct {
     int pointer_mode;       /* mouse drives the PS5 browser cursor */
     int sys_lang;           /* PS5 system language: KBM_LANG_ES / EN, AUTO = unknown */
     int lang;               /* effective language (config, else system) */
+    char pad[24];           /* Xbox controller in use ("Xbox One/Series", "Xbox 360"), "" = none */
 } KbmRuntime;
 
 typedef struct {

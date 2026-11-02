@@ -2,6 +2,16 @@
 
 **English** · [Español](CHANGELOG.es.md)
 
+## v0.14: wired Xbox controllers
+
+- **Xbox controllers over USB** drive the same virtual DualSense, alone or together with the keyboard and mouse (buttons are combined; a stick you move on the controller wins over the mouse/keyboard):
+  - **Xbox One / Series / Elite** and compatible wired pads (GIP protocol). The handshake and button mapping are Ghostcontrol's own code, confirmed on PS5 with an Xbox One S (`045e:02ea`); the bridge finds the controller by its USB interface, so other GIP pads should work too.
+  - **Xbox 360 wired** pads (XInput), with their own parser.
+  - A ✕ B ○ X □ Y △, LB/RB = L1/R1, LT/RT = L2/R2 (analog), View/Back = Create, Menu/Start = Options, Xbox button = PS.
+- Plug it in and press a button: the controller also starts the virtual DualSense on its own (like keyboard + mouse). The page shows "Xbox controller (USB)" in the status, and there's a notification when it connects or disconnects.
+- The diagnostics ELF reads the controller and logs its first reports, without creating the virtual controller.
+- **Not tested on the console yet.** Wireless (Bluetooth or the Xbox Wireless Adapter) is not supported: only a USB cable.
+
 ## v0.13: steadier reconnection, diagnostics, automatic releases
 
 - **Reconnect keyboard and mouse:** **F8** (once the controller is active) or a button on the settings page lets go of the keyboard and mouse and takes them again, without handing them to the PS5. For when one of them stops responding.

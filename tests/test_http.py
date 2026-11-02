@@ -49,6 +49,7 @@ try:
     assert all(set(p) >= {"id", "name", "kind", "conf", "mod"} and "actions" not in p for p in st["config"]["profiles"])
     assert "MOUSE1" in st["keys"] and "F12" not in st["keys"]
     assert st["runtime"]["profile"] == "re2r" and st["runtime"]["hz"] == 250
+    assert st["runtime"]["pad"] == ""
 
     assert api("/api/profile?id=re2r&sens=14&invert_y=1&smooth_ms=999")[1]["ok"]
     p = prof("re2r")

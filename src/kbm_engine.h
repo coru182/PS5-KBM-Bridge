@@ -27,6 +27,7 @@
 #define KBM_BTN_CROSS    0x00004000u
 #define KBM_BTN_SQUARE   0x00008000u
 #define KBM_BTN_TOUCH    0x00100000u
+#define KBM_BTN_CREATE   0x00000001u   /* DualSense Create (Share) */
 #define KBM_BTN_PS       0x00010000u   /* Ghostcontrol: PS/home button via VDI */
 /* Left-stick directions live above bit 32 of the output mask. */
 #define KBM_OUT_LS_UP    (1ull << 32)
