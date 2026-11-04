@@ -2,6 +2,10 @@
 
 **English** · [Español](CHANGELOG.es.md)
 
+## v0.14.1: Media Remote test (diagnostics ELF only)
+
+- The diagnostics ELF now checks whether a payload can read the **PS5 Media Remote**. Eight seconds after it starts, it looks up the controller ports for the foreground and system users, opens every likely port type except the DualSense ones (those are only looked up, never opened), and for 60 s logs any change while you press the remote's buttons (`REMOTE` lines in the log). It never creates a controller, never pairs or unpairs anything, and closes everything it opened. The bridge ELF is unchanged.
+
 ## v0.14: wired Xbox controllers
 
 - **Xbox controllers over USB** drive the same virtual DualSense, alone or together with the keyboard and mouse (buttons are combined; a stick you move on the controller wins over the mouse/keyboard):

@@ -48,7 +48,7 @@
 #ifndef KBM_DIAG_ONLY
 #define KBM_DIAG_ONLY 0
 #endif
-#define KBM_VERSION "0.14"
+#define KBM_VERSION "0.14.1"
 
 extern void ghostpad_status_log(const char *fmt, ...);
 #define KLOG(...) ghostpad_status_log("[KBM] " __VA_ARGS__)
@@ -1084,6 +1084,101 @@ static void *scanner_thread(void *unused) {
     return NULL;
 }
 
+#if KBM_DIAG_ONLY
+/* ---------------------------------------------------------------- media remote probe (diag only) */
+/* Can a payload read the PS5 Media Remote? Read-only: opens pad ports for the
+ * foreground / system users with every likely port type except the DualSense
+ * ones (those are only looked up, never opened), logs what each one
+ * is, then for 60 s logs any change in what they report while the player
+ * presses the remote's buttons. Never creates a controller, never pairs or
+ * unpairs anything; every handle it opened is closed at the end. */
+extern int32_t scePadOpen(int32_t userId, int32_t type, int32_t index, const void *param);
+extern int32_t scePadClose(int32_t handle);
+extern int32_t scePadGetHandle(int32_t userId, int32_t type, int32_t index);
+extern int32_t scePadReadState(int32_t handle, void *data);
+extern int32_t scePadGetControllerInformation(int32_t handle, void *info);
+extern int32_t sceUserServiceGetForegroundUser(int32_t *userId);
+
+#define RP_MAX 16
+static void rp_hex(char *out, const uint8_t *p, size_t n) {
+    for (size_t i = 0; i < n; ++i) snprintf(out + i * 2, 3, "%02x", p[i]);
+}
+static void *remote_probe_thread(void *unused) {
+    (void)unused;
+    struct { int32_t h, user, type, ours; uint8_t last[64]; int seen; } hs[RP_MAX];
+    int nh = 0;
+    for (int i = 0; i < 80 && g_running && !g_stop_requested; ++i) sleep_ns(100000000ull);   /* let startup settle (8 s) */
+    if (!g_running || g_stop_requested) return NULL;
+    int32_t fg = -1;
+    int frc = sceUserServiceGetForegroundUser(&fg);
+    KLOG("REMOTE probe: foreground user rc=0x%x id=0x%x\n", (unsigned)frc, (unsigned)fg);
+    const int32_t users[3] = { fg, 0xFF /* system */, 0xFE /* everyone */ };
+    static const int32_t types[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 32, 64 };
+    for (int u = 0; u < 3; ++u) {
+        if (users[u] < 0 || (u > 0 && users[u] == fg)) continue;
+        for (size_t t = 0; t < sizeof(types) / sizeof(types[0]); ++t) {
+            int32_t gh = scePadGetHandle(users[u], types[t], 0);
+            /* never open the standard (DualSense) or virtual-DualSense ports: only look them up */
+            int32_t oh = (types[t] == 0 || types[t] == 3) ? -1 : scePadOpen(users[u], types[t], 0, NULL);
+            uint8_t info[64] __attribute__((aligned(16)));
+            char hex[130] = "";
+            int irc = 0;
+            int32_t h = oh >= 0 ? oh : gh;
+            if (h >= 0) {
+                memset(info, 0, sizeof(info));
+                irc = scePadGetControllerInformation(h, info);
+                rp_hex(hex, info, 32);
+            }
+            if (gh >= 0 || oh >= 0 || types[t] == 0 || types[t] == 16)
+                KLOG("REMOTE port user=0x%x type=%d get=0x%x open=0x%x info_rc=0x%x info=%s\n", (unsigned)users[u], (int)types[t],
+                     (unsigned)gh, (unsigned)oh, (unsigned)irc, hex);
+            if (h >= 0 && nh < RP_MAX) {
+                hs[nh].h = h; hs[nh].user = users[u]; hs[nh].type = types[t]; hs[nh].ours = oh >= 0; hs[nh].seen = 0;
+                memset(hs[nh].last, 0, sizeof(hs[nh].last));
+                ++nh;
+            }
+        }
+    }
+    KLOG("REMOTE probe: %d port(s) to watch. Press every Media Remote button now (60 s)\n", nh);
+    NOTIFY("%s", kbm_tr("KBM diag: apreta cada boton del control remoto (60 s). No toques el mando",
+                        "KBM diag: press every Media Remote button (60 s). Don't touch the controller"));
+    int lines = 0;
+    uint64_t end = mono_ns() + 60000000000ull;
+    while (nh && g_running && !g_stop_requested && mono_ns() < end && lines < 400) {
+        for (int i = 0; i < nh; ++i) {
+            ScePadData d;
+            uint8_t raw[256] __attribute__((aligned(16)));
+            memset(raw, 0, sizeof(raw));
+            int rc = scePadReadState(hs[i].h, raw);
+            memcpy(&d, raw, sizeof(d));
+            /* compare what a button press can change: buttons, sticks, triggers, connected, ext, unknown */
+            uint8_t cur[64];
+            memset(cur, 0, sizeof(cur));
+            memcpy(cur, &d.buttons, 4);
+            cur[4] = d.leftStick.x; cur[5] = d.leftStick.y; cur[6] = d.rightStick.x; cur[7] = d.rightStick.y;
+            cur[8] = d.analogButtons.l2; cur[9] = d.analogButtons.r2; cur[10] = d.connected;
+            memcpy(cur + 11, d.ext, 16);
+            memcpy(cur + 27, d.unknown, 15);
+            memcpy(cur + 42, &rc, 4);
+            if (hs[i].seen && !memcmp(cur, hs[i].last, sizeof(cur))) continue;
+            hs[i].seen = 1;
+            memcpy(hs[i].last, cur, sizeof(cur));
+            char ext[40], unk[40];
+            rp_hex(ext, d.ext, 16); rp_hex(unk, d.unknown, 15);
+            KLOG("REMOTE read user=0x%x type=%d rc=0x%x conn=%u buttons=0x%08x L=%u,%u R=%u,%u L2=%u R2=%u ext=%s unk=%s\n",
+                 (unsigned)hs[i].user, (int)hs[i].type, (unsigned)rc, d.connected, (unsigned)d.buttons,
+                 d.leftStick.x, d.leftStick.y, d.rightStick.x, d.rightStick.y, d.analogButtons.l2, d.analogButtons.r2, ext, unk);
+            ++lines;
+        }
+        sleep_ns(30000000ull);
+    }
+    for (int i = 0; i < nh; ++i) if (hs[i].ours) scePadClose(hs[i].h);
+    KLOG("REMOTE probe done (%d change lines)\n", lines);
+    NOTIFY("%s", kbm_tr("KBM diag: prueba del control remoto terminada", "KBM diag: Media Remote test finished"));
+    return NULL;
+}
+#endif
+
 /* ---------------------------------------------------------------- game watcher */
 static void read_title(char *out, size_t n, int *app_id_out) {
     out[0] = 0;
@@ -1360,6 +1455,10 @@ int kbm_bridge_start(kbm_inject_cb inject, kbm_notify_cb notify) {
     pthread_detach(b);
     if (pthread_create(&c, NULL, watch_thread, NULL) != 0) { g_running = 0; return -4; }
     pthread_detach(c);
+#if KBM_DIAG_ONLY
+    pthread_t d;
+    if (pthread_create(&d, NULL, remote_probe_thread, NULL) == 0) pthread_detach(d);
+#endif
     KLOG("firmware 0x%08x\n", (unsigned)kernel_get_fw_version());
     KLOG("v" KBM_VERSION "%s started: profile=%s hz=%d auto_activate=%d native_switch=%d idle_exit_min=%d autostart_elf=%d\n",
          KBM_DIAG_ONLY ? " DIAG" : "", g_rt.profile, g_rt.hz, g_cfg.auto_activate, g_cfg.native_switch,

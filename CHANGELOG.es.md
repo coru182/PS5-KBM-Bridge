@@ -2,6 +2,10 @@
 
 [English](CHANGELOG.md) · **Español**
 
+## v0.14.1: prueba del control remoto (solo ELF de diagnóstico)
+
+- El ELF de diagnóstico ahora prueba si un payload puede leer el **control remoto multimedia de la PS5**. A los ocho segundos de arrancar, busca los puertos de mando del usuario activo y del sistema, abre todos los tipos de puerto probables menos los del DualSense (esos solo los busca, nunca los abre), y durante 60 s anota cualquier cambio mientras apretás los botones del remoto (líneas `REMOTE` en el log). Nunca crea un mando, nunca empareja ni desempareja nada, y cierra todo lo que abrió. El ELF del bridge no cambia.
+
 ## v0.14: mandos de Xbox por cable
 
 - **Mandos de Xbox por USB** manejan el mismo DualSense virtual, solos o junto con el teclado y el mouse (los botones se combinan; un stick que movés en el mando le gana al mouse/teclado):
