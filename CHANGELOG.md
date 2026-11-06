@@ -2,6 +2,13 @@
 
 **English** · [Español](CHANGELOG.es.md)
 
+## v0.15: separate keyboard and mouse that are both "keyboard + mouse"
+
+- **Fix for separate gaming keyboards and mice** (reported with a Corsair keyboard `1b1c:1bfd` and mouse `1b1c:1b9e`): many gaming keyboards also present a mouse interface, and many gaming mice a keyboard interface. Before, the first one plugged in took both roles and the second was ignored. Now the bridge takes every keyboard/mouse device (up to 3), and whichever one you're actually using drives the keyboard or the mouse. It hands over only when the other has nothing held, so no key or button gets stuck.
+- **Taking devices back:** if the PS5 re-attaches its own driver right after the bridge detaches it (seen on firmware 5.02 in the F10 test), the bridge now takes it back within a few tenths of a second instead of up to 5 s.
+- First reports from other firmwares: the bridge started, took the devices and created the virtual DualSense on **5.02**; the diagnostics ELF ran on **5.50**.
+- **Media Remote test results:** a controller port of type 16 opens for the system user, but it reports nothing when the remote's buttons are pressed, neither on the PS5 menu nor in an app. Reading the remote isn't possible this way; it stays in the diagnostics ELF for now.
+
 ## v0.14.1: Media Remote test (diagnostics ELF only)
 
 - The diagnostics ELF now checks whether a payload can read the **PS5 Media Remote**. Eight seconds after it starts, it looks up the controller ports for the foreground and system users, opens every likely port type except the DualSense ones (those are only looked up, never opened), and for 60 s logs any change while you press the remote's buttons (`REMOTE` lines in the log). It never creates a controller, never pairs or unpairs anything, and closes everything it opened. The bridge ELF is unchanged.

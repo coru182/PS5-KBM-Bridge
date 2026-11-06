@@ -611,6 +611,32 @@ static void test_custom_profiles(void) {
     assert(!strcmp(r.source, "rule") && !strcmp(r.p->id, "generic"));
 }
 
+/* Corsair-style pair: the keyboard (owner 0) also has a mouse interface, the
+ * mouse (owner 1) also has a keyboard interface. Whichever is used drives. */
+static void test_two_devices(void) {
+    static KbmConfig c; kbm_config_defaults(&c);
+    KbmEngine e; kbm_init(&e); load_profile(&e, &c, "re2r");
+    uint8_t none[8] = {0}, w[8] = {0, 0, 0x1a, 0, 0, 0, 0, 0}, side[8] = {0, 0, 0x2c, 0, 0, 0, 0, 0};
+    uint8_t m_idle[4] = {0}, m_move[4] = {0, 5, 0, 0}, m_click[4] = {1, 0, 0, 0}, m_up[4] = {0};
+    /* the keyboard device's idle mouse interface reports first: it doesn't keep the real mouse out */
+    assert(kbm_mouse(&e, 0, m_idle, 4, 1000) == 1 && e.mouse_owner == 0);
+    assert(kbm_mouse(&e, 1, m_move, 4, 2000) == 1 && e.mouse_owner == 1);      /* real mouse takes over */
+    assert(kbm_mouse(&e, 0, m_idle, 4, 3000) == 0 && e.mouse_owner == 1);      /* idle chatter ignored */
+    /* the mouse device's keyboard interface: idle reports don't steal the keyboard */
+    assert(kbm_keyboard(&e, 0, w, 8) == 1 && e.keyboard_owner == 0 && e.down[0x1a]);
+    assert(kbm_keyboard(&e, 1, none, 8) == 0 && e.keyboard_owner == 0);
+    assert(kbm_keyboard(&e, 1, side, 8) == 0 && e.down[0x1a] && !e.down[0x2c]);  /* W still held: no takeover */
+    assert(kbm_keyboard(&e, 0, none, 8) == 1 && !e.down[0x1a]);
+    assert(kbm_keyboard(&e, 1, side, 8) == 1 && e.keyboard_owner == 1 && e.down[0x2c]);   /* side button = Space */
+    assert(kbm_keyboard(&e, 1, none, 8) == 1 && !e.down[0x2c]);
+    assert(kbm_keyboard(&e, 0, w, 8) == 1 && e.keyboard_owner == 0);           /* and back */
+    /* a held mouse button keeps the mouse on its device */
+    assert(kbm_mouse(&e, 1, m_click, 4, 4000) == 1 && e.down[KBM_KEY_MOUSE1]);
+    assert(kbm_mouse(&e, 0, m_move, 4, 5000) == 0 && e.mouse_owner == 1);
+    assert(kbm_mouse(&e, 1, m_up, 4, 6000) == 1 && !e.down[KBM_KEY_MOUSE1]);
+    assert(kbm_mouse(&e, 0, m_move, 4, 7000) == 1 && e.mouse_owner == 0);
+}
+
 static void test_xbox_pad(void) {
     /* Xbox One S style: interface 0 = GIP (FF/47/D0) with OUT 0x02 + IN 0x82 */
     const uint8_t one[] = {9,2,64,0,1,1,0,0xa0,0xfa,
@@ -666,6 +692,7 @@ int main(void) {
     test_usb_descriptor_parser();
     test_custom_profiles();
     test_xbox_pad();
-    puts("PASS: keys, RE2R/Requiem defaults, combos, wheel, rate-independent mouse, capture, config INI/JSON, title DB + auto profile, vehicle layers, PS5 menu profile, stick shaping + dead-zone finder, HID parser, custom profiles import/export, Xbox pads");
+    test_two_devices();
+    puts("PASS: keys, RE2R/Requiem defaults, combos, wheel, rate-independent mouse, capture, config INI/JSON, title DB + auto profile, vehicle layers, PS5 menu profile, stick shaping + dead-zone finder, HID parser, custom profiles import/export, Xbox pads, two keyboard/mouse devices");
     return 0;
 }

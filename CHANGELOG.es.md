@@ -2,6 +2,13 @@
 
 [English](CHANGELOG.md) · **Español**
 
+## v0.15: teclado y mouse separados que dicen ser "teclado + mouse"
+
+- **Arreglo para teclados y mouse gamer separados** (reportado con un teclado Corsair `1b1c:1bfd` y un mouse `1b1c:1b9e`): muchos teclados gamer también presentan una interfaz de mouse, y muchos mouse gamer una de teclado. Antes, el primero que se enchufaba se quedaba con los dos roles y el segundo se ignoraba. Ahora el bridge toma todos los teclados/mouse (hasta 3), y el que estás usando de verdad maneja el teclado o el mouse. Solo cambia de uno a otro cuando el otro no tiene nada apretado, así ninguna tecla ni botón queda trabado.
+- **Retomar los dispositivos:** si la PS5 vuelve a conectar su propio driver justo después de que el bridge lo suelta (visto en el firmware 5.02 con la prueba de F10), el bridge ahora lo recupera en unas décimas de segundo en vez de hasta 5 s.
+- Primeros reportes con otros firmwares: el bridge arrancó, tomó los dispositivos y creó el DualSense virtual en **5.02**; el ELF de diagnóstico corrió en **5.50**.
+- **Resultado de la prueba del control remoto:** un puerto de mando de tipo 16 se abre para el usuario del sistema, pero no reporta nada al apretar los botones del remoto, ni en el menú de la PS5 ni en una app. Por este camino no se puede leer el remoto; la prueba queda en el ELF de diagnóstico por ahora.
+
 ## v0.14.1: prueba del control remoto (solo ELF de diagnóstico)
 
 - El ELF de diagnóstico ahora prueba si un payload puede leer el **control remoto multimedia de la PS5**. A los ocho segundos de arrancar, busca los puertos de mando del usuario activo y del sistema, abre todos los tipos de puerto probables menos los del DualSense (esos solo los busca, nunca los abre), y durante 60 s anota cualquier cambio mientras apretás los botones del remoto (líneas `REMOTE` en el log). Nunca crea un mando, nunca empareja ni desempareja nada, y cierra todo lo que abrió. El ELF del bridge no cambia.

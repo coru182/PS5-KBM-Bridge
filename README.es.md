@@ -74,8 +74,8 @@ Resultado en `out/`:
 
 | Archivo | Para qué |
 |---|---|
-| `ps5-kbm-bridge-v0141.elf` | El bridge |
-| `ps5-kbm-diag-v0141.elf` | Diagnóstico: solo lee y mide, **nunca** crea el mando virtual, se cierra a los 5 min |
+| `ps5-kbm-bridge-v015.elf` | El bridge |
+| `ps5-kbm-diag-v015.elf` | Diagnóstico: solo lee y mide, **nunca** crea el mando virtual, se cierra a los 5 min |
 | `homebrew/PPSA51258/` | Ícono para el home (ShadowMountPlus) |
 | `etaHEN/payloads/` | Arranque automático, solo si usás etaHEN |
 
@@ -84,7 +84,7 @@ Resultado en `out/`:
 ## Instalar y usar
 
 1. Copiá `out/homebrew/PPSA51258/` a `/data/homebrew/PPSA51258/` en la PS5 por FTP (por ejemplo con ps5upload). Reiniciá y cargá tus payloads; ShadowMountPlus agrega el ícono **PS5 KBM Bridge** al home.
-   - Sin ShadowMountPlus: mandá `ps5-kbm-bridge-v0141.elf` a elfldr (puerto 9021).
+   - Sin ShadowMountPlus: mandá `ps5-kbm-bridge-v015.elf` a elfldr (puerto 9021).
 2. Conectá el teclado y el mouse (o su receptor) y abrí el ícono. Se abre la página de ajustes. Mové el mouse y tocá una tecla: aparece el DualSense virtual.
 3. Abrí un juego. La notificación dice qué juego reconoció y qué perfil aplicó. Para cambiar algo en medio del juego: **F11**. Volvés con el botón PS (o la tecla Windows).
 
@@ -147,7 +147,8 @@ Perfiles de otros jugadores son bienvenidos (issues o pull requests), mejor con 
 | Teclas de los perfiles por juego | Validadas contra sus fuentes, **no probadas jugando**. Las de confianza "media" tienen partes deducidas |
 | Devolver el teclado/mouse a la PS5 y retomarlos (juegos "nativos") | Devolverlo funciona. Al retomarlos una vez el mouse quedó sin responder; v0.13 espera a los drivers de la PS5, verifica el protocolo, recupera las interfaces y F8 reconecta. **Todavía no probado en consola** |
 | Cambio juego ↔ menú de la PS5 según el foco (v0.11) | La función de foco se verificó con el ELF de diagnóstico en 11.60 (líneas `FOCUS` del log); el cambio automático en sí todavía no se probó en consola |
-| Cualquier teclado/mouse USB, dos dispositivos separados (v0.12) | Compila; pruebas de la lógica en PC. **No probado en consola**: probá primero el ELF de diagnóstico |
+| Cualquier teclado/mouse USB, dos dispositivos separados (v0.12, v0.15) | Logitech `046d:c52b` y teclado + mouse Corsair tomados en consola por un tester (FW 5.02); con v0.14 el segundo dispositivo Corsair se ignoraba, arreglado en v0.15 (**v0.15 todavía no probado en consola**) |
+| Otros firmwares | Un tester corrió el bridge en **5.02** (dispositivos tomados, DualSense virtual creado) y el ELF de diagnóstico en **5.50** |
 | Perfiles propios: exportar / importar / borrar (v0.12) | Pruebas en PC (motor, servidor HTTP real, página en Chromium). Guardar en `/data/ps5-kbm/profiles/` no se probó en consola |
 | Mandos de Xbox por cable (v0.14) | Pruebas en PC de la detección, el lector de Xbox 360 y la combinación; el arranque y el mapeo del Xbox One son de Ghostcontrol (confirmados por ellos en PS5). **No probado en consola con el bridge** |
 | Modos bici y avión (v0.12) | Pruebas en PC. En GTA V, el botón de disparo de los aviones y el freno de la bici no coinciden entre las fuentes (notas en `data/profiles/gta5.json`) |

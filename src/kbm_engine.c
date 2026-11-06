@@ -87,11 +87,28 @@ void kbm_set_layer(KbmEngine *e, int layer) {
     e->layer = ok ? layer : KBM_LAYER_FOOT;
 }
 
+/* Several USB devices can offer a keyboard (or mouse) interface: gaming mice
+ * have a keyboard interface for their extra buttons, gaming keyboards a mouse
+ * one. One device drives the keyboard at a time; another one takes over when
+ * it sends a key while the current one has nothing held, so nothing sticks. */
+static int keyboard_idle(const KbmEngine *e) {
+    for (int c = 0x04; c <= 0xE7; ++c) if (e->down[c]) return 0;
+    return 1;
+}
+static int mouse_idle(const KbmEngine *e) {
+    for (int b = 0; b < 5; ++b) if (e->down[KBM_KEY_MOUSE1 + b]) return 0;
+    return 1;
+}
+
 int kbm_keyboard(KbmEngine *e, int owner, const uint8_t *r, size_t n) {
     if (!r || n < 8 || owner < 0) return 0;
-    if (e->keyboard_owner >= 0 && e->keyboard_owner != owner) return 0;
     /* 0x01..0x03 = ErrorRollOver/POSTFail/Undefined: keep previous state. */
     for (int i = 2; i < 8; ++i) if (r[i] >= 1 && r[i] <= 3) return 0;
+    if (e->keyboard_owner >= 0 && e->keyboard_owner != owner) {
+        int any = r[0] != 0;
+        for (int i = 2; i < 8; ++i) any |= r[i] >= 4;
+        if (!any || !keyboard_idle(e)) return 0;          /* idle chatter, or the other keyboard is busy */
+    }
     e->keyboard_owner = owner;
     uint8_t now[256];
     memset(now, 0, sizeof(now));
@@ -103,7 +120,10 @@ int kbm_keyboard(KbmEngine *e, int owner, const uint8_t *r, size_t n) {
 
 int kbm_mouse(KbmEngine *e, int owner, const uint8_t *r, size_t n, uint64_t t_ns) {
     if (!r || n < 3 || owner < 0) return 0;
-    if (e->mouse_owner >= 0 && e->mouse_owner != owner) return 0;
+    if (e->mouse_owner >= 0 && e->mouse_owner != owner) {
+        int any = (r[0] & 0x1f) || r[1] || r[2] || (n >= 4 && r[3]);
+        if (!any || !mouse_idle(e)) return 0;             /* idle report, or a button held on the other mouse */
+    }
     e->mouse_owner = owner;
     for (int b = 0; b < 5; ++b) {
         int d = (r[0] >> b) & 1;

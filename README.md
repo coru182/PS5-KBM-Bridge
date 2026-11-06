@@ -74,8 +74,8 @@ Output in `out/`:
 
 | File | Purpose |
 |---|---|
-| `ps5-kbm-bridge-v0141.elf` | The bridge |
-| `ps5-kbm-diag-v0141.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
+| `ps5-kbm-bridge-v015.elf` | The bridge |
+| `ps5-kbm-diag-v015.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
 | `homebrew/PPSA51258/` | Home screen icon (ShadowMountPlus) |
 | `etaHEN/payloads/` | Automatic start, only if you use etaHEN |
 
@@ -84,7 +84,7 @@ Output in `out/`:
 ## Install and use
 
 1. Copy `out/homebrew/PPSA51258/` to `/data/homebrew/PPSA51258/` on the PS5 over FTP (for example with ps5upload). Reboot and load your payloads; ShadowMountPlus adds the **PS5 KBM Bridge** icon to the home screen.
-   - Without ShadowMountPlus: send `ps5-kbm-bridge-v0141.elf` to elfldr (port 9021).
+   - Without ShadowMountPlus: send `ps5-kbm-bridge-v015.elf` to elfldr (port 9021).
 2. Plug in the keyboard and mouse (or their receiver) and open the icon. The settings page opens. Move the mouse and press a key: the virtual DualSense appears.
 3. Open a game. The notification says which game it recognised and which profile it applied. To change something mid-game: **F11**. Go back with the PS button (or the Windows key).
 
@@ -147,7 +147,8 @@ Profiles from other players are welcome (issues or pull requests), ideally with 
 | Per-game profile keys | Checked against their sources, **not tested in play**. "Medium" confidence profiles have inferred parts |
 | Handing the keyboard/mouse to the PS5 and taking them back ("native" games) | Handing it back works. Taking them back once left the mouse unresponsive; v0.13 waits for the PS5 drivers, checks the protocol, reclaims the interfaces and F8 reconnects. **Not tested on console yet** |
 | Game ↔ PS5 menu switch from the PS5 focus (v0.11) | Focus call verified with the diagnostics ELF on 11.60 (`FOCUS` log lines); the automatic switch itself not yet tested on console |
-| Any USB keyboard/mouse, two separate devices (v0.12) | Builds; PC tests of the logic. **Not tested on console**: try the diagnostics ELF first |
+| Any USB keyboard/mouse, two separate devices (v0.12, v0.15) | Logitech `046d:c52b` and Corsair keyboard + mouse taken on console by a tester (FW 5.02); with v0.14 the second Corsair device was ignored, fixed in v0.15 (**v0.15 not tested on console yet**) |
+| Other firmwares | A tester ran the bridge on **5.02** (devices taken, virtual DualSense created) and the diagnostics ELF on **5.50** |
 | Custom profiles: export / import / delete (v0.12) | PC tests (engine, real HTTP server, page in Chromium). Saving to `/data/ps5-kbm/profiles/` not tested on console |
 | Wired Xbox controllers (v0.14) | PC tests of detection, Xbox 360 parsing and merging; the Xbox One handshake/mapping is Ghostcontrol's (confirmed by them on PS5). **Not tested on console with the bridge** |
 | Bike and aircraft modes (v0.12) | PC tests. GTA V aircraft fire button and bike brake are uncertain in the sources (notes in `data/profiles/gta5.json`) |

@@ -48,7 +48,7 @@
 #ifndef KBM_DIAG_ONLY
 #define KBM_DIAG_ONLY 0
 #endif
-#define KBM_VERSION "0.14.1"
+#define KBM_VERSION "0.15"
 
 extern void ghostpad_status_log(const char *fmt, ...);
 #define KLOG(...) ghostpad_status_log("[KBM] " __VA_ARGS__)
@@ -119,7 +119,8 @@ static void focus_probe(int big_app) {
 #define KBM_LOGITECH_VID 0x046d
 #define KBM_LOGITECH_PID 0xc534
 #define KBM_SONY_VID     0x054c   /* never touch PlayStation controllers */
-#define MAX_WORKERS 3      /* keyboard, mouse (or one receiver for both) + one Xbox controller */
+#define MAX_WORKERS 4      /* up to 3 keyboard/mouse devices + one Xbox controller */
+#define KBM_MAX_KBM_WORKERS 3
 #define KBM_POLL_MS 2
 #define KBM_CFG_DIR  "/data/ps5-kbm"
 #define KBM_CFG_PATH "/data/ps5-kbm/config.ini"
@@ -762,6 +763,16 @@ static void *device_thread(void *arg) {
              kd ? "STILL-ATTACHED" : "none", md ? "STILL-ATTACHED" : "none",
              l->keyboard_iface >= 0 ? get_protocol(fd, l->keyboard_iface) : -2,
              l->mouse_iface >= 0 ? get_protocol(fd, l->mouse_iface) : -2);
+        /* the PS5 sometimes re-attaches its own driver right after we detach
+         * (seen on FW 5.02 when taking a device back): take it back at once */
+        for (int k = 0; (kd || md) && k < 10; ++k) {
+            sleep_ns(100000000ull);
+            reclaim_ifaces(fd, l, w->path);
+            a = l->keyboard_iface; b = l->mouse_iface;
+            kd = a >= 0 && ioctl(fd, USB_IFACE_DRIVER_ACTIVE, &a) == 0;
+            md = b >= 0 && ioctl(fd, USB_IFACE_DRIVER_ACTIVE, &b) == 0;
+            if (!kd && !md) KLOG("TAKE %d: PS5 driver gone after %d reclaim(s)\n", g_take_count, k + 1);
+        }
     }
     {
         int idx = 0;
@@ -1025,7 +1036,16 @@ static void *scanner_thread(void *unused) {
             } else if (free_slot < 0) free_slot = i;
         }
         pthread_mutex_unlock(&g_lock);
-        can = can && !(have_kb && have_mouse);           /* still need a keyboard or a mouse */
+        /* Take every keyboard/mouse device (up to 3): a gaming keyboard may also
+         * offer a mouse interface and a gaming mouse a keyboard one, so "roles"
+         * can't be decided from the descriptors. The engine lets whichever
+         * device is being used drive the keyboard / the mouse. */
+        int n_kbm = 0;
+        pthread_mutex_lock(&g_lock);
+        n_kbm = kbm_workers_busy_locked();
+        pthread_mutex_unlock(&g_lock);
+        can = can && n_kbm < KBM_MAX_KBM_WORKERS;
+        (void)have_kb; (void)have_mouse;
         int want_pad = !have_pad && !g_diag_release_until; /* the Xbox controller doesn't care about native games */
         for (int bus = KBM_BUS_MIN; free_slot >= 0 && (can || want_pad) && bus <= KBM_BUS_MAX; bus++) {
             for (int dev = KBM_DEV_MIN; free_slot >= 0 && (can || want_pad) && dev <= KBM_DEV_MAX; dev++) {
@@ -1057,9 +1077,6 @@ static void *scanner_thread(void *unused) {
                     continue;
                 }
                 if (!can || !(found & PROBE_BOOT)) continue;
-                /* take only the roles still missing */
-                if (have_kb) layout.keyboard_iface = layout.keyboard_ep = -1;
-                if (have_mouse) layout.mouse_iface = layout.mouse_ep = -1;
                 if (layout.keyboard_ep < 0 && layout.mouse_ep < 0) continue;
                 KLOG("matched USB %04x:%04x at %s:%s%s\n", vid, pid, path,
                      layout.keyboard_ep >= 0 ? " keyboard" : "", layout.mouse_ep >= 0 ? " mouse" : "");
