@@ -2,6 +2,11 @@
 
 [English](CHANGELOG.md) · **Español**
 
+## v0.15.1: GTA VI
+
+- **Perfil de Grand Theft Auto VI.** Todavía no hay versión de PC, así que las teclas siguen a GTA V en PC y los botones siguen el esquema de control **Predeterminado** de GTA VI en PS5 (según tres guías de controles que coinciden a pie, en combate y manejando). Mismos modos que GTA V: F sube o baja, B rota a pie → auto → bici → aire. Autos, motos y lanchas comparten las teclas del auto (W/S gatillos, Espacio freno de mano, E bocina, H luces, Shift/Ctrl inclinarse en moto). Dudosos: freno de mano, bocina, tren de aterrizaje, botones de la bici; los helicópteros no aparecen en las guías. Poné el esquema de control del juego en Predeterminado, no Clásico.
+- **Base de títulos actualizada** desde PlayStation-Titles: se reconocen los Title ID europeo y japoneses de GTA VI (`PPSA01547`, `PPSA38500`, `PPSA29660`), más unas 230 entradas nuevas de PS5.
+
 ## v0.15: teclado y mouse separados que dicen ser "teclado + mouse"
 
 - **Arreglo para teclados y mouse gamer separados** (reportado con un teclado Corsair `1b1c:1bfd` y un mouse `1b1c:1b9e`): muchos teclados gamer también presentan una interfaz de mouse, y muchos mouse gamer una de teclado. Antes, el primero que se enchufaba se quedaba con los dos roles y el segundo se ignoraba. Ahora el bridge toma todos los teclados/mouse (hasta 3), y el que estás usando de verdad maneja el teclado o el mouse. Solo cambia de uno a otro cuando el otro no tiene nada apretado, así ninguna tecla ni botón queda trabado.

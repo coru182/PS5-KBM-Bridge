@@ -1,0 +1,528 @@
+{
+ "id": "gta6",
+ "name": "Grand Theft Auto VI",
+ "template": "tps",
+ "native_kbm_ps5": false,
+ "native_kbm_note": "GTA VI (PS5, Nov 2026) has no PC version yet; keys follow GTA V on PC, buttons follow GTA VI's Default control scheme on PS5.",
+ "ads_pct": 100,
+ "confidence": "medium",
+ "sources": [
+  "https://www.gta6map.net/wiki/gta-6/guides/gta-6-controls",
+  "https://www.g2a.com/news/gta-6-news/gta-6-controls-guide-ps5-and-xbox/",
+  "https://outputlag.com/guides/gta-6-controls/"
+ ],
+ "tips": {
+  "es": "En el juego: Ajustes → Controles → Esquema de control: Predeterminado (este perfil usa ese esquema, no el Clásico). Zona muerta de los sticks al mínimo, curva de respuesta Lineal o Estándar. Después apretá F10 adentro del juego para medir la zona muerta.",
+  "en": "In the game: Settings → Controls → Control Scheme: Default (this profile uses that scheme, not Classic). Stick dead zones at minimum, response curve Linear or Standard. Then press F10 in game to measure the dead zone."
+ },
+ "notes": "No PC version yet: keys follow GTA V on PC, buttons follow GTA VI's Default control scheme on PS5 as listed by gta6map.net, G2A and outputlag (they agree on foot, combat and driving). Modes like GTA V: F gets in/out (on foot ↔ car), B cycles on foot → car → bike → air. Cars, motorbikes and boats share the car layer; Shift/Ctrl lean on motorbikes; Shift is the landing gear in aircraft. Uncertain: handbrake (Cross per gta6map/G2A, outputlag says 'should be'), horn on L3 (outputlag only confirms the police siren there), landing gear L3, bicycle buttons (only gta6map lists them), helicopters (not covered). Reload isn't listed in the guides. Scope zoom uses the mouse wheel only while aiming (d-pad up/down).",
+ "actions": [
+  {
+   "id": "run",
+   "label": "Correr (otra vez: esprintar) / nadar rápido",
+   "ps5": "L3",
+   "pc": [
+    "LSHIFT",
+    ""
+   ]
+  },
+  {
+   "id": "jump",
+   "label": "Saltar / trepar / salir a la superficie",
+   "ps5": "CROSS",
+   "pc": [
+    "SPACE",
+    ""
+   ]
+  },
+  {
+   "id": "crouch",
+   "label": "Agacharse (mantener: descansar)",
+   "ps5": "CIRCLE",
+   "pc": [
+    "LCTRL",
+    ""
+   ]
+  },
+  {
+   "id": "melee",
+   "label": "Golpe cuerpo a cuerpo",
+   "ps5": "SQUARE",
+   "pc": [
+    "R",
+    ""
+   ]
+  },
+  {
+   "id": "interact",
+   "label": "Interactuar / cambiar arma rápido (apuntando)",
+   "ps5": "TRIANGLE",
+   "pc": [
+    "E",
+    ""
+   ]
+  },
+  {
+   "id": "aim",
+   "label": "Apuntar / fijar",
+   "ps5": "L2",
+   "pc": [
+    "MOUSE2",
+    ""
+   ]
+  },
+  {
+   "id": "fire",
+   "label": "Disparar / agarrar",
+   "ps5": "R2",
+   "pc": [
+    "MOUSE1",
+    ""
+   ]
+  },
+  {
+   "id": "cover",
+   "label": "Cubrirse (mantener: lanzar rápido) / bucear",
+   "ps5": "R1",
+   "pc": [
+    "Q",
+    ""
+   ]
+  },
+  {
+   "id": "holster",
+   "label": "Enfundar (mantener: equipamiento)",
+   "ps5": "L1",
+   "pc": [
+    "TAB",
+    ""
+   ]
+  },
+  {
+   "id": "zoom_in",
+   "label": "Mira: acercar",
+   "ps5": "DPAD_UP",
+   "pc": [
+    "WHEEL_UP",
+    ""
+   ]
+  },
+  {
+   "id": "zoom_out",
+   "label": "Mira: alejar",
+   "ps5": "DPAD_DOWN",
+   "pc": [
+    "WHEEL_DOWN",
+    ""
+   ]
+  },
+  {
+   "id": "shoulder",
+   "label": "Cambiar hombro",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "X",
+    ""
+   ]
+  },
+  {
+   "id": "throw_path",
+   "label": "Zoom / trayectoria de lanzamiento",
+   "ps5": "R3",
+   "pc": [
+    "MOUSE3",
+    ""
+   ]
+  },
+  {
+   "id": "vehicle",
+   "label": "Subir / bajar del vehículo",
+   "ps5": "TRIANGLE+MODE_TOGGLE",
+   "pc": [
+    "F",
+    ""
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "mode",
+   "label": "Cambiar modo: a pie → auto → bici → aire",
+   "ps5": "MODE_CYCLE",
+   "pc": [
+    "B",
+    ""
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "phone",
+   "label": "Teléfono",
+   "ps5": "DPAD_UP",
+   "pc": [
+    "UP",
+    ""
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "objective",
+   "label": "Objetivo / minimapa",
+   "ps5": "DPAD_DOWN",
+   "pc": [
+    "Z",
+    "DOWN"
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "dpad_left",
+   "label": "Cruceta izquierda (radio / intermitente)",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "LEFT",
+    ""
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "partner",
+   "label": "Explosivos / menú de compañero (mantener)",
+   "ps5": "DPAD_RIGHT",
+   "pc": [
+    "G",
+    "RIGHT"
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "look_back",
+   "label": "Mirar atrás",
+   "ps5": "R3",
+   "pc": [
+    "C",
+    ""
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "map",
+   "label": "Mapa",
+   "ps5": "TOUCHPAD",
+   "pc": [
+    "M",
+    ""
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "pause",
+   "label": "Pausa",
+   "ps5": "OPTIONS",
+   "pc": [
+    "ESC",
+    "P"
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "accept",
+   "label": "Aceptar (teléfono/menú)",
+   "ps5": "CROSS",
+   "pc": [
+    "ENTER",
+    ""
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "back",
+   "label": "Atrás (teléfono/menú)",
+   "ps5": "CIRCLE",
+   "pc": [
+    "BACKSPACE",
+    ""
+   ],
+   "layer": "both"
+  },
+  {
+   "id": "veh_accel",
+   "label": "Acelerar",
+   "ps5": "R2",
+   "pc": [
+    "W",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_brake",
+   "label": "Frenar / Reversa",
+   "ps5": "L2",
+   "pc": [
+    "S",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_handbrake",
+   "label": "Freno de mano",
+   "ps5": "CROSS",
+   "pc": [
+    "SPACE",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_fire",
+   "label": "Disparar desde el vehículo",
+   "ps5": "R1",
+   "pc": [
+    "MOUSE1",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_holster",
+   "label": "Enfundar / equipamiento",
+   "ps5": "L1",
+   "pc": [
+    "TAB",
+    "MOUSE2"
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_horn",
+   "label": "Bocina / nitro / sirena",
+   "ps5": "L3",
+   "pc": [
+    "E",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_lights",
+   "label": "Luces (mantener: agacharse)",
+   "ps5": "CIRCLE",
+   "pc": [
+    "H",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_melee",
+   "label": "Golpe desde el vehículo",
+   "ps5": "SQUARE",
+   "pc": [
+    "R",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_indicate_l",
+   "label": "Intermitente izquierdo / radio",
+   "ps5": "DPAD_LEFT",
+   "pc": [
+    "Q",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_lean_fwd",
+   "label": "Moto: inclinarse adelante",
+   "ps5": "LS_UP",
+   "pc": [
+    "LSHIFT",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "veh_lean_back",
+   "label": "Moto: inclinarse atrás",
+   "ps5": "LS_DOWN",
+   "pc": [
+    "LCTRL",
+    ""
+   ],
+   "layer": "vehicle"
+  },
+  {
+   "id": "bike_pedal",
+   "label": "Pedalear",
+   "ps5": "R2",
+   "pc": [
+    "W",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_sprint",
+   "label": "Esprintar",
+   "ps5": "CROSS",
+   "pc": [
+    "CAPSLOCK",
+    "LSHIFT"
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_brake",
+   "label": "Frenar",
+   "ps5": "L2",
+   "pc": [
+    "S",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_hop",
+   "label": "Salto (bunnyhop)",
+   "ps5": "CIRCLE",
+   "pc": [
+    "SPACE",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_bell",
+   "label": "Timbre",
+   "ps5": "L3",
+   "pc": [
+    "E",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_fire",
+   "label": "Disparar desde el vehículo",
+   "ps5": "R1",
+   "pc": [
+    "MOUSE1",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "bike_melee",
+   "label": "Golpe desde el vehículo",
+   "ps5": "SQUARE",
+   "pc": [
+    "R",
+    ""
+   ],
+   "layer": "bike"
+  },
+  {
+   "id": "air_throttle",
+   "label": "Acelerar / subir",
+   "ps5": "R2",
+   "pc": [
+    "W",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_brake",
+   "label": "Frenar / bajar",
+   "ps5": "L2",
+   "pc": [
+    "S",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_yaw_left",
+   "label": "Timón izquierda",
+   "ps5": "SQUARE",
+   "pc": [
+    "A",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_yaw_right",
+   "label": "Timón derecha",
+   "ps5": "CIRCLE",
+   "pc": [
+    "D",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_pitch_down",
+   "label": "Morro abajo",
+   "ps5": "LS_UP",
+   "pc": [
+    "KP8",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_pitch_up",
+   "label": "Morro arriba",
+   "ps5": "LS_DOWN",
+   "pc": [
+    "KP5",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_roll_left",
+   "label": "Alabeo izquierda",
+   "ps5": "LS_LEFT",
+   "pc": [
+    "KP4",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_roll_right",
+   "label": "Alabeo derecha",
+   "ps5": "LS_RIGHT",
+   "pc": [
+    "KP6",
+    ""
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_fire",
+   "label": "Disparar arma del avión",
+   "ps5": "R1",
+   "pc": [
+    "MOUSE1",
+    "SPACE"
+   ],
+   "layer": "air"
+  },
+  {
+   "id": "air_gear",
+   "label": "Tren de aterrizaje",
+   "ps5": "L3",
+   "pc": [
+    "LSHIFT",
+    ""
+   ],
+   "layer": "air"
+  }
+ ]
+}

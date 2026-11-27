@@ -2,6 +2,11 @@
 
 **English** · [Español](CHANGELOG.es.md)
 
+## v0.15.1: GTA VI
+
+- **Grand Theft Auto VI profile.** There's no PC version yet, so the keys follow GTA V on PC and the buttons follow GTA VI's **Default** control scheme on PS5 (as listed by three control guides that agree on foot, combat and driving). Same modes as GTA V: F gets in or out, B cycles on foot → car → bike → air. Cars, motorbikes and boats share the car keys (W/S triggers, Space handbrake, E horn, H lights, Shift/Ctrl lean on motorbikes). Uncertain: handbrake, horn, landing gear, bicycle buttons; helicopters aren't covered by the guides. Set the game's control scheme to Default, not Classic.
+- **Title database refreshed** from PlayStation-Titles: GTA VI's European and Japanese Title IDs (`PPSA01547`, `PPSA38500`, `PPSA29660`) are recognised, plus about 230 other new PS5 entries.
+
 ## v0.15: separate keyboard and mouse that are both "keyboard + mouse"
 
 - **Fix for separate gaming keyboards and mice** (reported with a Corsair keyboard `1b1c:1bfd` and mouse `1b1c:1b9e`): many gaming keyboards also present a mouse interface, and many gaming mice a keyboard interface. Before, the first one plugged in took both roles and the second was ignored. Now the bridge takes every keyboard/mouse device (up to 3), and whichever one you're actually using drives the keyboard or the mouse. It hands over only when the other has nothing held, so no key or button gets stuck.

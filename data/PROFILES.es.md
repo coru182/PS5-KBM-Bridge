@@ -5,8 +5,8 @@
 Generado por `tools/gen_builtin.py`. Cada perfil traduce las **teclas por defecto de la versión de PC** al botón del
 DualSense que hace lo mismo en la versión de PS5. Movimiento (WASD/flechas) y botón PS (tecla Windows) se agregan solos.
 
-Base de títulos: 24668 Title IDs (9595 juegos) de andshrew/PlayStation-Titles (MIT).
-Juegos con perfil propio: 93 entradas · con plantilla por género: 283 · con teclado/mouse nativo según la investigación: 34.
+Base de títulos: 24903 Title IDs (9771 juegos) de andshrew/PlayStation-Titles (MIT).
+Juegos con perfil propio: 94 entradas · con plantilla por género: 283 · con teclado/mouse nativo según la investigación: 34.
 
 | Perfil | Confianza | Teclado/mouse nativo en PS5 | Acciones | Fuentes |
 |---|---|---|---|---|
@@ -30,6 +30,7 @@ Juegos con perfil propio: 93 entradas · con plantilla por género: 283 · con t
 | God of War (2018) | alta | no | 20 | [1](https://www.shacknews.com/article/128344/god-of-war-pc-keybindings-controls) [2](https://www.magicgameworld.com/god-of-war-pc-keyboard-controls-guide/) [3](https://www.gamenguides.com/god-of-war-pc-keyboard-controls) [4](https://www.gamenguides.com/god-of-war-pc-gamepad-controls) [5](https://game8.co/games/God-of-War-2018/archives/316513) [6](https://www.magicgameworld.com/?p=17523) |
 | God of War Ragnarök | media | no | 21 | [1](https://www.magicgameworld.com/?p=106988) [2](https://shacknews.com/article/133014/controls-buttons-god-of-war-ragnarok) [3](https://steamcommunity.com/app/2322010/discussions/0/4843148117770587948) |
 | Grand Theft Auto V | media | no | 63 | [1](https://gta.fandom.com/wiki/Controls_for_GTA_V) [2](https://www.magicgameworld.com/?p=123765) [3](https://wiki.gtaboom.com/wiki/first-person-controls-settings-guide) [4](https://www.gtaboom.com/gta-5-controls-pc-keyboard-playstation-and-xbox/) [5](https://docs.fivem.net/docs/game-references/controls/) |
+| Grand Theft Auto VI | media | no | 57 | [1](https://www.gta6map.net/wiki/gta-6/guides/gta-6-controls) [2](https://www.g2a.com/news/gta-6-news/gta-6-controls-guide-ps5-and-xbox/) [3](https://outputlag.com/guides/gta-6-controls/) |
 | GTA Trilogy DE (esquema Clásico) | media | no | 48 | [1](https://www.magicgameworld.com/gta-3-definitive-edition-controls-guide-pc-xbox/) [2](https://gamerguides.com/grand-theft-auto-san-andreas-the-definitive-edition/guide/game-basics/introduction/ps4-ps5-controls) [3](https://www.gtabase.com/gta-san-andreas/guides/gta-san-andreas-controls-for-pc-xbox-ps4-definitive-edition?lang=en) [4](https://tcrf.net/Grand_Theft_Auto:_San_Andreas_-_The_Definitive_Edition) |
 | GTA: The Trilogy – Definitive Edition | media | no | 48 | [1](https://www.magicgameworld.com/gta-3-definitive-edition-controls-guide-pc-xbox/) [2](https://gamerguides.com/grand-theft-auto-san-andreas-the-definitive-edition/guide/game-basics/introduction/ps4-ps5-controls) [3](https://www.gtabase.com/gta-san-andreas/guides/gta-san-andreas-controls-for-pc-xbox-ps4-definitive-edition?lang=en) [4](https://tcrf.net/Grand_Theft_Auto:_San_Andreas_-_The_Definitive_Edition) |
 | Helldivers 2 | media | no | 29 | [1](https://progameguides.com/?p=768058) [2](https://sportskeeda.com/gaming-tech/helldivers-2-best-control-settings-keyboard-ps5-controller) [3](https://www.magicgameworld.com/helldivers-2-playstation-5-controls/) [4](https://www.switchbladegaming.com/helldivers-2/keybinds-guide-4/) [5](https://helldivers.wiki.gg/wiki/Input_Problems) |

@@ -13,7 +13,7 @@ Keyboard and mouse in any PS5 game, with no adapter and no PC. A payload for jai
 
 - **Virtual DualSense** from any USB keyboard and mouse (one wireless receiver or two separate devices), built on Ghostcontrol's virtual DualSense. The mouse drives the right stick by speed, so it feels the same at 30, 60 or 120 fps. Injects at 250 Hz.
 - **Recognises the game** you open by its Title ID. Ships a database of about 24,600 PS5 and PS4 titles, so it knows the game's name.
-- **Per-game profiles:** 51 games (counting the three GTA Trilogy games as one profile) use their PC version's default keys, mapped to the button that does the same thing on PS5. About 280 more games use a genre template (shooter, third-person, souls-like, racing). Full list with sources: [`data/PROFILES.md`](data/PROFILES.md).
+- **Per-game profiles:** 52 games (counting the three GTA Trilogy games as one profile) use their PC version's default keys, mapped to the button that does the same thing on PS5. About 280 more games use a genre template (shooter, third-person, souls-like, racing). Full list with sources: [`data/PROFILES.md`](data/PROFILES.md).
 - **Settings page** at `http://PS5-IP:8099`, from your phone, a PC or the PS5's own browser:
   - sensitivity, aiming (ADS) sensitivity and key binding with capture;
   - which profile each game uses, and marking a game as "native".
@@ -74,8 +74,8 @@ Output in `out/`:
 
 | File | Purpose |
 |---|---|
-| `ps5-kbm-bridge-v015.elf` | The bridge |
-| `ps5-kbm-diag-v015.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
+| `ps5-kbm-bridge-v0151.elf` | The bridge |
+| `ps5-kbm-diag-v0151.elf` | Diagnostics: only reads and measures, **never** creates the virtual controller, exits after 5 min |
 | `homebrew/PPSA51258/` | Home screen icon (ShadowMountPlus) |
 | `etaHEN/payloads/` | Automatic start, only if you use etaHEN |
 
@@ -84,7 +84,7 @@ Output in `out/`:
 ## Install and use
 
 1. Copy `out/homebrew/PPSA51258/` to `/data/homebrew/PPSA51258/` on the PS5 over FTP (for example with ps5upload). Reboot and load your payloads; ShadowMountPlus adds the **PS5 KBM Bridge** icon to the home screen.
-   - Without ShadowMountPlus: send `ps5-kbm-bridge-v015.elf` to elfldr (port 9021).
+   - Without ShadowMountPlus: send `ps5-kbm-bridge-v0151.elf` to elfldr (port 9021).
 2. Plug in the keyboard and mouse (or their receiver) and open the icon. The settings page opens. Move the mouse and press a key: the virtual DualSense appears.
 3. Open a game. The notification says which game it recognised and which profile it applied. To change something mid-game: **F11**. Go back with the PS button (or the Windows key).
 

@@ -349,6 +349,30 @@ static void test_vehicle_layers(void) {
         kb(&k, 0, 0x16, 0); kbm_frame(&k, 9, &f); assert(f.buttons == KBM_BTN_SQUARE); /* brake = Square */
         kb(&k, 0, 0, 0);
     }
+    /* GTA VI: GTA V keys, GTA VI Default-scheme buttons; every regional Title ID picks it */
+    {
+        const char *tids[] = { "PPSA01547", "PPSA38500", "PPSA29660" };
+        for (int t = 0; t < 3; ++t) {
+            KbmResolved r6; kbm_config_resolve(&c, tids[t], &r6);
+            assert(!strcmp(r6.p->id, "gta6") && !strcmp(r6.source, "game") && !strcmp(r6.info.name, "Grand Theft Auto VI"));
+        }
+        KbmEngine s; kbm_init(&s); load_profile(&s, &c, "gta6");
+        assert(s.map.layers == (KBM_LAYER_BIT(KBM_LAYER_VEHICLE) | KBM_LAYER_BIT(KBM_LAYER_BIKE) | KBM_LAYER_BIT(KBM_LAYER_AIR)));
+        kb(&s, 0, 0x2c, 0); kbm_frame(&s, 1, &f); assert(f.buttons == KBM_BTN_CROSS);                  /* Space: jump */
+        kb(&s, 0x02, 0, 0); kbm_frame(&s, 2, &f); assert(f.buttons == KBM_BTN_L3);               /* Shift: run */
+        kb(&s, 0, 0, 0);
+        kb(&s, 0, F, 0); kb(&s, 0, 0, 0); assert(s.layer == KBM_LAYER_VEHICLE);
+        kb(&s, 0, W, 0); kbm_frame(&s, 3, &f); assert(f.buttons == KBM_BTN_R2 && f.ly == 128);         /* accelerate */
+        kb(&s, 0, 0x2c, 0); kbm_frame(&s, 4, &f); assert(f.buttons == KBM_BTN_CROSS);                  /* handbrake */
+        kb(&s, 0, 0, 0);
+        kb(&s, 0, B, 0); kb(&s, 0, 0, 0); assert(s.layer == KBM_LAYER_BIKE);
+        kb(&s, 0, 0x2c, 0); kbm_frame(&s, 5, &f); assert(f.buttons == KBM_BTN_CIRCLE);                 /* bunnyhop */
+        kb(&s, 0, 0, 0);
+        kb(&s, 0, B, 0); kb(&s, 0, 0, 0); assert(s.layer == KBM_LAYER_AIR);
+        kb(&s, 0, A, 0); kbm_frame(&s, 6, &f); assert(f.buttons == KBM_BTN_SQUARE && f.lx == 128);     /* rudder left */
+        kb(&s, 0, 0, 0);
+        kb(&s, 0, F, 0); kb(&s, 0, 0, 0); assert(s.layer == KBM_LAYER_FOOT);
+    }
     /* GTA V: same idea, PC-style driving */
     {
         KbmEngine v; kbm_init(&v); load_profile(&v, &c, "gta5");
